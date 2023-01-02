@@ -16,7 +16,8 @@ if ! isRoot; then
         echo "Sorry, you need to run this as root"
         exit 1
 fi
-
+apt-get update
+apt-get upgrade
 sleep 2 && clear
 
 SERVER_IP=$(ip -4 addr | sed -ne 's|^.* inet \([^/]*\)/.* scope global.*$|\1|p' | head -1)
