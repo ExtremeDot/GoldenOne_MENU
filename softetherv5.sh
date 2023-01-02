@@ -63,11 +63,11 @@ apt-get -y install wget dnsmasq expect && sleep 2
 systemctl restart systemd-resolved && sleep 10
 
 # download the latest stable softether files
-wget https://github.com/SoftEtherVPN/SoftEtherVPN_Stable/releases/download/v4.41-9782-beta/softether-vpnserver-v4.41-9782-beta-2022.11.17-linux-x64-64bit.tar.gz
+wget https://github.com/SoftEtherVPN/SoftEtherVPN/releases/download/5.02.5180/SoftEtherVPN-5.02.5180.tar.xz
 
 # extract it 
-tar xzvf softether-vpnserver-v4.41-9782-beta-2022.11.17-linux-x64-64bit.tar.gz -C $TARGET
-rm -rf softether-vpnserver-v4.41-9782-beta-2022.11.17-linux-x64-64bit.tar.gz
+tar xzvf SoftEtherVPN-5.02.5180.tar.xz -C $TARGET
+rm -rf SoftEtherVPN-5.02.5180.tar.xz
 
 cd ${TARGET}vpnserver
 expect -c 'spawn make; expect number:; send 1\r; expect number:; send 1\r; expect number:; send 1\r; interact'
