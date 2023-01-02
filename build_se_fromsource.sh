@@ -348,13 +348,13 @@ cat <<EOF > /etc/dnsmasq.conf
 interface=tap_soft
 dhcp-range=tap_soft,$LOCALIP.$IPRNG1,10.100.10.$IPRNG2,12h
 dhcp-option=tap_soft,3,$LOCALIP.1
-dhcp-option=option:dns-server,$LOCALIP.$DNSMSQ_SERV
+dhcp-option=option:dns-server,$LOCALIP.1,$DNSMSQ_SERV
 bind-interfaces
 no-poll
 no-resolv
 bogus-priv
-server=DNSMSQ_SERV
-server=DNSMSQ_SERV2
+server=$DNSMSQ_SERV
+server=$DNSMSQ_SERV2
 
 EOF
 
