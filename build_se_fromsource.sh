@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Reference and credits:
 # - https://github.com/angristan/openvpn-install
@@ -175,19 +175,23 @@ sleep 1
 service dnsmasq restart
 sleep 5
 
+echo " INSTALLING PRE-REQ APPS"
 sudo apt-get -y install build-essential net-tools cmake gcc g++ make rpm pkg-config libncurses5-dev libssl-dev libsodium-dev libreadline-dev zlib1g-dev
 
 mkdir /se_install && cd /se_install
 
 # clone softether source
+echo " GET THE SOURCE"
 git clone https://github.com/SoftEtherVPN/SoftEtherVPN.git
 cd SoftEtherVPN
 git submodule init && git submodule update
+echo " BUILD THE SOURCE"
 ./configure
 sleep 2
 make -C build
 sleep 5
 # make -C build install
+
 
 cd /se_install/SoftEtherVPN/build
 make
@@ -200,6 +204,7 @@ chmod 700 vpnserver
 chmod 700 vpncmd
 
 # SOFTETHER SETUP
+echo "Setup SoftEther Server"
 HUB="VPN"
 HUB_PASSWORD=${SERVER_PASSWORD}
 USER_PASSWORD=${SERVER_PASSWORD}
