@@ -76,7 +76,7 @@ chmod 700 ${TARGET}vpnserver/vpnserver ${TARGET}vpnserver/vpncmd
 mkdir -p /var/lock/subsys
 echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.d/ipv4_forwarding.conf
 sysctl --system
-curl -O https://github.com/ExtremeDot/golden_one/blob/main/vpnserver_v5.sh --output /tmp/
+curl -O https://raw.githubusercontent.com/ExtremeDot/golden_one/master/vpnserver_v5.sh --output /tmp/
 mv /tmp/vpnserver_v5.sh /etc/init.d/vpnserver
 sed -i "s/\[SERVER_IP\]/${SERVER_IP}/g" /etc/init.d/vpnserver
 chmod 755 /etc/init.d/vpnserver && /etc/init.d/vpnserver start
