@@ -47,7 +47,7 @@ echo "USER: $USER"
 echo "PASSWORD: $SERVER_PASSWORD"
 echo "IP_SEC: $SHARED_KEY"
 
-
+sleep 5
 
 
 
