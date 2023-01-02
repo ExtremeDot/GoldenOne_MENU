@@ -190,13 +190,16 @@ sleep 5
 
 echo " INSTALLING PRE-REQ APPS"
 sudo apt-get -y install build-essential net-tools cmake gcc g++ make rpm pkg-config libncurses5-dev libssl-dev libsodium-dev libreadline-dev zlib1g-dev
-
-mkdir /se_install && cd /se_install
-
+sleep 2
+mkdir -p /se_install 
+sleep 2
+cd /se_install
+sleep 2
 # clone softether source
 echo " GET THE SOURCE"
 git clone https://github.com/SoftEtherVPN/SoftEtherVPN.git
 cd SoftEtherVPN
+sleep 2
 git submodule init && git submodule update
 echo " BUILD THE SOURCE"
 ./configure
