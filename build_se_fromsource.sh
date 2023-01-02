@@ -97,47 +97,70 @@ echo ""
         1) # Cloudflare
                 echo 'nameserver 1.0.0.1' > $DEST_RESOLV
                 echo 'nameserver 1.1.1.1' >> $DEST_RESOLV
+		DNSMSQ_SERV=1.1.1.1
+		DNSMSQ_SERV2=1.0.0.1
                 ;;
         2) # Quad9
                 echo 'nameserver 9.9.9.9' > $DEST_RESOLV
                 echo 'nameserver 149.112.112.112' >> $DEST_RESOLV
+		DNSMSQ_SERV=9.9.9.9
+		DNSMSQ_SERV2=149.112.112.112
                 ;;
         3) # Quad9 uncensored
                 echo 'nameserver 9.9.9.10' > $DEST_RESOLV
                 echo 'nameserver 149.112.112.10' >> $DEST_RESOLV
+		DNSMSQ_SERV=9.9.9.10
+		DNSMSQ_SERV2=149.112.112.10
                 ;;
         4) # FDN
                 echo 'nameserver 80.67.169.40' > $DEST_RESOLV
                 echo 'nameserver 80.67.169.12' >> $DEST_RESOLV
+		DNSMSQ_SERV=80.67.169.40
+		DNSMSQ_SERV2=80.67.169.12
                 ;;
         5) # DNS.WATCH
                 echo 'nameserver 84.200.69.80' > $DEST_RESOLV
                 echo 'nameserver 84.200.70.40' >> $DEST_RESOLV
+		DNSMSQ_SERV=84.200.69.80
+		DNSMSQ_SERV2=84.200.70.40
                 ;;
         6) # OpenDNS
                 echo 'nameserver 208.67.222.222' > $DEST_RESOLV
                 echo 'nameserver 208.67.220.220' >> $DEST_RESOLV
+		DNSMSQ_SERV=208.67.222.222
+		DNSMSQ_SERV2=208.67.220.220
                 ;;
         7) # Google
                 echo 'nameserver 8.8.8.8' > $DEST_RESOLV
                 echo 'nameserver 8.8.4.4' >> $DEST_RESOLV
+		DNSMSQ_SERV=8.8.8.8
+		DNSMSQ_SERV2=8.8.4.4
                 ;;
 		8) # Yandex Basic
                 echo 'nameserver 77.88.8.8' > $DEST_RESOLV
                 echo 'nameserver 77.88.8.1' >> $DEST_RESOLV
+		DNSMSQ_SERV=77.88.8.8
+		DNSMSQ_SERV2=77.88.8.1
                 ;;
         9) # AdGuard DNS
                 echo 'nameserver 94.140.14.14' > $DEST_RESOLV
                 echo 'nameserver 94.140.15.15' >> $DEST_RESOLV
+		DNSMSQ_SERV=94.140.14.14
+		DNSMSQ_SERV2=94.140.15.15
                 ;;
         10) # NextDNS
                 echo 'nameserver 45.90.28.167' > $DEST_RESOLV
                 echo 'nameserver 45.90.30.167' >> $DEST_RESOLV
+		DNSMSQ_SERV=45.90.28.167
+		DNSMSQ_SERV2=45.90.30.167
                 ;;
         11) # Custom DNS
                 echo "nameserver $DNS1" > $DEST_RESOLV
+		DNSMSQ_SERV=$DNS1
+		DNSMSQ_SERV2=8.8.8.8
                 if [[ $DNS2 != "" ]]; then
                         echo "nameserver $DNS2" >> $DEST_RESOLV
+			DNSMSQ_SERV2=$DNS2
                 fi
                 ;;
         esac
@@ -176,6 +199,24 @@ chmod 600 *
 chmod 700 vpnserver
 chmod 700 vpncmd
 
+# SOFTETHER SETUP
+HUB="VPN"
+HUB_PASSWORD=${SERVER_PASSWORD}
+USER_PASSWORD=${SERVER_PASSWORD}
+TARGET="/usr/local/"
+cd ${TARGET}vpnserver
+
+# INSTALLATION METHOD dnsmasq or securenat?
+SETMOD=""
+clear
+echo ""
+echo "Softether Installation Method?"
+echo "   1) Default, i will setup from SoftEther Manager Program"
+echo "   2) Local Bridge Mode using virtual tap by dnsmasq"
+until [[ $SETMOD =~ ^[0-2]+$ ]] && [ "$SETMOD" -ge 2 ] && [ "$SETMOD" -le 2 ]; do
+read -rp "SETMOD [1-2]: " -e -i 2 SETMOD
+
+if [[ $SETMOD == "1" ]]; then
 cat <<EOF > /etc/init.d/vpnserver
 #!/bin/sh
 # chkconfig: 2345 99 01
@@ -204,28 +245,108 @@ esac
 exit 0
 
 EOF
+echo "vpnserver is configured as defualt"
+
+elif [[ $SETMOD == "2" ]]; then
+LOCALIP=10.10.9
+echo "please enter the main ip address for virtual tap adapter"
+echo "enter the ip range [x.x.x] , the 4th number will generate automatically."
+echo "the result for [10.10.9] will be 10.10.9.[1-255] range."
+read -e -i "$LOCALIP" -p "Please enter IP gateway for virtual tap, example[10.10.9]: " input
+LOCALIP="${input:-$LOCALIP}"
+
+# UPDATE vpnserver running mode to local bridge
+cat <<EOF > /etc/init.d/vpnserver
+#!/bin/sh
+# chkconfig: 2345 99 01
+# description: SoftEther VPN Server
+DAEMON=/usr/local/vpnserver/vpnserver
+LOCK=/var/lock/subsys/vpnserver
+TAP_ADDR=$LOCALIP.1
+TAP_NETWORK=$LOCALIP.0/24
+SERVER_IP=$SERVER_IP
+test -x \$DAEMON || exit 0
+case "\$1" in
+start)
+\$DAEMON start
+touch \$LOCK
+sleep 2
+/sbin/ifconfig tap_soft \$TAP_ADDR
+iptables -t nat -F
+iptables -t nat -A POSTROUTING -s \${TAP_NETWORK} -j SNAT --to-source \${SERVER_IP}
+;;
+stop)
+\$DAEMON stop
+rm \$LOCK
+;;
+restart)
+\$DAEMON stop
+sleep 3
+\$DAEMON start
+sleep 2
+/sbin/ifconfig tap_soft \$TAP_ADDR
+iptables -t nat -F
+iptables -t nat -A POSTROUTING -s \${TAP_NETWORK} -j SNAT --to-source \${SERVER_IP}
+;;
+*)
+echo "Usage: \$0 {start|stop|restart}"
+exit 1
+esac
+exit 0
+
+EOF
+echo "vpnserver is configured with dnsmasq"
+
+else
+echo "vpnserver file is not configured and exit"
+exit
+fi
+
+done
+
 
 mkdir -p /var/lock/subsys
 chmod 755 /etc/init.d/vpnserver && /etc/init.d/vpnserver start
 update-rc.d vpnserver defaults
 
+# vpnserver start
+# vpncmd
+if [[ $SETMOD == "2" ]]; then
 
+# DEFINE DHCP SERVER RANGE FOR DNSMASQ
+IPRNG1=""
+until [[ $IPRNG1 =~ ^((25[0-4]|2[0-4][0-9]|[01]?[0-9][0-9]?)){0}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$ && $IPRNG1 -gt 2 && $IPRNG1 -lt 201 ]] ; do
+echo ""
+echo "Define a number between 3-200 ."
+read -rp "DHCP START IP: [Recommended = 10] " -e IPRNG1
+done
+IPRNG2=""
+until [[ $IPRNG2 =~ ^((25[0-4]|2[0-4][0-9]|[01]?[0-9][0-9]?)){0}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$ && $IPRNG2 -gt $IPRNG1 ]] ; do
+echo ""
+echo "DHCP START IP RANGE= $IPRNG1"
+END_IP_REC=$((30 + $IPRNG1))
+if [ $END_IP_REC -gt 254 ]
+then
+END_IP_REC=254
+fi
+echo "Define +30 number from DHCP Start value at least."
+echo "It relates to how much clients will connect to your server."
+read -rp "DHCP END IP: [Recommended = $END_IP_REC ~ 254 ] " -e IPRNG2
+done
 
-
-echo "vpnserver start"
-echo "vpncmd"
 
 cat <<EOF > /etc/dnsmasq.conf
+
 interface=tap_soft
-dhcp-range=tap_soft,10.100.10.128,10.100.10.254,12h
-dhcp-option=tap_soft,3,10.100.10.1
-dhcp-option=option:dns-server,10.100.10.1,1.1.1.1
+dhcp-range=tap_soft,$LOCALIP.$IPRNG1,10.100.10.$IPRNG2,12h
+dhcp-option=tap_soft,3,$LOCALIP.1
+dhcp-option=option:dns-server,$LOCALIP.$DNSMSQ_SERV
 bind-interfaces
 no-poll
 no-resolv
 bogus-priv
-server=1.1.1.1
-server=1.0.0.1
+server=DNSMSQ_SERV
+server=DNSMSQ_SERV2
 
 EOF
 sleep 2
