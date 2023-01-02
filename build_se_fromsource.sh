@@ -169,11 +169,17 @@ echo ""
         
 
 # installing dnsmasq
-
-systemctl stop systemd-resolved && sleep 1
+echo ""
+echo "Installing DNSMASQ"
 sudo apt-get -y install dnsmasq
-sleep 1
-service dnsmasq restart
+sleep 2
+echo ""
+echo "STOPING SYSTEM RESOLV"
+systemctl stop systemd-resolved && sleep 5
+echo "RESTARTING DNSMASQ and SYSTEM RESOLVE"
+service dnsmasq restart 
+sleep 5
+systemctl stop systemd-resolved 
 sleep 5
 
 echo " INSTALLING PRE-REQ APPS"
