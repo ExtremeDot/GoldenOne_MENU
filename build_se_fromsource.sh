@@ -339,8 +339,6 @@ EOF
 
 sleep 2
 echo ""
-echo " restarting DNSMASQ"
-service dnsmasq restart
 
 ## FOR WRONG INPUT
 else
@@ -353,3 +351,22 @@ done
 mkdir -p /var/lock/subsys
 chmod 755 /etc/init.d/vpnserver && /etc/init.d/vpnserver start
 update-rc.d vpnserver defaults
+
+## SETTING UP SERVER
+${TARGET}vpnserver/vpncmd localhost /SERVER /CMD ServerPasswordSet ${SERVER_PASSWORD}
+${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD HubCreate ${HUB} /PASSWORD:${HUB_PASSWORD}
+${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /HUB:${HUB} /CMD UserCreate ${USER} /GROUP:none /REALNAME:none /NOTE:none
+${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /HUB:${HUB} /CMD UserPasswordSet ${USER} /PASSWORD:${USER_PASSWORD}
+${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD IPsecEnable /L2TP:yes /L2TPRAW:yes /ETHERIP:yes /PSK:${SHARED_KEY} /DEFAULTHUB:${HUB}
+${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD BridgeCreate ${HUB} /DEVICE:soft /TAP:yes
+
+echo " restarting DNSMASQ"
+sleep 5
+service dnsmasq restart
+service vpnserver restart
+echo "+++ Installation finished +++"
+echo "IP: $SERVER_IP"
+echo "USER: $USER"
+echo "PASSWORD: $SERVER_PASSWORD"
+echo "IP_SEC: $SHARED_KEY"
+
