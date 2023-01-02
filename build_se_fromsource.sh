@@ -1,13 +1,34 @@
 #!/bin/sh
+
+function isRoot() {
+        if [ "$EUID" -ne 0 ]; then
+                return 1
+        fi
+}
+
+if ! isRoot; then
+        echo "Sorry, you need to run this as root"
+        exit 1
+fi
+
+
+# change DNS to adguard service
+cat << EOF > /etc/resolv.conf
+nameserver 94.140.14.14
+nameserver 94.140.14.15
+EOF
+
 # installing dnsmasq
-systemctl stop systemd-resolved && sleep 5
-sudo apt install dnsmasq
-sleep 5
+
+systemctl stop systemd-resolved && sleep 1
+sudo apt-get -y install dnsmasq
+sleep 1
 service dnsmasq restart
 sleep 5
 
+sudo apt-get -y install build-essential net-tools cmake gcc g++ make rpm pkg-config libncurses5-dev libssl-dev libsodium-dev libreadline-dev zlib1g-dev
+
 mkdir /se_install && cd /se_install
-sudo apt -y install build-essential net-tools cmake gcc g++ make rpm pkg-config libncurses5-dev libssl-dev libsodium-dev libreadline-dev zlib1g-dev
 
 # clone softether source
 git clone https://github.com/SoftEtherVPN/SoftEtherVPN.git
@@ -17,7 +38,53 @@ git submodule init && git submodule update
 sleep 2
 make -C build
 sleep 5
-make -C build install
+# make -C build install
+
+cd /se_install/SoftEtherVPN/build
+make
+mkdir -p /usr/local/vpnserver/
+cp vpn* /usr/local/vpnserver
+cp libcedar.so libmayaqua.so hamcore.se2 /usr/local/vpnserver/
+cd /usr/local/vpnserver/
+chmod 600 *
+chmod 700 vpnserver
+chmod 700 vpncmd
+
+cat <<EOF > /etc/init.d/vpnserver
+#!/bin/sh
+# chkconfig: 2345 99 01
+# description: SoftEther VPN Server
+DAEMON=/usr/local/vpnserver/vpnserver
+LOCK=/var/lock/subsys/vpnserver
+test -x \$DAEMON || exit 0
+case "\$1" in
+start)
+\$DAEMON start
+touch \$LOCK
+;;
+stop)
+\$DAEMON stop
+rm \$LOCK
+;;
+restart)
+\$DAEMON stop
+sleep 3
+\$DAEMON start
+;;
+*)
+echo "Usage: \$0 {start|stop|restart}"
+exit 1
+esac
+exit 0
+
+EOF
+
+mkdir -p /var/lock/subsys
+chmod 755 /etc/init.d/vpnserver && /etc/init.d/vpnserver start
+update-rc.d vpnserver defaults
+
+
+
 
 echo "vpnserver start"
 echo "vpncmd"
