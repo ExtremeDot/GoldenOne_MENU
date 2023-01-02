@@ -247,6 +247,9 @@ exit 0
 EOF
 echo "vpnserver is configured as defualt"
 
+
+### SET AS LOCAL BRIDGE MODE
+
 elif [[ $SETMOD == "2" ]]; then
 LOCALIP=10.10.9
 echo "please enter the main ip address for virtual tap adapter"
@@ -256,6 +259,7 @@ read -e -i "$LOCALIP" -p "Please enter IP gateway for virtual tap, example[10.10
 LOCALIP="${input:-$LOCALIP}"
 
 # UPDATE vpnserver running mode to local bridge
+
 cat <<EOF > /etc/init.d/vpnserver
 #!/bin/sh
 # chkconfig: 2345 99 01
@@ -297,22 +301,6 @@ exit 0
 EOF
 echo "vpnserver is configured with dnsmasq"
 
-else
-echo "vpnserver file is not configured and exit"
-exit
-fi
-
-done
-
-
-mkdir -p /var/lock/subsys
-chmod 755 /etc/init.d/vpnserver && /etc/init.d/vpnserver start
-update-rc.d vpnserver defaults
-
-# vpnserver start
-# vpncmd
-if [[ $SETMOD == "2" ]]; then
-
 # DEFINE DHCP SERVER RANGE FOR DNSMASQ
 IPRNG1=""
 until [[ $IPRNG1 =~ ^((25[0-4]|2[0-4][0-9]|[01]?[0-9][0-9]?)){0}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$ && $IPRNG1 -gt 2 && $IPRNG1 -lt 201 ]] ; do
@@ -333,10 +321,9 @@ echo "Define +30 number from DHCP Start value at least."
 echo "It relates to how much clients will connect to your server."
 read -rp "DHCP END IP: [Recommended = $END_IP_REC ~ 254 ] " -e IPRNG2
 done
-
+sleep 5
 
 cat <<EOF > /etc/dnsmasq.conf
-
 interface=tap_soft
 dhcp-range=tap_soft,$LOCALIP.$IPRNG1,10.100.10.$IPRNG2,12h
 dhcp-option=tap_soft,3,$LOCALIP.1
@@ -349,5 +336,20 @@ server=DNSMSQ_SERV
 server=DNSMSQ_SERV2
 
 EOF
+
 sleep 2
+echo ""
+echo " restarting DNSMASQ"
 service dnsmasq restart
+
+## FOR WRONG INPUT
+else
+echo "vpnserver file is not configured and exit"
+exit
+fi
+done
+
+
+mkdir -p /var/lock/subsys
+chmod 755 /etc/init.d/vpnserver && /etc/init.d/vpnserver start
+update-rc.d vpnserver defaults
