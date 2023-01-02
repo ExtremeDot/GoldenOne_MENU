@@ -60,6 +60,7 @@ TARGET="/usr/local/"
 echo "installing dnsmasq, wait for 15 seconds"
 systemctl stop systemd-resolved && sleep 10
 apt-get -y install wget dnsmasq expect && sleep 2
+# apt-get install -y dnsmasq
 systemctl restart systemd-resolved && sleep 10
 
 # download the latest stable softether files
@@ -101,6 +102,7 @@ server=1.1.1.1
 server=1.0.0.1
 
 EOF
+sleep 5
 service dnsmasq restart
 service vpnserver restart
 echo "+++ Installation finished +++"
