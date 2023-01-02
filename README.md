@@ -1,6 +1,6 @@
 # golden_one
 
-curl -O https://github.com/ExtremeDot/golden_one/blob/main/softetherv5.sh
+curl -O https://raw.githubusercontent.com/ExtremeDot/golden_one/master/softetherv5.sh
 
 chmod +x softetherv5.sh
 
