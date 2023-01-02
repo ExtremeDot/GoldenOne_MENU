@@ -5,6 +5,7 @@
 # - https://www.digitalocean.com/community/tutorials/how-to-setup-a-multi-protocol-vpn-server-using-softether
 # - https://gist.github.com/abegodong/
 
+rm build_se_fromsource.sh
 
 function isRoot() {
         if [ "$EUID" -ne 0 ]; then
@@ -74,11 +75,12 @@ echo ""
         echo "   8) Yandex Basic (Russia)"
         echo "   9) AdGuard DNS (Anycast: worldwide)"
         echo "   10) NextDNS (Anycast: worldwide)"
-        echo "   11) Custom"
-        until [[ $DNS =~ ^[0-9]+$ ]] && [ "$DNS" -ge 1 ] && [ "$DNS" -le 11 ]; do
-                read -rp "DNS [1-10]: " -e -i 9 DNS
+        echo "   11) SKIP, No change"
+	echo "   12) Custom"
+        until [[ $DNS =~ ^[0-9]+$ ]] && [ "$DNS" -ge 1 ] && [ "$DNS" -le 12 ]; do
+                read -rp "DNS [1-12]: " -e -i 9 DNS
                 
-                if [[ $DNS == "11" ]]; then
+                if [[ $DNS == "12" ]]; then
                         until [[ $DNS1 =~ ^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$ ]]; do
                                 read -rp "Primary DNS: " -e DNS1
                         done
@@ -137,7 +139,7 @@ echo ""
 		DNSMSQ_SERV=8.8.8.8
 		DNSMSQ_SERV2=8.8.4.4
                 ;;
-		8) # Yandex Basic
+	8) # Yandex Basic
                 echo 'nameserver 77.88.8.8' > $DEST_RESOLV
                 echo 'nameserver 77.88.8.1' >> $DEST_RESOLV
 		DNSMSQ_SERV=77.88.8.8
@@ -155,7 +157,11 @@ echo ""
 		DNSMSQ_SERV=45.90.28.167
 		DNSMSQ_SERV2=45.90.30.167
                 ;;
-        11) # Custom DNS
+	11) # NO CHNAGE
+        	DNSMSQ_SERV=8.8.8.8
+		DNSMSQ_SERV2=8.8.4.4        
+                ;;
+        12) # Custom DNS
                 echo "nameserver $DNS1" > $DEST_RESOLV
 		DNSMSQ_SERV=$DNS1
 		DNSMSQ_SERV2=8.8.8.8
