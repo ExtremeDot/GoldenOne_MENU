@@ -21,7 +21,7 @@ fi
 apt-get update
 apt-get upgrade
 sleep 2 && clear
-
+echo " "
 SERVER_IP=$(ip -4 addr | sed -ne 's|^.* inet \([^/]*\)/.* scope global.*$|\1|p' | head -1)
 if [[ -z $SERVER_IP ]]; then
 # Detect public IPv6 address
@@ -32,15 +32,15 @@ if [[ $APPROVE_IP =~ n ]]; then
 read -rp "IP address: " -e -i "$SERVER_IP" IP
 fi
 	
-echo ""
+echo " "
 USER=`echo -e $(openssl rand -hex 1)"admin"$(openssl rand -hex 4)`
 read -e -i "$USER" -p "Please enter your username: " input
 USER="${input:-$USER}"
-echo ""
+echo " "
 SERVER_PASSWORD=`echo -e $(openssl rand -hex 1)"PAsS"$(openssl rand -hex 4)`
 read -e -i "$SERVER_PASSWORD" -p "Please Set VPN Password: " input
 SERVER_PASSWORD="${input:-$SERVER_PASSWORD}"
-echo ""
+echo " "
 SHARED_KEY=`shuf -i 12345678-99999999 -n 1`
 read -e -i "$SHARED_KEY" -p "Set IPSec Shared Keys: " input
 SHARED_KEY="${input:-$SHARED_KEY}"
@@ -49,10 +49,6 @@ echo "IP: $SERVER_IP"
 echo "USER: $USER"
 echo "PASSWORD: $SERVER_PASSWORD"
 echo "IP_SEC: $SHARED_KEY"
-
-sleep 5
-
-
 
 # CHANGING DNS
 echo " CURRNET DNS LIST"
