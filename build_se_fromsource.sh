@@ -291,6 +291,7 @@ cat <<EOF > /etc/init.d/vpnserver
 # description: SoftEther VPN Server
 DAEMON=/usr/local/vpnserver/vpnserver
 LOCK=/var/lock/subsys/vpnserver
+TAP_INTERFACE=tap_soft
 TAP_ADDR=$LOCALIP.1
 TAP_INTERFACE=tap_soft
 TAP_NETWORK=$LOCALIP.0/24
@@ -301,16 +302,17 @@ start)
 \$DAEMON start
 touch \$LOCK
 sleep 2
-TAP_INTERFACE=tap_soft
-iptables -F && iptables -X
+
+iptables -F
+iptables -X
 sleep 2
-ifconfig \$TAP_INTERFACE $LOCALIP.1
-iptables -t nat -A POSTROUTING -s $LOCALIP.0/24 -j SNAT --to-source $SERVER_IP
+ifconfig \$TAP_INTERFACE \$TAP_ADDR
+iptables -t nat -A POSTROUTING -s \${TAP_NETWORK} -j SNAT --to-source \${SERVER_IP}
 iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
-iptables -A INPUT -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT 
-iptables -A OUTPUT -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT 
+iptables -A INPUT -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT
+iptables -A OUTPUT -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT
 iptables -A FORWARD -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT
 
 ;;
@@ -324,15 +326,16 @@ sleep 3
 \$DAEMON start
 sleep 2
 TAP_INTERFACE=tap_soft
-iptables -F && iptables -X
+iptables -F
+iptables -X
 sleep 2
-ifconfig $TAP_INTERFACE $LOCALIP.1
-iptables -t nat -A POSTROUTING -s $LOCALIP.0/24 -j SNAT --to-source $SERVER_IP
+ifconfig \$TAP_INTERFACE \$TAP_ADDR
+iptables -t nat -A POSTROUTING -s \${TAP_NETWORK} -j SNAT --to-source \${SERVER_IP}
 iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
-iptables -A INPUT -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT 
-iptables -A OUTPUT -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT 
+iptables -A INPUT -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT
+iptables -A OUTPUT -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT
 iptables -A FORWARD -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT
 ;;
 *)
@@ -368,9 +371,7 @@ sleep 5
 
 cat <<EOF > /etc/dnsmasq.conf
 interface=tap_soft
-
 except-interface=eth0 # Need review
-
 listen-address=$LOCALIP.1
 bind-interfaces
 port=5353
@@ -413,6 +414,7 @@ read-ethers
 # quite-dhcp6
 # GATEWAY
 dhcp-option=3,$LOCALIP.1
+
 EOF
 
 sleep 2
@@ -426,6 +428,8 @@ fi
 done
 
 # ENABLE KERNEL IP FORWARDING
+echo "net.ipv4.ip_forward = 1" > /etc/sysctl.d/ipv4_forwarding.conf
+
 cat <<EOF >> /etc/sysctl.conf
 
 net.core.somaxconn=4096
@@ -447,7 +451,7 @@ net.ipv6.conf.all.proxy_ndp = 1
 EOF
 
 sysctl -f
-
+sysctl --system
 mkdir -p /var/lock/subsys
 chmod 755 /etc/init.d/vpnserver
 /etc/init.d/vpnserver start
