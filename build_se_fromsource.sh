@@ -240,6 +240,7 @@ until [[ $SETMOD =~ ^[0-2]+$ ]] && [ "$SETMOD" -ge 2 ] && [ "$SETMOD" -le 2 ]; d
 read -rp "SETMOD [1-2]: " -e -i 2 SETMOD
 
 if [[ $SETMOD == "1" ]]; then
+
 cat <<EOF > /etc/init.d/vpnserver
 #!/bin/sh
 # chkconfig: 2345 99 01
@@ -274,6 +275,7 @@ echo "vpnserver is configured as defualt"
 ### SET AS LOCAL BRIDGE MODE
 
 elif [[ $SETMOD == "2" ]]; then
+
 LOCALIP=10.10.9
 echo "please enter the main ip address for virtual tap adapter"
 echo "enter the ip range [x.x.x] , the 4th number will generate automatically."
@@ -282,8 +284,8 @@ read -e -i "$LOCALIP" -p "Please enter IP gateway for virtual tap, example[10.10
 LOCALIP="${input:-$LOCALIP}"
 
 # UPDATE vpnserver running mode to local bridge
-
 cat <<EOF > /etc/init.d/vpnserver
+
 #!/bin/sh
 # chkconfig: 2345 99 01
 # description: SoftEther VPN Server
@@ -302,7 +304,7 @@ sleep 2
 TAP_INTERFACE=tap_soft
 iptables -F && iptables -X
 sleep 2
-ifconfig $TAP_INTERFACE $LOCALIP.1
+ifconfig \$TAP_INTERFACE $LOCALIP.1
 iptables -t nat -A POSTROUTING -s $LOCALIP.0/24 -j SNAT --to-source $SERVER_IP
 iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
@@ -408,7 +410,7 @@ dhcp-option=45,$LOCALIP.1
 dhcp-option=46,8
 dhcp-option=47
 read-ethers
-quite-dhcp6
+# quite-dhcp6
 # GATEWAY
 dhcp-option=3,$LOCALIP.1
 EOF
