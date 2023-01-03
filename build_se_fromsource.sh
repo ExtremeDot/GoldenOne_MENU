@@ -1,9 +1,10 @@
 #!/bin/bash
 
 # Reference and credits:
-# - https://github.com/angristan/openvpn-install
-# - https://www.digitalocean.com/community/tutorials/how-to-setup-a-multi-protocol-vpn-server-using-softether
+# - https://github.com/angristan/
+# - https://www.digitalocean.com/
 # - https://gist.github.com/abegodong/
+# - https://whattheserver.com/
 
 rm build_se_fromsource.sh
 
@@ -288,6 +289,7 @@ cat <<EOF > /etc/init.d/vpnserver
 DAEMON=/usr/local/vpnserver/vpnserver
 LOCK=/var/lock/subsys/vpnserver
 TAP_ADDR=$LOCALIP.1
+TAP_INTERFACE=tap_soft
 TAP_NETWORK=$LOCALIP.0/24
 SERVER_IP=$SERVER_IP
 test -x \$DAEMON || exit 0
@@ -296,9 +298,18 @@ start)
 \$DAEMON start
 touch \$LOCK
 sleep 2
-/sbin/ifconfig tap_soft \$TAP_ADDR
-iptables -t nat -F
-iptables -t nat -A POSTROUTING -s \${TAP_NETWORK} -j SNAT --to-source \${SERVER_IP}
+TAP_INTERFACE=tap_soft
+iptables -F && iptables -X
+sleep 2
+ifconfig $TAP_INTERFACE $LOCALIP.1
+iptables -t nat -A POSTROUTING -s $LOCALIP.0/24 -j SNAT --to-source $SERVER_IP
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A INPUT -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT 
+iptables -A OUTPUT -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT 
+iptables -A FORWARD -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT
+
 ;;
 stop)
 \$DAEMON stop
@@ -309,9 +320,17 @@ restart)
 sleep 3
 \$DAEMON start
 sleep 2
-/sbin/ifconfig tap_soft \$TAP_ADDR
-iptables -t nat -F
-iptables -t nat -A POSTROUTING -s \${TAP_NETWORK} -j SNAT --to-source \${SERVER_IP}
+TAP_INTERFACE=tap_soft
+iptables -F && iptables -X
+sleep 2
+ifconfig $TAP_INTERFACE $LOCALIP.1
+iptables -t nat -A POSTROUTING -s $LOCALIP.0/24 -j SNAT --to-source $SERVER_IP
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A INPUT -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT 
+iptables -A OUTPUT -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT 
+iptables -A FORWARD -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT
 ;;
 *)
 echo "Usage: \$0 {start|stop|restart}"
@@ -346,16 +365,51 @@ sleep 5
 
 cat <<EOF > /etc/dnsmasq.conf
 interface=tap_soft
-dhcp-range=tap_soft,$LOCALIP.$IPRNG1,10.100.10.$IPRNG2,12h
-dhcp-option=tap_soft,3,$LOCALIP.1
-dhcp-option=option:dns-server,$LOCALIP.1,$DNSMSQ_SERV
-bind-interfaces
-no-poll
-no-resolv
-bogus-priv
-server=$DNSMSQ_SERV
-server=$DNSMSQ_SERV2
 
+except-interface=eth0 # Need review
+
+listen-address=$LOCALIP.1
+bind-interfaces
+port=5353
+dhcp-range=tap_soft,$LOCALIP.$IPRNG1,$LOCALIP.$IPRNG2,720h
+dhcp-option=tap_soft,3,$LOCALIP.1
+dhcp-authoritative
+enable-ra
+expand-hosts
+strict-order
+dhcp-no-override
+domain-needed
+bogus-priv
+stop-dns-rebind
+rebind-localhost-ok
+dns-forward-max=300
+no-resolv
+no-poll
+dhcp-option=252,"\n"
+# INCOMING DNS REQUESTS
+server=$DNSMSQ_SERV
+server=$DNSMSQ_SERV2 
+# IPV6 DNS SERVERS
+server=2620:0:ccd::2
+server=2001:4860:4860::8888
+server=2001:4860:4860::8844
+# CLIENT DNS IPv4 SERVER SETUP #AdGuard DNS
+dhcp-option=option:dns-server,$LOCALIP.1,$DNSMSQ_SERV
+# CLIENT DNS IPv6 SERVER #AdGuard DNS V6
+dhcp-option=option6:dns-server,[2a10:50c0::ad1:ff],[2a10:50c0::ad2:ff]
+cache-size=10000
+neg-ttl=80000
+local-ttl=3600
+dhcp-option=23,64
+dhcp-option=vendor:MSFT,2,1i
+dhcp-option=44,$LOCALIP.1
+dhcp-option=45,$LOCALIP.1
+dhcp-option=46,8
+dhcp-option=47
+read-ethers
+quite-dhcp6
+# GATEWAY
+dhcp-option=3,$LOCALIP.1
 EOF
 
 sleep 2
@@ -368,9 +422,32 @@ exit
 fi
 done
 
+# ENABLE KERNEL IP FORWARDING
+cat <<EOF >> /etc/sysctl.conf
+
+net.core.somaxconn=4096
+net.ipv4.ip_forward=1
+net.ipv4.conf.all.send_redirects = 0
+net.ipv4.conf.all.accept_redirects = 1 
+net.ipv4.conf.all.rp_filter = 1
+net.ipv4.conf.default.send_redirects = 1
+net.ipv4.conf.default.proxy_arp = 0
+
+net.ipv6.conf.all.forwarding=1
+net.ipv6.conf.default.forwarding = 1
+net.ipv6.conf.tap_soft.accept_ra=2
+net.ipv6.conf.all.accept_ra = 1
+net.ipv6.conf.all.accept_source_route=1
+net.ipv6.conf.all.accept_redirects = 1
+net.ipv6.conf.all.proxy_ndp = 1
+
+EOF
+
+sysctl -f
 
 mkdir -p /var/lock/subsys
-chmod 755 /etc/init.d/vpnserver && /etc/init.d/vpnserver start
+chmod 755 /etc/init.d/vpnserver
+/etc/init.d/vpnserver start
 update-rc.d vpnserver defaults
 
 ## SETTING UP SERVER
@@ -393,5 +470,5 @@ echo "USER: $USER"
 echo "PASSWORD: $SERVER_PASSWORD"
 echo "IP_SEC: $SHARED_KEY"
 
-# CRONTABE 
+# CRONTAB 
 sudo crontab -l | { cat; echo "@reboot /etc/init.d/vpnserver start" ; } | crontab -
