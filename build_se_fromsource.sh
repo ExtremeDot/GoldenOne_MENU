@@ -93,10 +93,51 @@ echo ""
                         done
                 fi
         done
-		
-        # DNS resolvers
-		DEST_RESOLV=$RESOLVCONF
-        case $DNS in
+
+  
+# set temporary dns to fix error while downloading
+DEST_RESOLV='/etc/resolv.conf'
+echo 'nameserver 77.88.8.8' > $DEST_RESOLV
+echo 'nameserver 77.88.8.1' >> $DEST_RESOLV
+
+
+# installing dnsmasq
+echo ""
+echo "Installing DNSMASQ"
+sudo apt-get -y install dnsmasq
+sleep 2
+echo ""
+echo "STOPING SYSTEM RESOLV"
+systemctl stop systemd-resolved && sleep 5
+echo "RESTARTING DNSMASQ and SYSTEM RESOLVE"
+service dnsmasq restart 
+sleep 5
+systemctl stop systemd-resolved 
+sleep 5
+
+echo " INSTALLING PRE-REQ APPS"
+sudo apt-get -y install build-essential net-tools cmake gcc g++ make rpm pkg-config libncurses5-dev libssl-dev libsodium-dev libreadline-dev zlib1g-dev
+sleep 2
+mkdir -p /se_install 
+sleep 2
+cd /se_install
+sleep 2
+# clone softether source
+echo " GET THE SOURCE"
+git clone https://github.com/SoftEtherVPN/SoftEtherVPN.git
+cd SoftEtherVPN
+sleep 2
+git submodule init && git submodule update
+echo " BUILD THE SOURCE"
+./configure
+sleep 2
+make -C build
+sleep 5
+
+## DNS CHANGE
+# DNS resolvers
+DEST_RESOLV=$RESOLVCONF
+case $DNS in
         
         1) # Cloudflare
                 echo 'nameserver 1.0.0.1' > $DEST_RESOLV
@@ -172,44 +213,8 @@ echo ""
                 fi
                 ;;
         esac
-        
-        
 
-# installing dnsmasq
-echo ""
-echo "Installing DNSMASQ"
-sudo apt-get -y install dnsmasq
-sleep 2
-echo ""
-echo "STOPING SYSTEM RESOLV"
-systemctl stop systemd-resolved && sleep 5
-echo "RESTARTING DNSMASQ and SYSTEM RESOLVE"
-service dnsmasq restart 
-sleep 5
-systemctl stop systemd-resolved 
-sleep 5
-
-echo " INSTALLING PRE-REQ APPS"
-sudo apt-get -y install build-essential net-tools cmake gcc g++ make rpm pkg-config libncurses5-dev libssl-dev libsodium-dev libreadline-dev zlib1g-dev
-sleep 2
-mkdir -p /se_install 
-sleep 2
-cd /se_install
-sleep 2
-# clone softether source
-echo " GET THE SOURCE"
-git clone https://github.com/SoftEtherVPN/SoftEtherVPN.git
-cd SoftEtherVPN
-sleep 2
-git submodule init && git submodule update
-echo " BUILD THE SOURCE"
-./configure
-sleep 2
-make -C build
-sleep 5
 # make -C build install
-
-
 cd /se_install/SoftEtherVPN/build
 make
 mkdir -p /usr/local/vpnserver/
