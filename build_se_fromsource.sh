@@ -32,7 +32,7 @@ if [[ $APPROVE_IP =~ n ]]; then
 read -rp "IP address: " -e -i "$SERVER_IP" IP
 fi
 	
-
+echo ""
 USER=`echo -e $(openssl rand -hex 1)"admin"$(openssl rand -hex 4)`
 read -e -i "$USER" -p "Please enter your username: " input
 USER="${input:-$USER}"
