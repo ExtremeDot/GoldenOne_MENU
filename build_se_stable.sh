@@ -19,6 +19,29 @@ if ! isRoot; then
 fi
 clear
 sudo ufw disable
+TARGET="/usr/local/"
+mkdir -p $TARGET
+
+
+echo ""
+echo "CLEAN INSTALL?"
+echo "Remove ALl Previous SE files?"
+echo ""
+until [[ $CLEAN_SETUP =~ (y|n) ]]; do
+read -rp "Clean SoftEther Setup? [y/n]: " -e -i y CLEAN_SETUP
+done
+if [[ $CUSTOMIZE_SETUP == "y" ]]; then
+	clear
+	echo ""
+	echo " Installing SoftEther CLEAN INSTALLATION"
+	rm -rf /usr/local/vpnserver/
+	rm /etc/init.d/vpnserver
+	echo "port=5353" > /etc/dnsmasq.conf
+	sleep 2
+else
+	echo " Installing SoftEther NORMAL INSTALLATION"
+fi
+
 
 
 # Save current DNS resolv config
@@ -253,7 +276,6 @@ echo "Setup SoftEther Server"
 HUB="VPN"
 HUB_PASSWORD=${SERVER_PASSWORD}
 USER_PASSWORD=${SERVER_PASSWORD}
-TARGET="/usr/local/"
 cd ${TARGET}vpnserver
 
 
@@ -489,6 +511,7 @@ done
 	net.ipv6.conf.all.accept_source_route=1
 	net.ipv6.conf.all.accept_redirects = 1
 	net.ipv6.conf.all.proxy_ndp = 1
+	
 	EOF
 	
 	else
