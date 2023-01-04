@@ -1,8 +1,6 @@
 # AUTOMATED SCRIPT INSTALL SOFTETHER LATEST STABLE RELEASE
 
-curl -O https://raw.githubusercontent.com/ExtremeDot/golden_one/master/build_se_stable.sh
-
-chmod +x build_se_stable.sh
+curl -O https://raw.githubusercontent.com/ExtremeDot/golden_one/master/build_se_stable.sh && chmod +x build_se_stable.sh
 
 ./build_se_stable.sh
 
