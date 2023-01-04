@@ -4,10 +4,16 @@ echo "G O L D E N    O N E     MENU      V1.0"
 echo "----------------------------------------"
 PS3=" $(echo $'\n'-----------------------------$'\n' "   Enter Option: " ) "
 echo ""
-options=("InstallSoftEther v4" "Install v2ray Server" "v2RAY RUN" "Hetzner cURL Test" "SpeedTest" "NetFelix Test" "Angristan-OpenVpn" "Angristan-WireGuard" "OpenConnect" "Kernel Tuner" "OVPN Status" "myFUCKip" "socks10808 check" "check Listen Ports" "DNSMASQ EDIT" "SoftEther Info" "CLEAR" "Quit")
+options=("InstallSoftEther v4" "Install v2ray Server" "v2RAY RUN" "Hetzner cURL Test" "SpeedTest" "NetFelix Test" "Angristan-OpenVpn" "Angristan-WireGuard" "OpenConnect" "Kernel Tuner" "OVPN Status" "DNSMASQ Restart" "DNSMASQ EDIT" "DNSMASQ LOG" "SoftEther Secure-NAT" "SoftEther RESTART" "SoftEther Restore" "myFUCKip" "socks10808 check" "check Listen Ports" "SoftEther Info" "CLEAR" "UPDATE" "Quit")
 select opt in "${options[@]}"
 do
 case $opt in
+
+# DNSMASQ RESTART
+"DNSMASQ Restart")
+/etc/init.d/dnsmasq restart
+;;
+
 
 # KERNEL Tuner
 "Kernel Tuner")
@@ -136,9 +142,19 @@ chmod +x /Angristan/WireGuard/wireguard-install.sh
 fi
 ;;
 
+# SoftEther Restart
+"SoftEther RESTART")
+/etc/init.d/vpnserver restart
+;;
+
 # EDIT DNSMASQ
 "DNSMASQ EDIT")
 nano /etc/dnsmasq.conf
+;;
+
+# CHECK DNSMASQ LOG
+"DNSMASQ LOG")
+systemctl status dnsmasq.service
 ;;
 
 # OPENVPN STATUS
@@ -154,6 +170,68 @@ curl -4 https://myip.wtf/json
 # Softether SHOW GOLDEN 1
 "SoftEther Info")
 /bin/seshow
+;;
+
+# SOFTETHER RESTORE BACKUP
+"SoftEther Restore:)
+echo "stopping SoftEther Servcie"
+/etc/init.d/vpnserver stop
+if test -f "/etc/init.d/vpnserver_BACKUP1";
+then
+rm /etc/init.d/vpnserver_LASTRUN
+cp /etc/init.d/vpnserver /etc/init.d/vpnserver_LASTRUN
+rm /etc/init.d/vpnserver
+mv /etc/init.d/vpnserver_BACKUP1 /etc/init.d/vpnserver
+echo " the first-run vpnserver file was backed up before."
+echo " SKIPing the backup creating"
+else
+echo " NO ANY BACKUP FOUND"
+echo " SKIP"
+fi
+
+
+# Softether SHOW GOLDEN 1
+"SoftEther Secure-NAT")
+
+# creating BACKUP
+if test -f "/etc/init.d/vpnserver_BACKUP1";
+then
+echo " the first-run vpnserver file was backed up before."
+echo " SKIPing the backup creating"
+else
+cp /etc/init.d/vpnserver /etc/init.d/vpnserver_BACKUP1
+fi
+
+cat <<EOF > /etc/init.d/vpnserver
+#!/bin/sh
+# chkconfig: 2345 99 01
+# description: SoftEther VPN Server
+DAEMON=/usr/local/vpnserver/vpnserver
+LOCK=/var/lock/subsys/vpnserver
+test -x \$DAEMON || exit 0
+case "\$1" in
+start)
+\$DAEMON start
+touch \$LOCK
+;;
+stop)
+\$DAEMON stop
+rm \$LOCK
+;;
+restart)
+\$DAEMON stop
+sleep 3
+\$DAEMON start
+;;
+*)
+echo "Usage: \$0 {start|stop|restart}"
+exit 1
+esac
+exit 0
+
+EOF
+
+echo "vpnserver is configured as [SECURE-NAT]"
 ;;
 
 # socks10808 port check
@@ -174,6 +252,16 @@ lsof -i -P -n | grep LIST
 # CLEAR SCREEN
 "CLEAR")
 	clear
+;;
+
+# CLEAR SCREEN
+"UPDATE")
+cd /tmp
+curl -O https://raw.githubusercontent.com/ExtremeDot/golden_one/master/MAIN.sh
+chmod +x /tmp/MAIN.sh
+cp /tmp/MAIN.sh /bin/goldenONE
+chmod +x /bin/goldenONE
+echo " Restrat the Script to RUN Latest"
 ;;
 
 # WRONG INPUT
