@@ -572,12 +572,17 @@ echo ""
 echo "+++ Installation finished +++"
 
 touch /bin/seshow
-echo "SoftEther - GoldenOne Script Data" > /bin/seshow
-echo " " >> /bin/seshow
-echo "IP: $SERVER_IP" >> /bin/seshow
-echo "USER: $USER" >> /bin/seshow
-echo "PASSWORD: $SERVER_PASSWORD" >> /bin/seshow
-echo "IP_SEC: $SHARED_KEY" >> /bin/seshow
+cat <<EOF > /bin/seshow
+clear
+echo "SoftEther - GoldenOne Script Data"
+echo " "
+echo "IP:       $SERVER_IP"
+echo "USER:     $USER"
+echo "PASSWORD: $SERVER_PASSWORD"
+echo "IP_SEC:   $SHARED_KEY"
+echo " "
+EOF
+
 chmod +x /bin/seshow
 echo "to Show Login Information, run "seshow" command."
 echo " "
