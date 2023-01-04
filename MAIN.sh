@@ -261,7 +261,7 @@ curl -O https://raw.githubusercontent.com/ExtremeDot/golden_one/master/MAIN.sh
 chmod +x /tmp/MAIN.sh
 cp /tmp/MAIN.sh /bin/goldenONE
 chmod +x /bin/goldenONE
-echo " Restrat the Script to RUN Latest"
+exit 0
 ;;
 
 # WRONG INPUT
