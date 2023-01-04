@@ -101,7 +101,7 @@ echo "IP: $SERVER_IP"
 echo "USER: $USER"
 echo "PASSWORD: $SERVER_PASSWORD"
 echo "IP_SEC: $SHARED_KEY"
-
+sleep 2
 # get data to changing DNS Settings
 echo "`sed -ne 's/^nameserver[[:space:]]\+\([^[:space:]]\+\).*$/\1/p' $RESOLVCONF`"
 echo ""
@@ -546,6 +546,7 @@ done
 if [[ $CUSTOMIZE_SETUP == "y" ]]; then
 	# CUSTOMIZED SETUP
 	## SETTING UP SERVER
+	echo "SERVER PASSWORD= $SERVER_PASSWORD"
 	${TARGET}vpnserver/vpncmd localhost /SERVER /CMD ServerPasswordSet ${SERVER_PASSWORD}
 	${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD HubCreate ${HUB} /PASSWORD:${HUB_PASSWORD}
 	${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /HUB:${HUB} /CMD UserCreate ${USER} /GROUP:none /REALNAME:none /NOTE:none
