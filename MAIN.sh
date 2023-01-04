@@ -4,7 +4,7 @@ echo "G O L D E N    O N E     MENU      V1.0"
 echo "----------------------------------------"
 PS3=" $(echo $'\n'-----------------------------$'\n' "   Enter Option: " ) "
 echo ""
-options=("Kernel Tuner" "InstallSoftEther v4" "SpeedTest" "NetFelix Test" "Hetzner cURL Test" "Install v2ray Server" "OpenConnect" "Angristan-OpenVpn" "Angristan-WireGuard" "v2RAY RUN" "OVPN Status" "myFUCKip" "socks10808 check" "check Listen Ports" "DNSMASQ EDIT" "SoftEther Info" "CLEAR" "Quit")
+options=("InstallSoftEther v4" "Install v2ray Server" "v2RAY RUN" "Hetzner cURL Test" "SpeedTest" "NetFelix Test" "Angristan-OpenVpn" "Angristan-WireGuard" "OpenConnect" "Kernel Tuner" "OVPN Status" "myFUCKip" "socks10808 check" "check Listen Ports" "DNSMASQ EDIT" "SoftEther Info" "CLEAR" "Quit")
 select opt in "${options[@]}"
 do
 case $opt in
