@@ -30,6 +30,7 @@ echo ""
 until [[ $CLEAN_SETUP =~ (y|n) ]]; do
 read -rp "Clean SoftEther Setup? [y/n]: " -e -i y CLEAN_SETUP
 done
+
 if [[ $CLEAN_SETUP == "y" ]]; then
 	clear
 	echo ""
@@ -494,29 +495,32 @@ done
 	until [[ $CUSTOM_EXTRANET =~ (y|n) ]]; do
 		read -rp "Install Extra Net config settings? [y/n]: " -e -i n CUSTOM_EXTRANET
 	done
-	if [[ $CUSTOM_EXTRANET == "y" ]]; then
-	echo "net.ipv4.ip_forward = 1" > /etc/sysctl.d/ipv4_forwarding.conf
-	cat <<EOF >> /etc/sysctl.conf
-	net.core.somaxconn=4096
-	net.ipv4.ip_forward=1
-	net.ipv4.conf.all.send_redirects = 0
-	net.ipv4.conf.all.accept_redirects = 1 
-	net.ipv4.conf.all.rp_filter = 1
-	net.ipv4.conf.default.send_redirects = 1
-	net.ipv4.conf.default.proxy_arp = 0
-	net.ipv6.conf.all.forwarding=1
-	net.ipv6.conf.default.forwarding = 1
-	net.ipv6.conf.tap_soft.accept_ra=2
-	net.ipv6.conf.all.accept_ra = 1
-	net.ipv6.conf.all.accept_source_route=1
-	net.ipv6.conf.all.accept_redirects = 1
-	net.ipv6.conf.all.proxy_ndp = 1
+
+if [[ $CUSTOM_EXTRANET == "y" ]]; then
+echo "net.ipv4.ip_forward = 1" > /etc/sysctl.d/ipv4_forwarding.conf
+
+cat <<EOF >> /etc/sysctl.conf
+
+net.core.somaxconn=4096
+net.ipv4.ip_forward=1
+net.ipv4.conf.all.send_redirects = 0
+net.ipv4.conf.all.accept_redirects = 1 
+net.ipv4.conf.all.rp_filter = 1
+net.ipv4.conf.default.send_redirects = 1
+net.ipv4.conf.default.proxy_arp = 0
+net.ipv6.conf.all.forwarding=1
+net.ipv6.conf.default.forwarding = 1
+net.ipv6.conf.tap_soft.accept_ra=2
+net.ipv6.conf.all.accept_ra = 1
+net.ipv6.conf.all.accept_source_route=1
+net.ipv6.conf.all.accept_redirects = 1
+net.ipv6.conf.all.proxy_ndp = 1
 	
-	EOF
-	
+EOF
+
 	else
-	echo " Skipping Extra NET Configs"
-	fi
+echo " Skipping Extra NET Configs"
+fi
 	
 	
 sysctl -f
