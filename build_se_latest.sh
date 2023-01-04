@@ -464,25 +464,36 @@ fi
 done
 
 # ENABLE KERNEL IP FORWARDING
-echo "net.ipv4.ip_forward = 1" > /etc/sysctl.d/ipv4_forwarding.conf
-
-cat <<EOF >> /etc/sysctl.conf
-net.core.somaxconn=4096
-net.ipv4.ip_forward=1
-net.ipv4.conf.all.send_redirects = 0
-net.ipv4.conf.all.accept_redirects = 1 
-net.ipv4.conf.all.rp_filter = 1
-net.ipv4.conf.default.send_redirects = 1
-net.ipv4.conf.default.proxy_arp = 0
-net.ipv6.conf.all.forwarding=1
-net.ipv6.conf.default.forwarding = 1
-net.ipv6.conf.tap_soft.accept_ra=2
-net.ipv6.conf.all.accept_ra = 1
-net.ipv6.conf.all.accept_source_route=1
-net.ipv6.conf.all.accept_redirects = 1
-net.ipv6.conf.all.proxy_ndp = 1
-EOF
-
+	echo "Add extra IP forwarding to Networking?"
+	echo "Run this setup if the default is not working properly."
+	echo ""
+	until [[ $CUSTOM_EXTRANET =~ (y|n) ]]; do
+		read -rp "Install Extra Net config settings? [y/n]: " -e -i n CUSTOM_EXTRANET
+	done
+	if [[ $CUSTOM_EXTRANET == "y" ]]; then
+	echo "net.ipv4.ip_forward = 1" > /etc/sysctl.d/ipv4_forwarding.conf
+	cat <<EOF >> /etc/sysctl.conf
+	net.core.somaxconn=4096
+	net.ipv4.ip_forward=1
+	net.ipv4.conf.all.send_redirects = 0
+	net.ipv4.conf.all.accept_redirects = 1 
+	net.ipv4.conf.all.rp_filter = 1
+	net.ipv4.conf.default.send_redirects = 1
+	net.ipv4.conf.default.proxy_arp = 0
+	net.ipv6.conf.all.forwarding=1
+	net.ipv6.conf.default.forwarding = 1
+	net.ipv6.conf.tap_soft.accept_ra=2
+	net.ipv6.conf.all.accept_ra = 1
+	net.ipv6.conf.all.accept_source_route=1
+	net.ipv6.conf.all.accept_redirects = 1
+	net.ipv6.conf.all.proxy_ndp = 1
+	EOF
+	
+	else
+	echo " Skipping Extra NET Configs"
+	fi
+	
+	
 sysctl -f
 sysctl --system
 mkdir -p /var/lock/subsys
@@ -490,22 +501,35 @@ chmod 755 /etc/init.d/vpnserver
 /etc/init.d/vpnserver start
 update-rc.d vpnserver defaults
 
-
-## SETTING UP SERVER
-${TARGET}vpnserver/vpncmd localhost /SERVER /CMD ServerPasswordSet ${SERVER_PASSWORD}
-${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD HubCreate ${HUB} /PASSWORD:${HUB_PASSWORD}
-${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /HUB:${HUB} /CMD UserCreate ${USER} /GROUP:none /REALNAME:none /NOTE:none
-${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /HUB:${HUB} /CMD UserPasswordSet ${USER} /PASSWORD:${USER_PASSWORD}
-${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD IPsecEnable /L2TP:yes /L2TPRAW:yes /ETHERIP:yes /PSK:${SHARED_KEY} /DEFAULTHUB:${HUB}
-${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD BridgeCreate ${HUB} /DEVICE:soft /TAP:yes
-${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD ServerCipherSet AES128-SHA256
-${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD ServerCertRegenerate ${SERVER_IP}
-${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD VpnOverIcmpDnsEnable /ICMP:yes /DNS:yes
+echo ""
+echo "Do you want to run customized Setup Script?"
+echo "It will set the initial setup for yor server."
+echo ""
+until [[ $CUSTOMIZE_SETUP =~ (y|n) ]]; do
+read -rp "Install Customized settings? [y/n]: " -e -i y CUSTOMIZE_SETUP
+done
+if [[ $CUSTOMIZE_SETUP == "y" ]]; then
+	# CUSTOMIZED SETUP
+	## SETTING UP SERVER
+	${TARGET}vpnserver/vpncmd localhost /SERVER /CMD ServerPasswordSet ${SERVER_PASSWORD}
+	${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD HubCreate ${HUB} /PASSWORD:${HUB_PASSWORD}
+	${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /HUB:${HUB} /CMD UserCreate ${USER} /GROUP:none /REALNAME:none /NOTE:none
+	${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /HUB:${HUB} /CMD UserPasswordSet ${USER} /PASSWORD:${USER_PASSWORD}
+	${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD IPsecEnable /L2TP:yes /L2TPRAW:yes /ETHERIP:yes /PSK:${SHARED_KEY} /DEFAULTHUB:${HUB}
+	${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD BridgeCreate ${HUB} /DEVICE:soft /TAP:yes
+	${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD ServerCipherSet AES128-SHA256
+	${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD ServerCertRegenerate ${SERVER_IP}
+	${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD VpnOverIcmpDnsEnable /ICMP:yes /DNS:yes
+else
+	echo " Nothing has changed on SoftEther Server."
+fi
+	
 
 echo " restarting DNSMASQ"
-sleep 5
+sleep 3
 service dnsmasq restart
 service vpnserver restart
+echo ""
 echo "+++ Installation finished +++"
 echo "IP: $SERVER_IP"
 echo "USER: $USER"
