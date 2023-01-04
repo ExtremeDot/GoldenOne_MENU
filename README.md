@@ -1,9 +1,9 @@
-#INSTALL MAIN SCRIPT AS system 
+# INSTALL MAIN SCRIPT AS system 
 curl -O https://raw.githubusercontent.com/ExtremeDot/golden_one/master/MAIN.sh && chmod +x MAIN.sh
 
 cp MAIN.sh /bin/goldenONE && chmod +x /bin/goldenONE
 
- --- now you can run goldenONE command everywhere
+ #-now you can run goldenONE command everywhere
 
 # AUTOMATED SCRIPT INSTALL SOFTETHER LATEST STABLE RELEASE
 
