@@ -304,6 +304,7 @@ echo "vpnserver is configured as defualt [SECURE-NAT]"
 ### SET AS LOCAL BRIDGE MODE
 
 elif [[ $SETMOD == "2" ]]; then
+
 LOCALIP=10.10.9
 echo "please enter the main ip address for virtual tap adapter"
 echo "enter the ip range [x.x.x] , the 4th number will generate automatically."
@@ -312,7 +313,7 @@ read -e -i "$LOCALIP" -p "Please enter IP gateway for virtual tap, example[10.10
 LOCALIP="${input:-$LOCALIP}"
 
 # UPDATE vpnserver running mode to local bridge
-
+cat <<EOF > /etc/init.d/vpnserver
 #!/bin/sh
 # chkconfig: 2345 99 01
 # description: SoftEther VPN Server
