@@ -171,8 +171,9 @@ curl -4 https://myip.wtf/json
 ;;
 
 # SOFTETHER RESTORE BACKUP
-"SoftEther Restore:)
+"SoftEther Restore")
 echo "Stopping SoftEther Servcie"
+
 /etc/init.d/vpnserver stop
 if test -f "/etc/init.d/vpnserver_BACKUP1"
 then
