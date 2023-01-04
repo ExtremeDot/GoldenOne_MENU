@@ -30,7 +30,7 @@ echo ""
 until [[ $CLEAN_SETUP =~ (y|n) ]]; do
 read -rp "Clean SoftEther Setup? [y/n]: " -e -i y CLEAN_SETUP
 done
-if [[ $CUSTOMIZE_SETUP == "y" ]]; then
+if [[ $CLEAN_SETUP == "y" ]]; then
 	clear
 	echo ""
 	echo " Installing SoftEther CLEAN INSTALLATION"
