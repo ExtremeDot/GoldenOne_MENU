@@ -36,7 +36,10 @@ if [[ $CLEAN_SETUP == "y" ]]; then
 	echo ""
 	echo " Installing SoftEther CLEAN INSTALLATION"
 	/etc/init.d/vpnserver stop
+	sleep 2
 	rm -rf /usr/local/vpnserver/
+	rm -rf /usr/local/vpnserver/chain_certs/
+	rm /usr/local/vpnserver/vpn_server.config
 	rm /etc/init.d/vpnserver
 	echo "port=5353" > /etc/dnsmasq.conf
 	sleep 2
