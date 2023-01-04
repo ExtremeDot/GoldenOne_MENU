@@ -4,7 +4,7 @@ echo "G O L D E N    O N E     MENU      V1.1"
 echo "----------------------------------------"
 PS3=" $(echo $'\n'-----------------------------$'\n' "   Enter Option: " ) "
 echo ""
-options=("InstallSoftEther v4" "Install v2ray Server" "v2RAY RUN" "Hetzner cURL Test" "SpeedTest" "NetFelix Test" "Angristan-OpenVpn" "Angristan-WireGuard" "OpenConnect" "Kernel Tuner" "OVPN Status" "DNSMASQ Restart" "DNSMASQ EDIT" "DNSMASQ LOG" "SoftEther Secure-NAT" "SoftEther RESTART" "SoftEther Restore" "myFUCKip" "socks10808 check" "check Listen Ports" "SoftEther Info" "CLEAR" "UPDATE" "Quit")
+options=("InstallSoftEther v4" "SoftEther RESTART" "SoftEther Info" "SoftEther Secure-NAT" "SoftEther Restore" "Hetzner cURL Test" "SpeedTest" "NetFelix Test" "Install v2ray Server" "v2RAY RUN" "Angristan-OpenVpn" "OVPN Status" "Angristan-WireGuard" "OpenConnect" "Kernel Tuner" "IPTABLES show" "Check Listen Ports" "DNSMASQ Restart" "DNSMASQ EDIT" "DNSMASQ LOG" "myFUCKip" "Socks10808 check" "CLEAR" "UPDATE" "Quit")
 select opt in "${options[@]}"
 do
 case $opt in
@@ -13,7 +13,6 @@ case $opt in
 "DNSMASQ Restart")
 /etc/init.d/dnsmasq restart
 ;;
-
 
 # KERNEL Tuner
 "Kernel Tuner")
@@ -80,7 +79,7 @@ rm /tmp/test.file
 ;;
 
 # IPTABLES SHOW
-"iptables show")
+"IPTABLES show")
 iptables-save -t nat
 ;;
 
@@ -234,12 +233,12 @@ echo "vpnserver is configured as [SECURE-NAT]"
 ;;
 
 # socks10808 port check
-"socks10808 check")
+"Socks10808 check")
 curl --socks5 socks5://localhost:10808 https://myip.wtf/json
 ;;
 
 # Check Ports
-"check Listen Ports")
+"Check Listen Ports")
 lsof -i -P -n | grep LIST
 ;;
 
