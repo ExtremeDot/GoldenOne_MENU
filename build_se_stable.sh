@@ -495,12 +495,12 @@ fi
 done
 
 # ENABLE KERNEL IP FORWARDING
-	echo "Add extra IP forwarding to Networking?"
-	echo "Run this setup if the default is not working properly."
-	echo ""
-	until [[ $CUSTOM_EXTRANET =~ (y|n) ]]; do
-		read -rp "Install Extra Net IP forwarding configs? [y/n]: " -e -i n CUSTOM_EXTRANET
-	done
+echo "Add extra IP forwarding to Networking?"
+echo "Run this setup if the default is not working properly."
+echo ""
+until [[ $CUSTOM_EXTRANET =~ (y|n) ]]; do
+read -rp "Install Extra Net IP forwarding configs? [y/n]: " -e -i n CUSTOM_EXTRANET
+done
 
 if [[ $CUSTOM_EXTRANET == "y" ]]; then
 echo "net.ipv4.ip_forward = 1" > /etc/sysctl.d/ipv4_forwarding.conf
@@ -544,20 +544,20 @@ until [[ $CUSTOMIZE_SETUP =~ (y|n) ]]; do
 read -rp "GoldenOne - First RUN Setup? [y/n]: " -e -i y CUSTOMIZE_SETUP
 done
 if [[ $CUSTOMIZE_SETUP == "y" ]]; then
-	# CUSTOMIZED SETUP
-	## SETTING UP SERVER
-	echo "SERVER PASSWORD= $SERVER_PASSWORD"
-	${TARGET}vpnserver/vpncmd localhost /SERVER /CMD ServerPasswordSet ${SERVER_PASSWORD}
-	${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD HubCreate ${HUB} /PASSWORD:${HUB_PASSWORD}
-	${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /HUB:${HUB} /CMD UserCreate ${USER} /GROUP:none /REALNAME:none /NOTE:none
-	${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /HUB:${HUB} /CMD UserPasswordSet ${USER} /PASSWORD:${USER_PASSWORD}
-	${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD IPsecEnable /L2TP:yes /L2TPRAW:yes /ETHERIP:yes /PSK:${SHARED_KEY} /DEFAULTHUB:${HUB}
-	${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD BridgeCreate ${HUB} /DEVICE:soft /TAP:yes
-	${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD ServerCipherSet AES128-SHA256
-	${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD ServerCertRegenerate ${SERVER_IP}
-	${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD VpnOverIcmpDnsEnable /ICMP:yes /DNS:yes
+# CUSTOMIZED SETUP
+## SETTING UP SERVER
+echo "SERVER PASSWORD= $SERVER_PASSWORD"
+${TARGET}vpnserver/vpncmd localhost /SERVER /CMD ServerPasswordSet ${SERVER_PASSWORD}
+${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD HubCreate ${HUB} /PASSWORD:${HUB_PASSWORD}
+${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /HUB:${HUB} /CMD UserCreate ${USER} /GROUP:none /REALNAME:none /NOTE:none
+${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /HUB:${HUB} /CMD UserPasswordSet ${USER} /PASSWORD:${USER_PASSWORD}
+${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD IPsecEnable /L2TP:yes /L2TPRAW:yes /ETHERIP:yes /PSK:${SHARED_KEY} /DEFAULTHUB:${HUB}
+${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD BridgeCreate ${HUB} /DEVICE:soft /TAP:yes
+${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD ServerCipherSet AES128-SHA256
+${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD ServerCertRegenerate ${SERVER_IP}
+${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD VpnOverIcmpDnsEnable /ICMP:yes /DNS:yes
 else
-	echo " Nothing has changed on SoftEther Server."
+echo " Nothing has changed on SoftEther Server."
 fi
 	
 
