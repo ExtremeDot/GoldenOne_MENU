@@ -35,6 +35,7 @@ if [[ $CLEAN_SETUP == "y" ]]; then
 	clear
 	echo ""
 	echo " Installing SoftEther CLEAN INSTALLATION"
+	/etc/init.d/vpnserver stop
 	rm -rf /usr/local/vpnserver/
 	rm /etc/init.d/vpnserver
 	echo "port=5353" > /etc/dnsmasq.conf
@@ -498,7 +499,7 @@ done
 	echo "Run this setup if the default is not working properly."
 	echo ""
 	until [[ $CUSTOM_EXTRANET =~ (y|n) ]]; do
-		read -rp "Install Extra Net config settings? [y/n]: " -e -i n CUSTOM_EXTRANET
+		read -rp "Install Extra Net IP forwarding configs? [y/n]: " -e -i n CUSTOM_EXTRANET
 	done
 
 if [[ $CUSTOM_EXTRANET == "y" ]]; then
@@ -536,11 +537,11 @@ chmod 755 /etc/init.d/vpnserver
 update-rc.d vpnserver defaults
 
 echo ""
-echo "Do you want to run customized Setup Script?"
+echo "Do you want to run optimized First RUN Setup Script [IRAN]?"
 echo "It will set the initial setup for yor server."
 echo ""
 until [[ $CUSTOMIZE_SETUP =~ (y|n) ]]; do
-read -rp "Install Customized settings? [y/n]: " -e -i y CUSTOMIZE_SETUP
+read -rp "GoldenOne - First RUN Setup? [y/n]: " -e -i y CUSTOMIZE_SETUP
 done
 if [[ $CUSTOMIZE_SETUP == "y" ]]; then
 	# CUSTOMIZED SETUP
