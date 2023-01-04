@@ -33,7 +33,8 @@ fi
 echo "nameserver 94.140.14.14" > /etc/resolv.conf
 echo "nameserver 94.140.15.15" >> /etc/resolv.conf
 sleep 1
-/etc/init.d/networking restart # restart networks to apply changes
+#/etc/init.d/networking restart # restart networks to apply changes
+systemctl restart systemd-networkd
 sleep 3
 
 echo " update the linux to latest, wait for finish"
