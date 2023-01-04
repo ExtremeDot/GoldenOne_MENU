@@ -17,11 +17,11 @@ if ! isRoot; then
         echo "Sorry, you need to run this as root"
         exit 1
 fi
+
 clear
 sudo ufw disable
 TARGET="/usr/local/"
 mkdir -p $TARGET
-
 
 echo ""
 echo "CLEAN INSTALL?"
@@ -52,11 +52,11 @@ if grep -q "127.0.0.53" "/etc/resolv.conf"; then
                 else
                         RESOLVCONF='/etc/resolv.conf'
 fi
-
+echo " $RESOLVCONF "
 # temporary changing dns to adgurad DNS
 echo "nameserver 94.140.14.14" > /etc/resolv.conf
 echo "nameserver 94.140.15.15" >> /etc/resolv.conf
-sleep 1
+sleep 3
 #/etc/init.d/networking restart # restart networks to apply changes
 systemctl restart systemd-networkd
 sleep 3
@@ -153,14 +153,19 @@ sleep 2
 mkdir -p /selatest_install 
 sleep 2
 cd /selatest_install
+clear
+echo " "
 echo "always check the GitHUB for latest releases"
 echo "https://github.com/SoftEtherVPN/SoftEtherVPN_Stable"
+echo " "
+echo " If you want to install another version, replace your link to the current one!"
+echo " "
 echo " The Current Selected Version IS: v4.41-9782-beta [17.NOV.2022]"
-
+echo " "
 echo " "
 DLLINK=https://github.com/SoftEtherVPN/SoftEtherVPN_Stable/releases/download/v4.41-9782-beta/softether-vpnserver-v4.41-9782-beta-2022.11.17-linux-x64-64bit.tar.gz
 DLFILE=/selatest_install/Soft.tar.gz
-read -e -i "$DLLINK" -p "Install Another version? paste the Link Here!: " input
+read -e -i "$DLLINK" -p "SoftEther Link: " input
 DLLINK="${input:-$DLLINK}"
 
 curl -L $DLLINK --output $DLFILE
@@ -564,6 +569,9 @@ echo "IP: $SERVER_IP"
 echo "USER: $USER"
 echo "PASSWORD: $SERVER_PASSWORD"
 echo "IP_SEC: $SHARED_KEY"
+
+# CRONTAB 
+sudo crontab -l | { cat; echo "@reboot /etc/init.d/vpnserver start" ; } | crontab -
 
 # remove the file
 rm build_se_latest.sh
