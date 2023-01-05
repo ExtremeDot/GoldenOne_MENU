@@ -4,13 +4,29 @@ echo "G O L D E N    O N E     MENU      V1.1"
 echo "----------------------------------------"
 PS3=" $(echo $'\n'-----------------------------$'\n' "   Enter Option: " ) "
 echo ""
-options=("InstallSoftEther v4" "SoftEther RESTART" "SoftEther EDIT-VPNSERVER" "SoftEther Info" "SoftEther Secure-NAT" "SoftEther Restore" "Hetzner cURL Test" "SpeedTest" "NetFelix Test" "Install v2ray Server" "v2RAY X-UI SERVER-RUN" "Install v2ray Client-v2fly" "Angristan-OpenVpn" "OVPN Status" "Angristan-WireGuard" "OpenConnect" "Kernel Tuner" "IPTABLES show" "Check Listen Ports" "DNSMASQ Restart" "DNSMASQ EDIT" "DNSMASQ LOG" "myFUCKip" "Socks10808 check" "CLEAR" "UPDATE" "Quit")
+options=("InstallSoftEther v4" "SoftEther RESTART" "SoftEther EDIT-VPNSERVER" "SoftEther Info" "SoftEther Secure-NAT" "SoftEther Restore" "Hetzner cURL Test" "SpeedTest" "NetFelix Test" "Install v2ray Server" "v2RAY X-UI SERVER-RUN" "Install v2ray Client-v2fly" "Config v2ray Client-v2fly" "SpeedTest for Client-v2fly" "Angristan-OpenVpn" "OVPN Status" "Angristan-WireGuard" "OpenConnect" "Kernel Tuner" "IPTABLES show" "Check Listen Ports" "DNSMASQ Restart" "DNSMASQ EDIT" "DNSMASQ LOG" "myFUCKip" "Socks10808 check" "CLEAR" "UPDATE" "Quit")
 select opt in "${options[@]}"
 do
 case $opt in
 
+# V2RAY CLIENT INSTALL
 "Install v2ray Client-v2fly")
+apt install -y shadowsocks-libev
+apt install -y iptables-persistent
+apt install -y curl
+apt install -y unzip
+cd /tmp
+bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
+sleep 2
+systemctl enable v2ray
+;;
 
+"Config v2ray Client-v2fly")
+nano /usr/local/etc/v2ray/config.json
+;;
+
+"SpeedTest for Client-v2fly")
+curl --socks5 socks5://localhost:10808 -L https://speed.hetzner.de/100MB.bin > /tmp/test.file
 ;;
 
 # EDIT VPNSERVER SOFTETHER
