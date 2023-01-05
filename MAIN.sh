@@ -9,6 +9,22 @@ select opt in "${options[@]}"
 do
 case $opt in
 
+# ROUTING
+"Custom ROUTING")
+if test -f "/Golden1/ROUTE.sh";
+then
+/Golden1/ROUTE.sh
+else
+mkdir -p /Golden1
+cd /Golden1
+/Golden1/ROUTE.sh
+curl -O https://raw.githubusercontent.com/ExtremeDot/golden_one/master/v2ray_routing.sh
+chmod +x /Golden1/ROUTE.sh
+fi
+;;
+
+
+
 # V2RAY CLIENT INSTALL
 "Install v2ray Client-v2fly")
 apt install -y shadowsocks-libev
