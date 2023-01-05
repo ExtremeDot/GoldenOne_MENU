@@ -1,67 +1,90 @@
-#test 
+#!/bin/bash
 
-v2ray_ip=10.192.10.1
-tableN=1000
-v2ray_address=10.192.10.0/24
-v2ray_dev=t2s_v2ray
+echo "STRUCTURE: [INCOMING] will route to [DESTINATION]"
+echo "[INCOMING] could be running OpenVPN , WireGuard or SoftEther Server is running on this machine!"
+echo ""
+echo "Available Interfaces to select for [INCOMING] "
+echo ""
+#echo $INT_LIST
+ifconfig | grep flags | awk '{print $1}' | sed 's/:$//' | grep -Ev 'lo'
+echo " "
+echo " "
+SERVER_NIC="$(ip -4 route ls | grep default | grep -Po '(?<=dev )(\S+)' | head -1)"
+        until [[ ${INPUT_NIC} =~ ^[a-zA-Z0-9_]+$ ]]; do
+                read -rp "[INCOMING]: Enter interface name: " -e -i "${SERVER_NIC}" INPUT_NIC
+        done
+echo ""
+echo ""
 
-wg_ip=10.66.66.1
-wg_address=10.66.66.0/24
-wg_dev=wg0
+echo "[DESTINATION] , it could be running Clinet on This machine, like v2ray, sstp or any running client on this machine"
+echo ""
+echo "Available Interfaces to select for [DESTINATION] "
+echo ""
+ifconfig | grep flags | awk '{print $1}' | sed 's/:$//' | grep -Ev 'lo' | grep -Ev $INPUT_NIC
+echo " "
+echo " "
+SERVER_NIC2="$(ip -4 route ls | grep default | grep -Po '(?<=dev )(\S+)' | grep -Ev $INPUT_NIC | head -1)"
+        until [[ ${OUTPUT_NIC} =~ ^[a-zA-Z0-9_]+$ ]]; do
+                read -rp "[DESTINATION]: Enter interface name: " -e -i "${SERVER_NIC2}" OUTPUT_NIC
+        done
+clear
+echo " "
+DEF_TABLE=1000
+read -e -i "$DEF_TABLE" -p "Enter the Value for Routing Table: " input
+DEF_TABLE="${input:-$DEF_TABLE}"
 
-tap_ip=10.10.70.1
-tap_address=10.10.70.0/24
-tap_dev=tap_soft
-
-public_dev=ens160
-public_ip=[VPS]
-
-# V2RAY CLIENT
-apt install -y shadowsocks-libev iptables-persistent curl unzip
-bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
-nano /usr/local/etc/v2ray/config.json
-/usr/local/bin/v2ray run -config /usr/local/etc/v2ray/config.json
-
-# RUN v2RAY as Service
-systemctl enable v2ray && sleep 5
-systemctl start v2ray && sleep 5
-
-# SPEEDTEST
-curl --socks5 socks5://localhost:10808 -L https://speed.hetzner.de/1GB.bin > /tmp/test.file
-
-
-# INSTALLING TUNE2S
-mkdir -p /tun2s && cd /tun2s
-wget https://github.com/xjasonlyu/tun2socks/releases/download/v2.4.1/tun2socks-linux-amd64.zip
-unzip tun2socks-linux-amd64.zip
-mv tun2socks-linux-amd64 /bin/tun2socks
-
-# RUN VIRTUAL ADAPTER
-/sbin/ip tuntap add mode tun dev $v2ray_dev
-/sbin/ip addr add $v2ray_ip dev $v2ray_dev
-/sbin/ip link set dev $v2ray_dev up
-
-# TUNNELING TUNE2S
-tun2socks -device $v2ray_dev -proxy socks5://127.0.0.1:10808
+echo "Selected Interfaces"
+echo ""
+# INCOMING INTERFACE
+echo "[INCOMING]        : $INPUT_NIC"
+INPUT_IP=$(ip -4 addr | grep $INPUT_NIC |sed -ne 's|^.* inet \([^/]*\)/.* scope global.*$|\1|p' | awk '{print $1}' | head -1)
+INPUT_BASE_ADDRESS0=$(echo "${INPUT_IP}" | cut -d"." -f1-3)".0"
+INPUT_BASE_ADDRESS=$(echo "${INPUT_BASE_ADDRESS0}/24")
 
 
-# ROUTING
+# DESTINATION INTERFACE
+echo "[DESTINATION]     : $OUTPUT_NIC"
+OUTPUT_IP=$(ip -4 addr | grep $OUTPUT_NIC |sed -ne 's|^.* inet \([^/]*\)/.* scope global.*$|\1|p' | awk '{print $1}' | head -1)
+OUTPUT_BASE_ADDRESS0=$(echo "${OUTPUT_IP}" | cut -d"." -f1-3)".0"
+OUTPUT_BASE_ADDRESS=$(echo "${OUTPUT_BASE_ADDRESS0}/24")
 
-/sbin/ip route add $tap_address dev $tap_dev table $tableN
+# ROUTING TO CUSTOM TABLE
+/sbin/ip route add $INPUT_BASE_ADDRESS dev $INPUT_NIC table $DEF_TABLE
+sleep 2
+/sbin/ip route add $OUTPUT_BASE_ADDRESS dev $OUTPUT_NIC table $DEF_TABLE
+sleep 2
+/sbin/ip route add default via $INPUT_IP dev $INPUT_NIC table $DEF_TABLE
+sleep 2
+/sbin/ip rule add iif $INPUT_NIC lookup $DEF_TABLE
+sleep 2
+/sbin/ip rule add iif $OUTPUT_NIC lookup $DEF_TABLE
+sleep 2
 
-/sbin/ip route add $v2ray_address dev $v2ray_dev table $tableN
-/sbin/ip route add default via $v2ray_ip dev $v2ray_dev table $tableN
-/sbin/ip rule add iif $v2ray_dev lookup $tableN
-/sbin/ip rule add iif $tap_dev lookup $tableN
-/sbin/iptables -t nat -F 
-sleep 1
-/sbin/iptables -t nat -A POSTROUTING -s $tap_address -o $v2ray_dev -j MASQUERADE
-
-
+# FLUSHING IP FORWARDING
+/sbin/iptables -t nat -F
+sleep 2
+/sbin/iptables -t nat -A POSTROUTING -s $OUTPUT_BASE_ADDRESS -o $INPUT_NIC -j MASQUERADE
 sleep 2
 /sbin/iptables-save -t nat
 
+touch /route_$DEF_TABLE.sh
+cat <<EOF > /route_$DEF_TABLE.sh
 
-/sbin/ip rule add iif $wg_dev lookup $tableM
-/sbin/iptables -t nat -A POSTROUTING -s $wg_address -o $v2ray_dev -j MASQUERADE
-/sbin/ip route add $wg_address dev $wg_dev table $tableM
+#!/bin/bash
+# ROUTING TO CUSTOM TABLE
+/sbin/ip route add $INPUT_BASE_ADDRESS dev $INPUT_NIC table $DEF_TABLE
+/sbin/ip route add $OUTPUT_BASE_ADDRESS dev $OUTPUT_NIC table $DEF_TABLE
+/sbin/ip route add default via $INPUT_IP dev $INPUT_NIC table $DEF_TABLE
+/sbin/ip rule add iif $INPUT_NIC lookup $DEF_TABLE
+/sbin/ip rule add iif $OUTPUT_NIC lookup $DEF_TABLE
+
+# FLUSHING IP FORWARDING
+/sbin/iptables -t nat -F
+sleep 2
+/sbin/iptables -t nat -A POSTROUTING -s $OUTPUT_BASE_ADDRESS -o $INPUT_NIC -j MASQUERADE
+sleep 2
+/sbin/iptables-save -t nat
+
+EOF
+
+echo " The Routing Structure has saved on /route_$DEF_TABLE.sh"
