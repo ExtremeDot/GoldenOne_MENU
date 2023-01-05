@@ -4,10 +4,16 @@ echo "G O L D E N    O N E     MENU      V1.1"
 echo "----------------------------------------"
 PS3=" $(echo $'\n'-----------------------------$'\n' "   Enter Option: " ) "
 echo ""
-options=("InstallSoftEther v4" "SoftEther RESTART" "SoftEther Info" "SoftEther Secure-NAT" "SoftEther Restore" "Hetzner cURL Test" "SpeedTest" "NetFelix Test" "Install v2ray Server" "v2RAY RUN" "Angristan-OpenVpn" "OVPN Status" "Angristan-WireGuard" "OpenConnect" "Kernel Tuner" "IPTABLES show" "Check Listen Ports" "DNSMASQ Restart" "DNSMASQ EDIT" "DNSMASQ LOG" "myFUCKip" "Socks10808 check" "CLEAR" "UPDATE" "Quit")
+options=("InstallSoftEther v4" "SoftEther RESTART" "SoftEther EDIT-VPNSERVER" "SoftEther Info" "SoftEther Secure-NAT" "SoftEther Restore" "Hetzner cURL Test" "SpeedTest" "NetFelix Test" "Install v2ray Server" "v2RAY RUN" "Angristan-OpenVpn" "OVPN Status" "Angristan-WireGuard" "OpenConnect" "Kernel Tuner" "IPTABLES show" "Check Listen Ports" "DNSMASQ Restart" "DNSMASQ EDIT" "DNSMASQ LOG" "myFUCKip" "Socks10808 check" "CLEAR" "UPDATE" "Quit")
 select opt in "${options[@]}"
 do
 case $opt in
+
+# EDIT VPNSERVER SOFTETHER
+"SoftEther EDIT-VPNSERVER")
+nano /etc/init.d/vpnserver
+;;
+
 
 # DNSMASQ RESTART
 "DNSMASQ Restart")
