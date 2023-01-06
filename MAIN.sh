@@ -17,8 +17,7 @@ then
 else
 mkdir -p /Golden1
 cd /Golden1
-/Golden1/ROUTE.sh
-curl -O https://raw.githubusercontent.com/ExtremeDot/golden_one/master/ROUTE.shh
+curl -O https://raw.githubusercontent.com/ExtremeDot/golden_one/master/ROUTE.sh
 chmod +x /Golden1/ROUTE.sh
 fi
 ;;
