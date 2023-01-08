@@ -1,13 +1,28 @@
 #!/bin/bash
 clear
-echo "G O L D E N    O N E     MENU      V1.2"
+echo "G O L D E N    O N E     MENU      V1.4"
 echo "----------------------------------------"
 PS3=" $(echo $'\n'-----------------------------$'\n' "   Enter Option: " ) "
 echo ""
-options=("InstallSoftEther v4" "SoftEther RESTART" "SoftEther EDIT-VPNSERVER" "SoftEther Info" "SoftEther Secure-NAT" "SoftEther Restore" "Custom ROUTING" "Hetzner cURL Test" "SpeedTest" "NetFelix Test" "Install v2ray Server" "v2RAY X-UI SERVER-RUN" "Install v2ray Client-v2fly" "Config v2ray Client-v2fly" "SpeedTest for Client-v2fly" "Angristan-OpenVpn" "OVPN Status" "Angristan-WireGuard" "OpenConnect" "Kernel Tuner" "IPTABLES show" "Check Listen Ports" "DNSMASQ Restart" "DNSMASQ EDIT" "DNSMASQ LOG" "myFUCKip" "Socks10808 check" "CLEAR" "UPDATE" "Quit")
+options=( "DHCP Server" "InstallSoftEther v4" "SoftEther RESTART" "SoftEther EDIT-VPNSERVER" "SoftEther Info" "SoftEther Secure-NAT" "SoftEther Restore" "Custom ROUTING" "Hetzner cURL Test" "SpeedTest" "NetFelix Test" "Install v2ray Server" "v2RAY X-UI SERVER-RUN" "Install v2ray Client-v2fly" "Config v2ray Client-v2fly" "SpeedTest for Client-v2fly" "Angristan-OpenVpn" "OVPN Status" "Angristan-WireGuard" "OpenConnect" "Kernel Tuner" "IPTABLES show" "Check Listen Ports" "DNSMASQ Restart" "DNSMASQ EDIT" "DNSMASQ LOG" "myFUCKip" "Socks10808 check" "CLEAR" "UPDATE" "Quit")
 select opt in "${options[@]}"
 do
 case $opt in
+
+# DHCP SERVER
+"DHCP Server")
+if test -f "/Golden1/dhcp-server.sh";
+then
+bash /Golden1/dhcp-server.sh
+else
+mkdir -p /Golden1
+cd /Golden1
+curl -O https://raw.githubusercontent.com/ExtremeDot/ubuntu-dhcp-server/master/dhcp-server.sh
+chmod +x /Golden1/dhcp-server.sh
+bash /Golden1/dhcp-server.sh
+fi
+;;
+
 
 # ROUTING
 "Custom ROUTING")
