@@ -4,7 +4,7 @@ echo "G O L D E N    O N E     MENU      V1.4"
 echo "----------------------------------------"
 PS3=" $(echo $'\n'-----------------------------$'\n' "   Enter Option: " ) "
 echo ""
-options=( "DHCP Server" "InstallSoftEther v4" "SoftEther RESTART" "SoftEther EDIT-VPNSERVER" "SoftEther Info" "SoftEther Secure-NAT" "SoftEther Restore" "Custom ROUTING" "Hetzner cURL Test" "SpeedTest" "NetFelix Test" "Install v2ray Server" "v2RAY X-UI SERVER-RUN" "Install v2ray Client-v2fly" "Config v2ray Client-v2fly" "SpeedTest for Client-v2fly" "Angristan-OpenVpn" "OVPN Status" "Angristan-WireGuard" "OpenConnect" "Kernel Tuner" "IPTABLES show" "Check Listen Ports" "DNSMASQ Restart" "DNSMASQ EDIT" "DNSMASQ LOG" "myFUCKip" "Socks10808 check" "CLEAR" "UPDATE" "Quit")
+options=( "DHCP Server" "InstallSoftEther v4" "SoftEther RESTART" "SoftEther EDIT-VPNSERVER" "SoftEther Info" "SoftEther Secure-NAT" "SoftEther Restore" "Custom ROUTING" "Hetzner cURL Test" "SpeedTest" "NetFelix Test" "v2ray-Niduka" "Install v2ray Server" "v2RAY X-UI SERVER-RUN" "Install v2ray Client-v2fly" "Config v2ray Client-v2fly" "SpeedTest for Client-v2fly" "Angristan-OpenVpn" "OVPN Status" "Angristan-WireGuard" "OpenConnect" "Kernel Tuner" "IPTABLES show" "Check Listen Ports" "DNSMASQ Restart" "DNSMASQ EDIT" "DNSMASQ LOG" "myFUCKip" "Socks10808 check" "CLEAR" "UPDATE" "Quit")
 select opt in "${options[@]}"
 do
 case $opt in
@@ -23,7 +23,6 @@ bash /Golden1/dhcp-server.sh
 fi
 ;;
 
-
 # ROUTING
 "Custom ROUTING")
 if test -f "/Golden1/ROUTE.sh";
@@ -36,8 +35,6 @@ curl -O https://raw.githubusercontent.com/ExtremeDot/golden_one/master/ROUTE.sh
 chmod +x /Golden1/ROUTE.sh
 fi
 ;;
-
-
 
 # V2RAY CLIENT INSTALL
 "Install v2ray Client-v2fly")
@@ -139,12 +136,27 @@ rm /tmp/test.file
 iptables-save -t nat
 ;;
 
+
+# v2ray INSTALL
+"v2ray-Niduka")
+if test -f "/v2rayServerNiduka/install.sh";
+then
+mkdir /v2rayServerNiduka
+cd /v2rayServerNiduka
+wget https://raw.githubusercontent.com/NidukaAkalanka/x-ui-english/master/install.sh
+chmod +x /v2rayServerNiduka/install.sh
+bash /v2rayServerNiduka/install.sh
+else
+x-ui
+exit
+;;
+
 # v2ray INSTALL
 "Install v2ray Server")
 mkdir /v2rayServer
 cd /v2rayServer
 wget --no-check-certificate -O install https://raw.githubusercontent.com/proxykingdev/x-ui/master/install
-chmod +x instal
+chmod +x install
 /v2rayServer/./install
 ;;
 
