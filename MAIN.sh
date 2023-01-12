@@ -141,13 +141,13 @@ iptables-save -t nat
 "v2ray-Niduka")
 if test -f "/v2rayServerNiduka/install.sh";
 then
-mkdir /v2rayServerNiduka
+x-ui
+else
+mkdir -p /v2rayServerNiduka
 cd /v2rayServerNiduka
 wget https://raw.githubusercontent.com/NidukaAkalanka/x-ui-english/master/install.sh
 chmod +x /v2rayServerNiduka/install.sh
 bash /v2rayServerNiduka/install.sh
-else
-x-ui
 fi
 ;;
 
