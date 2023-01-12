@@ -148,7 +148,7 @@ chmod +x /v2rayServerNiduka/install.sh
 bash /v2rayServerNiduka/install.sh
 else
 x-ui
-exit
+fi
 ;;
 
 # v2ray INSTALL
