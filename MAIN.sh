@@ -1,10 +1,10 @@
 #!/bin/bash
 clear
-echo "G O L D E N    O N E     MENU      V1.4"
+echo "G O L D E N    O N E     MENU      V1.5"
 echo "----------------------------------------"
 PS3=" $(echo $'\n'-----------------------------$'\n' "   Enter Option: " ) "
 echo ""
-options=( "DHCP Server" "InstallSoftEther v4" "SoftEther RESTART" "SoftEther EDIT-VPNSERVER" "SoftEther Info" "SoftEther Secure-NAT" "SoftEther Restore" "Custom ROUTING" "Hetzner cURL Test" "SpeedTest" "NetFelix Test" "v2ray-Niduka" "Install v2ray Server" "v2RAY X-UI SERVER-RUN" "Install v2ray Client-v2fly" "Config v2ray Client-v2fly" "SpeedTest for Client-v2fly" "Angristan-OpenVpn" "OVPN Status" "Angristan-WireGuard" "OpenConnect" "Kernel Tuner" "IPTABLES show" "Check Listen Ports" "DNSMASQ Restart" "DNSMASQ EDIT" "DNSMASQ LOG" "myFUCKip" "Socks10808 check" "CLEAR" "UPDATE" "Quit")
+options=( "DHCP Server" "InstallSoftEther v4" "SoftEther RESTART" "SoftEther EDIT-VPNSERVER" "SoftEther Info" "SoftEther Secure-NAT" "SoftEther Restore" "Custom ROUTING" "Hetzner cURL Test" "SpeedTest" "NetFelix Test" "v2ray-Niduka" "Install v2ray Auto SSL" "Install v2ray Server" "v2RAY X-UI SERVER-RUN" "Install v2ray Client-v2fly" "Config v2ray Client-v2fly" "SpeedTest for Client-v2fly" "Angristan-OpenVpn" "OVPN Status" "Angristan-WireGuard" "OpenConnect" "Kernel Tuner" "IPTABLES show" "Check Listen Ports" "DNSMASQ Restart" "DNSMASQ EDIT" "DNSMASQ LOG" "myFUCKip" "Socks10808 check" "CLEAR" "UPDATE" "Quit")
 select opt in "${options[@]}"
 do
 case $opt in
@@ -149,6 +149,15 @@ wget https://raw.githubusercontent.com/NidukaAkalanka/x-ui-english/master/instal
 chmod +x /v2rayServerNiduka/install.sh
 bash /v2rayServerNiduka/install.sh
 fi
+;;
+
+# v2ray INSTALL AUTO SSL
+"Install v2ray Auto SSL")
+mkdir /v2rayServerSSL
+cd /v2rayServerSSL
+curl -O https://raw.githubusercontent.com/ExtremeDot/vpn_setups/master/v2ray_ssl.sh
+chmod +x v2ray_ssl.sh
+bash /v2rayServerSSL/v2ray_ssl.sh
 ;;
 
 
