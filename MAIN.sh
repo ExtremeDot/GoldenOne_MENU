@@ -356,7 +356,7 @@ lsof -i -P -n | grep LIST
 cd /tmp
 curl -O https://raw.githubusercontent.com/ExtremeDot/golden_one/master/MAIN.sh
 chmod +x /tmp/MAIN.sh
-mv /tmp/MAIN.sh /bin/goldenONE
+mv /tmp/MAIN.sh /bin/GoldenONE
 chmod +x /bin/GoldenONE
 exit 0
 ;;
