@@ -1,14 +1,35 @@
 #!/bin/bash
 clear
-echo "G O L D E N    O N E     MENU      V1.5"
+echo "G O L D E N    O N E     MENU      V1.6"
 echo "----------------------------------------"
 PS3=" $(echo $'\n'-----------------------------$'\n' "   Enter Option: " ) "
 echo ""
-options=( "DHCP Server" "InstallSoftEther v4" "SoftEther RESTART" "SoftEther EDIT-VPNSERVER" "SoftEther Info" "SoftEther Secure-NAT" "SoftEther Restore" "Custom ROUTING" "Hetzner cURL Test" "SpeedTest" "NetFelix Test" "v2ray-Niduka" "Install v2ray Auto SSL" "Install v2ray Server" "v2RAY X-UI SERVER-RUN" "Install v2ray Client-v2fly" "Config v2ray Client-v2fly" "SpeedTest for Client-v2fly" "Angristan-OpenVpn" "OVPN Status" "Angristan-WireGuard" "OpenConnect" "Kernel Tuner" "IPTABLES show" "Check Listen Ports" "DNSMASQ Restart" "DNSMASQ EDIT" "DNSMASQ LOG" "myFUCKip" "Socks10808 check" "CLEAR" "UPDATE" "Quit")
+options=( "Install SNAP-Certbot" "certbot" "DHCP Server" "InstallSoftEther v4" "SoftEther RESTART" "SoftEther EDIT-VPNSERVER" "SoftEther Info" "SoftEther Secure-NAT" "SoftEther Restore" "Custom ROUTING" "Hetzner cURL Test" "SpeedTest" "NetFelix Test" "v2ray-Niduka" "Install v2ray Auto SSL" "Install v2ray Server" "v2RAY X-UI SERVER-RUN" "Install v2ray Client-v2fly" "Config v2ray Client-v2fly" "SpeedTest for Client-v2fly" "Angristan-OpenVpn" "OVPN Status" "Angristan-WireGuard" "OpenConnect" "Kernel Tuner" "IPTABLES show" "Check Listen Ports" "DNSMASQ Restart" "DNSMASQ EDIT" "DNSMASQ LOG" "myFUCKip" "Socks10808 check" "CLEAR" "UPDATE" "Quit")
 select opt in "${options[@]}"
 do
 case $opt in
 
+# INSTALLING SNAP
+"Install SNAP")
+if [ $(dpkg-query -W -f='${Status}' snapd 2>/dev/null | grep -c "ok installed") -eq 0 ];
+then
+echo " Installing SNAP"
+apt install -y snap snapd;
+else echo " It was installed" ;
+fi
+snap install core
+snap refresh core
+sleep 1
+snap install --classic certbot
+sleep 1
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
+echo " Now run certboot ro create certificates"
+;;
+
+# certbot
+"certbot")
+sudo certbot certonly --standalone
+;;
 # DHCP SERVER
 "DHCP Server")
 if test -f "/Golden1/dhcp-server.sh";
