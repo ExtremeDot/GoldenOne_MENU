@@ -1,6 +1,6 @@
 #!/bin/bash
 clear
-echo "G O L D E N    O N E     MENU      V1.7"
+echo "G O L D E N    O N E     MENU      V1.8"
 echo "----------------------------------------"
 PS3=" $(echo $'\n'-----------------------------$'\n' "   Enter Option: " ) "
 echo ""
