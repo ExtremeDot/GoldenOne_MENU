@@ -10,12 +10,12 @@ do
 case $opt in
 
 # INSTALLING SNAP
-"Install SNAP")
+"Install SNAP-Certbot")
 if [ $(dpkg-query -W -f='${Status}' snapd 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
 echo " Installing SNAP"
 apt install -y snap snapd;
-else echo " It was installed" ;
+else echo " Snapd was installed before" ;
 fi
 snap install core
 snap refresh core
