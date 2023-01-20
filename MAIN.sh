@@ -1,6 +1,6 @@
 #!/bin/bash
 clear
-echo "G O L D E N    O N E     MENU      V1.6"
+echo "G O L D E N    O N E     MENU      V1.7"
 echo "----------------------------------------"
 PS3=" $(echo $'\n'-----------------------------$'\n' "   Enter Option: " ) "
 echo ""
@@ -356,8 +356,8 @@ lsof -i -P -n | grep LIST
 cd /tmp
 curl -O https://raw.githubusercontent.com/ExtremeDot/golden_one/master/MAIN.sh
 chmod +x /tmp/MAIN.sh
-cp /tmp/MAIN.sh /bin/goldenONE
-chmod +x /bin/goldenONE
+mv /tmp/MAIN.sh /bin/goldenONE
+chmod +x /bin/GoldenONE
 exit 0
 ;;
 
