@@ -29,6 +29,9 @@ echo " Now run certboot ro create certificates"
 # certbot
 "certbot")
 sudo certbot certonly --standalone
+echo ""
+echo "Certfile : /etc/letsencrypt/live/domain/cert.pem"
+echo "Certfile : /etc/letsencrypt/live/domain/privkey.pem"
 ;;
 # DHCP SERVER
 "DHCP Server")
