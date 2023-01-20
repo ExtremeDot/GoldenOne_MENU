@@ -9,7 +9,7 @@ select opt in "${options[@]}"
 do
 case $opt in
 
-"X-UI Migration"
+"X-UI Migration")
 if test -f "/Golden1/main-xui-move.sh";
 then
 bash /Golden1/main-xui-move.sh
