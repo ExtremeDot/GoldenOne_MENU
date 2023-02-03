@@ -10,7 +10,7 @@ ifconfig | grep flags | awk '{print $1}' | sed 's/:$//' | grep -Ev 'lo'
 echo " "
 echo " "
 SERVER_NIC="$(ip -4 route ls | grep default | grep -Po '(?<=dev )(\S+)' | head -1)"
-        until [[ ${INPUT_NIC} =~ ^[a-zA-Z0-9_]+$ ]]; do
+        until [[ ${INPUT_NIC} =~ ^[a-zA-Z0-9_-]+$ ]]; do
                 read -rp "[INCOMING]: Enter interface name: " -e -i "${SERVER_NIC}" INPUT_NIC
         done
 echo ""
@@ -24,7 +24,7 @@ ifconfig | grep flags | awk '{print $1}' | sed 's/:$//' | grep -Ev 'lo' | grep -
 echo " "
 echo " "
 SERVER_NIC2="$(ip -4 route ls | grep default | grep -Po '(?<=dev )(\S+)' | grep -Ev $INPUT_NIC | head -1)"
-        until [[ ${OUTPUT_NIC} =~ ^[a-zA-Z0-9_]+$ ]]; do
+        until [[ ${OUTPUT_NIC} =~ ^[a-zA-Z0-9_-]+$ ]]; do
                 read -rp "[DESTINATION]: Enter interface name: " -e -i "${SERVER_NIC2}" OUTPUT_NIC
         done
 clear
