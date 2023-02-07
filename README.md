@@ -3,7 +3,7 @@
 ```sh
 curl -O https://raw.githubusercontent.com/ExtremeDot/golden_one/master/extremeDOT.sh && chmod +x extremeDOT.sh
 
-mv extremeDOT.sh /bin/extremeDOT.sh && chmod +x /bin/extremeDOT.sh
+mv extremeDOT.sh /bin/extremeDOT.sh && chmod +x /bin/extremeDOT
 ````
 
 ```sh
