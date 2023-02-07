@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.03
+scriptVersion=1.04
 
 # root checker
 function isRoot() {
