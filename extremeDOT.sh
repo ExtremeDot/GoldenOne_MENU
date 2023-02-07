@@ -14,6 +14,7 @@ if ! isRoot; then
         exit 1
 fi
 
+
 # Load Colors
 function colorScript() {
 
@@ -1366,3 +1367,5 @@ sshPanelUMHamedAP
 esac
 
 }
+
+mainMenuRun
