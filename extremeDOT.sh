@@ -1,5 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
+scriptVersion=1.0
 
 # root checker
 function isRoot() {
@@ -1256,7 +1257,7 @@ installTools
 
 clear && echo
 echo -e "${GREEN}"
-echo "EXTREME DOT - GOLDEN1 MENU ========= "
+echo "EXTREME DOT - GOLDEN1 MENU =========[Version $scriptVersion] "
 echo "   1) Update the Linux "
 echo "   2) Install XAN MOD KERNEL"
 echo "   3) Install JINWYP Kernel Tuner Script"
