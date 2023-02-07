@@ -1071,15 +1071,15 @@ else
 echo " you can test connection using these command"
 echo "bash /Golden1/SSTP/connect1.sh"
 fi
-;;
+
 
 ################################
 # SETTING UP SSTP CLIENT 2
-"Setup SSTP Client Number 2")
+green "Setup SSTP Client Number 2"
 mkdir -p /Golden1/SSTP/
 cd /Golden1/SSTP/
 
-echo " "
+echo
 SSTPCONAME2="sstp_"
 read -e -i "$SSTPCONAME2" -p "SSTP Client2: Please enter name for connection: " input
 SSTPCONAME2="${input:-$SSTPCONAME2}"
@@ -1165,6 +1165,7 @@ else
 echo " you can test connection using these command"
 echo "bash /Golden1/SSTP/connect2.sh"
 fi
+
 }
 
 function sshPanelUMHamedAP() {
