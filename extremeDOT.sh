@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.02
+scriptVersion=1.03
 
 # root checker
 function isRoot() {
@@ -1325,6 +1325,7 @@ echo "   0) EXIT"
 echo -e "${GREEN}"
 echo
 
+MENUITEMR=""
 until [[ $MENUITEMR =~ ^[0-9]+$ ]] && [ "$MENUITEMR" -ge 0 ] && [ "$MENUITEMR" -le 99 ]; do
 read -rp "$MENUITEMR [0-99]: " -e -i 0 MENUITEMR
 done
@@ -1337,23 +1338,27 @@ exit
 ;;
 
 1) # Update the Linux
-
+mainMenuRun
 ;;
 
 2) # Install XAN MOD KERNEL
 installXanModKernel
+mainMenuRun
 ;;
 
 3) # Install JINWYP Kernel Tuner Script
 jinwypScript
+mainMenuRun
 ;;
 
 4) # Install Certificate USING ACME
 acmeInstaller
+mainMenuRun
 ;;
 
 5) # Enabling Firewall
 firewallEnabler
+mainMenuRun
 ;;
 
 
@@ -1362,6 +1367,7 @@ firewallEnabler
 
 15) # Install HAMED-AP SSH Panel
 sshPanelUMHamedAP
+mainMenuRun
 ;;
 
 16) # 
