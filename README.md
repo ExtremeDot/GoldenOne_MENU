@@ -1,4 +1,17 @@
-# INSTALL MAIN SCRIPT AS system 
+## INSTALL MAIN EXTREMEDOT
+
+```sh
+curl -O https://raw.githubusercontent.com/ExtremeDot/golden_one/master/extremeDOT.sh && chmod +x extremeDOT.sh
+
+mv extremeDOT.sh /bin/extremeDOT.sh && chmod +x /bin/extremeDOT.sh
+````
+
+```sh
+
+extrmeDOT
+```
+
+## INSTALL MAIN SCRIPT 
 curl -O https://raw.githubusercontent.com/ExtremeDot/golden_one/master/MAIN.sh && chmod +x MAIN.sh
 
 mv MAIN.sh /bin/GoldenONE && chmod +x /bin/GoldenONE
