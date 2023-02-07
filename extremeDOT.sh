@@ -1367,7 +1367,8 @@ mainMenuRun
 
 15) # Install HAMED-AP SSH Panel
 sshPanelUMHamedAP
-mainMenuRun
+enter2main
+
 ;;
 
 16) # 
