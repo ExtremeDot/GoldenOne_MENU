@@ -384,7 +384,7 @@ if [[ -z $EMAIL_ADDRESS || -z $DOMAIN_ADDRESS ]]; then #INFORMATION IS NOT CORRE
 	red "please define Doamin name and EMAIL address and then run it again."
 	echo
 	green "back to main menu"
-	mainMenuRun
+	enter2main
 else
 	echo
 	green "Email Address:	[$EMAIL_ADDRESS]"
@@ -395,7 +395,7 @@ else
 	done
 	if [[ $confirmAddresses == "n" ]]; then
 	green "back to main menu"
-	mainMenuRun
+	enter2main
 	fi
 
 fi
@@ -1263,7 +1263,8 @@ echo "   2) Install XAN MOD KERNEL"
 echo "   3) Install JINWYP Kernel Tuner Script"
 echo "   4) Install Certificate USING ACME "
 echo "   5) Enabling Firewall "
-
+echo "   6) Input OLD and NEW Server Information "
+echo "   7) Input Domain and Email Address "
 
 echo "   11) Install VAXILU v2RAY X-UI Panel  "
 echo "   12) Install ProxyKingDEV v2RAY X-UI Panel  "
@@ -1314,8 +1315,7 @@ echo "   80) SpeedTest Client to check the real SPEED"
 echo "   81) Show Current Public IP"
 echo "   82) Check Socks 5 Port's Public IP Number "
 echo "   83) Check Interface's Public IP Number "
-echo "   84) Show Current Public IP"
-
+echo "   84) Show Used Ports"
 echo "   85) Show Current IPTABLES NAT ROUTING"
 echo "   86) IPV6 ENABLER"
 echo "   87) IPV6 DISABLER"
@@ -1338,29 +1338,40 @@ exit
 ;;
 
 1) # Update the Linux
-mainMenuRun
+enter2main
 ;;
 
 2) # Install XAN MOD KERNEL
 installXanModKernel
-mainMenuRun
+enter2main
 ;;
 
 3) # Install JINWYP Kernel Tuner Script
 jinwypScript
-mainMenuRun
+enter2main
 ;;
 
 4) # Install Certificate USING ACME
 acmeInstaller
-mainMenuRun
+enter2main
 ;;
 
 5) # Enabling Firewall
 firewallEnabler
-mainMenuRun
+enter2main
 ;;
 
+6) # Input OLD and NEW Server Information
+getOldServerData
+getNewServerData
+enter2main
+;;
+
+7) #  Input Domain and Email Address
+getDomainInfo
+getEmailInfo
+enter2main
+;;
 
 14) # 
 ;;
@@ -1373,6 +1384,12 @@ enter2main
 
 16) # 
 ;;
+
+84) # Show Used Ports"
+checkRunningPorts
+enter2main
+;;
+
 esac
 
 }
