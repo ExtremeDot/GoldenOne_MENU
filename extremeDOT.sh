@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.0
+scriptVersion=1.02
 
 # root checker
 function isRoot() {
@@ -1329,7 +1329,7 @@ until [[ $MENUITEMR =~ ^[0-9]+$ ]] && [ "$MENUITEMR" -ge 0 ] && [ "$MENUITEMR" -
 read -rp "$MENUITEMR [0-99]: " -e -i 0 MENUITEMR
 done
 
-case $KERNINSTAL in
+case $MENUITEMR in
 
 0) # EXIT
 echo -e "${NC}"
