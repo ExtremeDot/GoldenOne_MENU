@@ -1326,12 +1326,13 @@ echo -e "${GREEN}"
 echo
 
 until [[ $MENUITEMR =~ ^[0-9]+$ ]] && [ "$MENUITEMR" -ge 0 ] && [ "$MENUITEMR" -le 99 ]; do
-read -rp "MENUITEMR [1-3]: " -e -i 2 MENUITEMR
+read -rp "$MENUITEMR [0-99]: " -e -i 0 MENUITEMR
 done
 
 case $KERNINSTAL in
 
 0) # EXIT
+echo -e "${NC}"
 exit 
 ;;
 
