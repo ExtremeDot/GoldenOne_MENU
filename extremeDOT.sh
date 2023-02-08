@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.06
+scriptVersion=1.07
 
 # root checker
 function isRoot() {
@@ -1302,36 +1302,36 @@ function mainMenuRun() {
 echo -e "${GREEN}"
 yellow "EXTREME DOT - GOLDEN1 MENU =========[Version $scriptVersion] "
 
-green "-------------- Initial Setup"
-echo "1) System Status & Show Status									6) Input OLD and NEW Server Information "
-echo "2) Install XAN MOD KERNEL											7) Input Domain and Email Address "
-echo "3) Install JINWYP Kernel Tuner Script								8) IPV6 [DIS/EN]ABLER"
-echo "4) Install Certificate USING ACME									9) Edit SSH config file"
+blue "-------------- Initial Setup"
+echo "1) System Status & Show Status                              6) Input OLD and NEW Server Information "
+echo "2) Install XAN MOD KERNEL                                   7) Input Domain and Email Address "
+echo "3) Install JINWYP Kernel Tuner Script                       8) IPV6 [DIS/EN]ABLER"
+echo "4) Install Certificate USING ACME                           9) Edit SSH config file"
 echo "5) Firewall [DIS/EN]ABLER"
 
-green "-------------- X-UI BASED VPN SERVERS"
+blue "-------------- X-UI BASED VPN SERVERS"
 echo "10) X-UI MIGRATION SCRIPT - MOVE FILES TO NEW SERVER"
 echo "11) Install VAXILU v2RAY X-UI Panel  "
 echo "12) Install ProxyKingDEV v2RAY X-UI Panel  "
 echo "13) Install NIDUKA AKALANKA ENGLISH X-UI Panel  "
 echo "14) Install HAMED-AP V2RAY Panel  "
-echo "15) Install MACK-A v2RAY AGENT Script [TRANSLATED to ENGLISH]"
+echo "15) Install MACK-A v2RAY AGENT Script [ENGLISH]"
 
 
-green "-------------- SSH, SSR and ETC "
+blue "-------------- SSH, SSR and ETC "
 echo "16) Install HAMED-AP SSH Panel  "
 echo "17) Install ShodowSocksR Server"
 
-green "-------------- SoftEther "
-blue "Install Softether Server --->	21) [OUTSIDE IRAN]	22)[INSIDE IRAN]"
-echo "								23) Secure NAT MODE 24) Show Settings "
-echo "								25) Restart "
+blue "-------------- SoftEther "
+echo "Install Softether Server --->	21) [OUTSIDE IRAN]	22)[INSIDE IRAN]"
+echo "                                  23) Secure NAT MODE     24) Show Settings "
+echo "                                  25) Restart "
 
 green "-------------- Configs, Tools, Clients & Misc."
-echo "31) XRAY CLIENT STATUS CHECK										36) EDIT CONFIG: NEKORAY CLI"				
-echo "32)CLIENT RESTART													37) Install SSTP Client"
-echo "33) Install V2Fly-V2ray Client									38) EDIT CONFIG: SSTP Client 1"
-echo "34) EDIT CONFIG: V2Fly V2ray										39) EDIT CONFIG: SSTP Client 2"
+echo "31) XRAY CLIENT STATUS CHECK                              36) EDIT CONFIG: NEKORAY CLI"				
+echo "32)CLIENT RESTART                                         37) Install SSTP Client"
+echo "33) Install V2Fly-V2ray Client                            38) EDIT CONFIG: SSTP Client 1"
+echo "34) EDIT CONFIG: V2Fly V2ray                              39) EDIT CONFIG: SSTP Client 2"
 echo "35) Install NEKORAY CLI Client"
 
 
