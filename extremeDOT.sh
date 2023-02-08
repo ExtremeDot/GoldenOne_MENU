@@ -1304,7 +1304,7 @@ installTools
 function mainMenuRun() {
 #MAIN MENU SCRIPt
 echo -e "${GREEN}"
-yellow "EXTREME DOT - GOLDEN1 MENU ===========================================================[Version $scriptVersion]="
+yellow "EXTREME DOT - GOLDEN1 MENU ============================================================[Version $scriptVersion]"
 
 blue "--- Initial Setup -----------------------------------------------------------------------------------"
 echo "1) System Status & Show Status                              6) Input OLD and NEW Server Information "
@@ -1356,8 +1356,8 @@ echo "81) Show Current System Public IP                         86) GET BBR STAT
 echo "82) Check Public IP by Socks 5 Port's Number"
 echo "83) Check Public IP by Interface's Name"
 echo "84) Show Busy/Used Ports by System"
-
-echo "0) EXIT 				                        99) Update "
+echo "0) EXIT                                                   99) Update "
+yellow "Please Enter the Number=========================================================================="
 
 echo -e "${GREEN}"
 echo
