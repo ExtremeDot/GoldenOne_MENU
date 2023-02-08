@@ -1357,11 +1357,8 @@ echo "82) Check Public IP by Socks 5 Port's Number"
 echo "83) Check Public IP by Interface's Name"
 echo "84) Show Busy/Used Ports by System"
 echo "0) EXIT                                                   99) Update "
-yellow "Please Enter the Number=========================================================================="
-
+yellow "Please Enter the Number============================================================================="
 echo -e "${GREEN}"
-echo
-
 MENUITEMR=""
 until [[ $MENUITEMR =~ ^[0-9]+$ ]] && [ "$MENUITEMR" -ge 0 ] && [ "$MENUITEMR" -le 99 ]; do
 read -rp "$MENUITEMR [Please Select 0-99]: " -e  MENUITEMR
