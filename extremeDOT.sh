@@ -390,8 +390,7 @@ function acmeInstaller() {
 green "ACME Certificate Installer"
 if [[ -z $EMAIL_ADDRESS || -z $DOMAIN_ADDRESS ]]; then #INFORMATION IS NOT CORRECT
 	red "No DOMAIN and E-MAIL address has defined."
-	red "Please Define Email and Domain names from "
-	red " \"7) Input Domain and Email Address\" and then run it again."
+	red "Please Define Email address and Domain name by choosing \"7) Input Domain and Email Address\" ,then run it again."
 	echo
 	green "back to main menu"
 	enter2main
