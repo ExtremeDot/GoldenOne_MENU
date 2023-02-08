@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.04
+scriptVersion=1.06
 
 # root checker
 function isRoot() {
@@ -315,11 +315,13 @@ fi; fi
 # ipv6 Enabler
 function ipv6Enabler() {
 echo
-green "Do you want to enable IPv6? Avoid Google reCAPTCHA human verification"
-until [[ $IPV6ABLE =~ (y|n) ]]; do
-read -rp "Enable IPV6 Support? ? [y/n]: " -e -i y IPV6ABLE
+green "IPv6 Disable or Enabler"
+yellow "Enter 0 to Disable IPv6"
+yellow "Enter 1 to Enable IPv6"
+until [[ $IPV6ABLE =~ (0|1) ]]; do
+read -rp "Enter 0 to Disable or 1 to Enable ! [0 or 1]: " -e IPV6ABLE
 done
-if [[ $IPV6ABLE == "y" ]]; then
+if [[ $IPV6ABLE == "1" ]]; then
 	green "Enabling IPV6 Support"
 	if [[ $(sysctl -a | grep 'disable_ipv6.*=.*1') || $(cat /etc/sysctl.{conf,d/*} | grep 'disable_ipv6.*=.*1') ]]; then
         sed -i '/disable_ipv6/d' /etc/sysctl.{conf,d/*}
@@ -327,6 +329,13 @@ if [[ $IPV6ABLE == "y" ]]; then
         sysctl -w net.ipv6.conf.all.disable_ipv6=0
 	fi
 	sleep 1
+elif [[ $IPV6ABLE == "0" ]]; then
+green "Disabling IPV6 Support"
+	if [[ $(sysctl -a | grep 'disable_ipv6.*=.*0') || $(cat /etc/sysctl.{conf,d/*} | grep 'disable_ipv6.*=.*0') ]]; then
+        sed -i '/disable_ipv6/d' /etc/sysctl.{conf,d/*}
+        echo 'net.ipv6.conf.all.disable_ipv6 = 1' >/etc/sysctl.d/ipv6.conf
+        sysctl -w net.ipv6.conf.all.disable_ipv6=1
+	fi
 fi
 }
 
@@ -335,7 +344,7 @@ function installXanModKernel() {
 clear && echo
 green "Installing XanMod Kernel"
 echo -e "${GREEN}"
-echo "What XanMod Kernel Version want to install? ?"
+echo "What XanMod Kernel Version want to install? "
 echo "   1) Stable XanMod Kernel Release"
 echo "   2) Latest Kernel XanMod EDGE (recommended for the latest kernel)"
 echo "   3) XanMod LTS (Kernel 5.15 LTS) "
@@ -424,7 +433,7 @@ function bbrEnabler() {
 green "Enabling BBR?"
 red "If you have installed XANMOD kernel, please don't install and Skip this installation"
 until [[ $BBREANBLE =~ (y|n) ]]; do
-read -rp "Enable BBR? ? [y/n]: " -e -i n BBREANBLE
+read -rp "Enable BBR?  [y/n]: " -e -i n BBREANBLE
 done
 if [[ $BBREANBLE == "y" ]]; then
 echo "Enabling BBR "
@@ -518,22 +527,26 @@ mainMenuRun
 
 function firewallEnabler() {
 echo
-green "Do you want to enable Firewall?"
+if [ $(dpkg-query -W -f='${Status}' ufw 2>/dev/null | grep -c "ok installed") -eq 0 ];
+then
+	green "Installing Firewall"
+	apt-get update
+	apt install -y ufw
+	green "Firewall is installed " ;
+else
+	green "Firewall has installed allready.." ;
+fi
+FWREADSTAT=`ufw status | grep Status | cut -c 9-14`
+if [[ $FWREADSTAT == "inacti" ]]; then
+green "Firewall is Disabled, Do you want to Enable it?"
+	FIREWALLINS2=""
 	until [[ $FIREWALLINS2 =~ (y|n) ]]; do
-	read -rp "Enable Firewall? ? [y/n]: " -e -i y FIREWALLINS2
+	read -rp "Enable Firewall? [y/n]: " -e -i y FIREWALLINS2
 	done
 	if [[ $FIREWALLINS2 == "y" ]]; then
-			if [ $(dpkg-query -W -f='${Status}' ufw 2>/dev/null | grep -c "ok installed") -eq 0 ];
-				then
-				green "Installing Firewall"
-				apt-get update
-				apt install -y ufw
-				green "Firewall is installed " ;
-			else
-				green "Firewall has installed allready.." ;
-			fi
+
 		echo
-		green "Please enter the Port number for ADMIN v2ray Panel"
+		green "Please enter the Port number for ADMIN Panel"
 		echo
 		read -e -i "$PANELPORT" -p "please Enter X-UI Panel Port: " input
 		PANELPORT="${input:-$PANELPORT}"
@@ -568,6 +581,16 @@ green "Do you want to enable Firewall?"
 		blue " ufw enable"
 		red " ufw disable"
 	fi
+elif [[ $FWREADSTAT == "active" ]]; then
+	green "Firewall is Enabled, Do you want to Disable it?"
+	FIREWALLINS3=""
+	read -rp "Disable Firewall? [y/n]: " -e -i y FIREWALLINS3
+	if [[ $FIREWALLINS3 == "y" ]]; then
+	ufw disable
+	green "Firewall has Disabled"
+	fi
+fi
+
 }
 
 function xuiMigrator() {
@@ -1169,6 +1192,22 @@ echo "bash /Golden1/SSTP/connect2.sh"
 fi
 
 }
+function readStatus() {
+green "Show System Status"
+echo -e "${YELLOW}Current Installed Kernel= `cat /proc/version | sed 's/.(.*//'`"
+echo 
+echo -e "${YELLOW}Current IPV4= `ifconfig eth0 | grep inet | grep netmask | grep -o -P '(?<=inet ).*(?=  netmask)'`"
+echo -e "${YELLOW}Current IPV6= [`ifconfig eth0 | grep inet6 | grep global | grep -o -P '(?<=inet6 ).*(?=  prefixlen)'`]"
+echo 
+echo -e "${YELLOW}BBR Status= `sysctl -n net.ipv4.tcp_congestion_control` - `lsmod | grep bbr`" 
+echo 
+green "User Variables Info --"
+echo -e "${YELLOW} OLD SERVER: IP:$OLD_IPv4 | Username: $OLD_LOGINNAME | Password: $OLD_PASSWORD"
+echo -e "${YELLOW} NEW SERVER: IP:$NEW_IPv4 | Username: $NEW_LOGINNAME | Password: $NEW_PASSWORD"
+echo -e "${YELLOW} Domain: $DOMAIN_ADDRESS | Email: $EMAIL_ADDRESS"
+echo -e "${GREEN}"
+
+}
 
 function sshPanelUMHamedAP() {
 bash <(curl -Ls https://raw.githubusercontent.com/HamedAp/Ssh-User-management/master/install.sh --ipv4)
@@ -1244,82 +1283,86 @@ green "openConnectServer"
 green "openVpnAngristanInstall"
 green "wireGuardAngristanInstall"
 green "sshPanelUMHamedAP"	#Ssh-User-management In Persian Language
-
-
 }
 
-
-function mainMenuRun() {
-#MAIN MENU SCRIPt
+function firstStart() {
+clear
 isRoot
 colorScript
 installTools
+}
 
-clear && echo
+function mainMenuRun() {
+#MAIN MENU SCRIPt
 echo -e "${GREEN}"
-echo "EXTREME DOT - GOLDEN1 MENU =========[Version $scriptVersion] "
-echo "   1) Update the Linux "
+yellow "EXTREME DOT - GOLDEN1 MENU =========[Version $scriptVersion] "
+
+green "-------------- Initial Setup"
+echo "   1) System Status & Show Status  "
 echo "   2) Install XAN MOD KERNEL"
 echo "   3) Install JINWYP Kernel Tuner Script"
 echo "   4) Install Certificate USING ACME "
-echo "   5) Enabling Firewall "
-echo "   6) Input OLD and NEW Server Information "
-echo "   7) Input Domain and Email Address "
+echo "   5) Firewall [DIS/EN]ABLER "
+blue "   6) Input OLD and NEW Server Information "
+blue "   7) Input Domain and Email Address "
+echo "   8) IPV6 [DIS/EN]ABLER"
+echo "   9) Edit SSH config file"
 
+green "-------------- X-UI BASED VPN SERVERS"
+echo "   10) X-UI MIGRATION SCRIPT - MOVE FILES TO NEW SERVER"
 echo "   11) Install VAXILU v2RAY X-UI Panel  "
 echo "   12) Install ProxyKingDEV v2RAY X-UI Panel  "
 echo "   13) Install NIDUKA AKALANKA ENGLISH X-UI Panel  "
 echo "   14) Install HAMED-AP V2RAY Panel  "
-echo "   15) Install HAMED-AP SSH Panel  "
-echo "   16) Install ShodowSocksR Server"
-echo "   17) Install MACK-A v2RAY AGENT Script [TRANSLATED to ENGLISH]"
-
-echo "   20) X-UI MIGRATION SCRIPT - MOVE FILES TO NEW SERVER"
-
-echo "   21) Install XRAY Client"
-echo "   22) EDIT CONFIG: XRAY Client"
-
-#XRAY CLIENT STATUS CHECK
-#XRAY CLIENT RESTART
+echo "   15) Install MACK-A v2RAY AGENT Script [TRANSLATED to ENGLISH]"
 
 
-echo "   23) Install V2Fly-V2ray Client"
-echo "   24) EDIT CONFIG: V2Fly V2ray"
+green "-------------- SSH, SSR and ETC "
+echo "   16) Install HAMED-AP SSH Panel  "
+echo "   17) Install ShodowSocksR Server"
 
-echo "   25) Install NEKORAY CLI Client"
-echo "   26) EDIT CONFIG: NEKORAY CLI"
+green "-------------- SoftEther "
+blue "   21) Install Softether Server [OUTSIDE IRAN]"
+blue "   22) Install Softether Server [INSIDE IRAN]"
+blue "   23) Install Softether Secure NAT MODE"
+echo "   24) Softether Show Settings "
+echo "   25) Softether Restart "
 
-echo "   27) Install SSTP Client"
-echo "   28) EDIT CONFIG: SSTP Client 1"
-echo "   29) EDIT CONFIG: SSTP Client 2"
 
+green "-------------- Configs, Tools, Clients & Misc."
+echo "   31) XRAY CLIENT STATUS CHECK"
+echo "   32)CLIENT RESTART"
+echo "   33) Install V2Fly-V2ray Client"
+echo "   34) EDIT CONFIG: V2Fly V2ray"
+echo "   35) Install NEKORAY CLI Client"
+echo "   36) EDIT CONFIG: NEKORAY CLI"
+echo "   37) Install SSTP Client"
+echo "   38) EDIT CONFIG: SSTP Client 1"
+echo "   39) EDIT CONFIG: SSTP Client 2"
 
+green "-------------- Local Server/Clients"
+echo "   51) Install DHCP Server"
+echo "   52) Install DOT ROUTER"
+echo "   53) Install LOAD BALANCER"
+echo "   54) Install BADVPN-TUN2SOCKS"
+echo "   55) Install TUN2SOCKS"
+echo "   56) Install XRAY Client"
+echo "   57) EDIT CONFIG: XRAY Client"
 
-echo "   31) Install Softether Server [OUTSIDE IRAN]"
-echo "   32) Install Softether Server [INSIDE IRAN]"
-echo "   33) Install Softether Secure NAT MODE"
-echo "   34) Softether Show Settings "
-echo "   35) Softether Restart "
+green "-------------- OpenVPN, WireGuard and Open Connect Servers"
+echo "   71) Install ANGRISTAN OPEN VPN SERVER"
+echo "   72) Install ANGRISTAN WIREGUARD SERVER"
+echo "   73) Install Open Connect SERVER"
 
-echo "   41) Install DHCP Server"
-echo "   42) Install DOT ROUTER"
-echo "   43) Install LOAD BALANCER"
-echo "   44) Install BADVPN-TUN2SOCKS"
-echo "   45) Install TUN2SOCKS"
-
-echo "   61) Install ANGRISTAN OPEN VPN SERVER"
-echo "   62) Install ANGRISTAN WIREGUARD SERVER"
-echo "   63) Install Open Connect SERVER"
-
+green "-------------- Diagnostics,troubleshooting tools  "
 echo "   80) SpeedTest Client to check the real SPEED"
-echo "   81) Show Current Public IP"
-echo "   82) Check Socks 5 Port's Public IP Number "
-echo "   83) Check Interface's Public IP Number "
-echo "   84) Show Used Ports"
-echo "   85) Show Current IPTABLES NAT ROUTING"
-echo "   86) IPV6 ENABLER"
-echo "   87) IPV6 DISABLER"
-echo "   88) GET BBR STATUS"
+echo "   81) Show Current System Public IP"
+echo "   82) Check Public IP by Socks 5 Port's Number"
+echo "   83) Check Public IP by Interface's Name"
+echo "   84) Show Busy/Used Ports by System"
+echo "   85) Show Current IPTABLES ROUTING"
+echo "   86) GET BBR STATUS"
+echo "   99) Update "
 echo "   0) EXIT"
 
 echo -e "${GREEN}"
@@ -1327,14 +1370,20 @@ echo
 
 MENUITEMR=""
 until [[ $MENUITEMR =~ ^[0-9]+$ ]] && [ "$MENUITEMR" -ge 0 ] && [ "$MENUITEMR" -le 99 ]; do
-read -rp "$MENUITEMR [0-99]: " -e -i 0 MENUITEMR
+read -rp "$MENUITEMR [Please Select 0-99]: " -e  MENUITEMR
 done
 
+#################################
 case $MENUITEMR in
 
 0) # EXIT
 echo -e "${NC}"
 exit 
+;;
+
+1) #System Status & Show Status
+readStatus
+enter2main
 ;;
 
 1) # Update the Linux
@@ -1373,25 +1422,88 @@ getEmailInfo
 enter2main
 ;;
 
-14) # 
+8) # IPV6 [DIS/EN]ABLER
+ipv6Enabler
+enter2main
 ;;
 
-15) # Install HAMED-AP SSH Panel
+9) #Edit SSH config file"
+green "Editing sshd Config"
+nano /etc/ssh/sshd_config
+green "Restarting SSH Service"
+systemctl restart sshd
+enter2main
+;;
+
+10) # X-UI MIGRATION SCRIPT - MOVE FILES TO NEW SERVER
+xuiMigrator
+enter2main
+;;
+
+11) # Install VAXILU v2RAY X-UI Panel
+vaxiluv2rayInstaller
+enter2main
+;;
+
+12) # Install ProxyKingDEV v2RAY X-UI Panel
+proxyKingV2rayInstaller
+enter2main
+;;
+13) # Install NIDUKA AKALANKA ENGLISH X-UI Panel
+nidukav2rayInstaller
+enter2main
+;;
+
+14) # Install HAMED-AP V2RAY Panel
+hamedAPv2rayInstaller
+enter2main
+;;
+
+15) # Install MACK-A v2RAY AGENT Script [TRANSLATED to ENGLISH]
+extremeDotV2RAInstaller
+enter2main
+;;
+
+16) # Install HAMED-AP SSH Panel
 sshPanelUMHamedAP
 enter2main
-
 ;;
 
-16) # 
-;;
-
-84) # Show Used Ports"
-checkRunningPorts
+17) #Install ShodowSocksR Server
+shadowSocksRPanel
 enter2main
 ;;
+
+21) # Install Softether Server [OUTSIDE IRAN]
+softEtherv4Install
+enter2main
+;;
+
+22) #Install Softether Server [INSIDE IRAN]
+softEtherv4Install
+enter2main
+;;
+
+23) #Install Softether Secure NAT MODE
+softEtherSecureNATinstall
+enter2main
+;;
+
+24) #Softether Show Settings
+softEtherInfoShow
+enter2main
+;;
+
+25) #Softether Restart
+restartSoftEtherServer
+enter2main
+;;
+
 
 esac
 
 }
 
+firstStart
 mainMenuRun
+echo -e "${NC}
