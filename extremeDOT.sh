@@ -1193,13 +1193,14 @@ fi
 
 }
 function readStatus() {
-green "Show System Status"
-echo -e "${YELLOW}Current Installed Kernel= `cat /proc/version | sed 's/.(.*//'`"
 echo 
-echo -e "${YELLOW}Current IPV4= `ifconfig eth0 | grep inet | grep netmask | grep -o -P '(?<=inet ).*(?=  netmask)'`"
-echo -e "${YELLOW}Current IPV6= [`ifconfig eth0 | grep inet6 | grep global | grep -o -P '(?<=inet6 ).*(?=  prefixlen)'`]"
+green "Show System Status ============================================================================="
+echo -e "${YELLOW} Current Installed Kernel= `cat /proc/version | sed 's/.(.*//'`"
 echo 
-echo -e "${YELLOW}BBR Status= `sysctl -n net.ipv4.tcp_congestion_control` - `lsmod | grep bbr`" 
+echo -e "${YELLOW} Current IPV4= `ifconfig eth0 | grep inet | grep netmask | grep -o -P '(?<=inet ).*(?=  netmask)'`"
+echo -e "${YELLOW} Current IPV6= [`ifconfig eth0 | grep inet6 | grep global | grep -o -P '(?<=inet6 ).*(?=  prefixlen)'`]"
+echo 
+echo -e "${YELLOW} BBR Status= `sysctl -n net.ipv4.tcp_congestion_control` - `lsmod | grep bbr`" 
 echo 
 green "User Variables Info --"
 echo -e "${YELLOW} OLD SERVER: IP:$OLD_IPv4 | Username: $OLD_LOGINNAME | Password: $OLD_PASSWORD"
