@@ -1336,8 +1336,8 @@ echo "35) Install NEKORAY CLI Client"
 
 
 green "-------------- Local Server/Clients"
-echo "51) Install DHCP Server											56) Install XRAY Client"
-echo "52) Install DOT ROUTER											57) EDIT CONFIG: XRAY Client"
+echo "51) Install DHCP Server                                   56) Install XRAY Client"
+echo "52) Install DOT ROUTER                                    57) EDIT CONFIG: XRAY Client"
 echo "53) Install LOAD BALANCER"
 echo "54) Install BADVPN-TUN2SOCKS"
 echo "55) Install TUN2SOCKS"
@@ -1348,13 +1348,13 @@ echo "72) Install ANGRISTAN WIREGUARD SERVER"
 echo "73) Install Open Connect SERVER"
 
 green "-------------- Diagnostics,troubleshooting tools  "
-echo "80) SpeedTest Client to check the real SPEED						85) Show Current IPTABLES ROUTING"
-echo "81) Show Current System Public IP									86) GET BBR STATUS"
+echo "80) SpeedTest Client to check the real SPEED		85) Show Current IPTABLES ROUTING"
+echo "81) Show Current System Public IP			        86) GET BBR STATUS"
 echo "82) Check Public IP by Socks 5 Port's Number"
 echo "83) Check Public IP by Interface's Name"
 echo "84) Show Busy/Used Ports by System"
 
-echo "0) EXIT 				99) Update "
+echo "0) EXIT 				                        99) Update "
 
 echo -e "${GREEN}"
 echo
