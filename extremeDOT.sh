@@ -396,8 +396,8 @@ if [[ -z $EMAIL_ADDRESS || -z $DOMAIN_ADDRESS ]]; then #INFORMATION IS NOT CORRE
 	enter2main
 else
 	echo
-	green "Email Address:	[$EMAIL_ADDRESS]"
-	green "Domain Name:		[$DOMAIN_ADDRESS]"
+	green "Email Address:   [$EMAIL_ADDRESS]"
+	green "Domain Name:     [$DOMAIN_ADDRESS]"
 	echo
 	until [[ $confirmAddresses =~ (y|n) ]]; do
 	read -rp "Domain name and Email Address are correct? [y/n]: " -e -i y confirmAddresses
