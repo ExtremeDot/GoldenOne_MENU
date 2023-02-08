@@ -1315,10 +1315,10 @@ echo -e "${GREEN}"
 yellow "EXTREME DOT - GOLDEN1 MENU ============================================================[Version $scriptVersion]"
 
 blue "--- Initial Setup -----------------------------------------------------------------------------------"
-echo "1)  System Status & Show Status                             6) Input OLD and NEW Server Information "
-echo "2)  Install XAN MOD KERNEL                                  7) Input Domain and Email Address "
-echo "3)  Install JINWYP Kernel Tuner Script                      8) IPV6 [DIS/EN]ABLER"
-echo "4)  Install Certificate USING ACME                          9) Edit SSH config file"
+echo "1)  System Status & Show Status                            6) Input OLD and NEW Server Information "
+echo "2)  Install XAN MOD KERNEL                                 7) Input Domain and Email Address "
+echo "3)  Install JINWYP Kernel Tuner Script                     8) IPV6 [DIS/EN]ABLER"
+echo "4)  Install Certificate USING ACME                         9) Edit SSH config file"
 echo "5)  Firewall [DIS/EN]ABLER"
 
 blue "--- X-UI BASED VPN SERVERS --------------------------------------------------------------------------"
@@ -1331,7 +1331,7 @@ echo "15) Install MACK-A v2RAY AGENT Script [ENGLISH]"
 
 
 blue "--- SSH, SSR and ETC --------------------------------------------------------------------------------"
-echo "16) Install HAMED-AP SSH Panel                             18) Change SSH & Apache Port numbers"
+echo "16) Install HAMED-AP SSH Panel                            18) Change SSH & Apache Port numbers"
 echo "17) Install ShodowSocksR Server"
 
 blue "--- SoftEther ---------------------------------------------------------------------------------------"
