@@ -1285,9 +1285,11 @@ green "wireGuardAngristanInstall"
 green "sshPanelUMHamedAP"	#Ssh-User-management In Persian Language
 }
 function updateTheScript() {
+mkdir -p /tmp/extdot
+cd /tmp/extdot
 curl -O https://raw.githubusercontent.com/ExtremeDot/golden_one/master/extremeDOT.sh && chmod +x extremeDOT.sh
 
-mv extremeDOT.sh /bin/extremeDOT && chmod +x /bin/extremeDOT ;exit ; bash /bin/extremeDOT
+mv /tmp/extdot/extremeDOT.sh /bin/extremeDOT && chmod +x /bin/extremeDOT ; bash /bin/extremeDOT ; exit
 }
 
 function firstStart() {
