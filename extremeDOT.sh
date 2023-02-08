@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.09
+scriptVersion=1.10
 
 # root checker
 function isRoot() {
@@ -1375,12 +1375,8 @@ echo -e "${NC}"
 exit 
 ;;
 
-1) #System Status & Show Status
+1) # System Status
 readStatus
-enter2main
-;;
-
-1) # Update the Linux
 enter2main
 ;;
 
@@ -1501,7 +1497,7 @@ updateTheScript
 esac
 
 }
-
 firstStart
+clear
 mainMenuRun
 echo -e "${NC}
