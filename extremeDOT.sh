@@ -1287,9 +1287,11 @@ green "sshPanelUMHamedAP"	#Ssh-User-management In Persian Language
 function updateTheScript() {
 mkdir -p /tmp/extdot
 cd /tmp/extdot
-curl -O https://raw.githubusercontent.com/ExtremeDot/golden_one/master/extremeDOT.sh && chmod +x extremeDOT.sh
-
-mv /tmp/extdot/extremeDOT.sh /bin/extremeDOT && chmod +x /bin/extremeDOT ; bash /bin/extremeDOT ; exit
+wget https://raw.githubusercontent.com/ExtremeDot/golden_one/main/extremeDOT.sh
+chmod +x /tmp/extdot/extremeDOT.sh
+mv /tmp/extdot/extremeDOT.sh /bin/extremeDOT
+chmod +x /bin/extremeDOT
+bash /bin/extremeDOT ; exit
 }
 
 function firstStart() {
