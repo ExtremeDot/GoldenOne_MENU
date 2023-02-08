@@ -1323,7 +1323,7 @@ echo "16) Install HAMED-AP SSH Panel  "
 echo "17) Install ShodowSocksR Server"
 
 blue "-------------- SoftEther "
-echo "Install Softether Server --->	21) [OUTSIDE IRAN]	22)[INSIDE IRAN]"
+echo "Install Softether Server          21) [OUTSIDE IRAN]      22)[INSIDE IRAN]"
 echo "                                  23) Secure NAT MODE     24) Show Settings "
 echo "                                  25) Restart "
 
