@@ -1231,6 +1231,16 @@ echo "bash /Golden1/SSTP/connect2.sh"
 fi
 
 }
+
+function irandatGeofiles() {
+cd /usr/local/x-ui/bin
+sleep
+wget https://github.com/bootmortis/iran-hosted-domains/releases/latest/download/iran.dat
+wget https://github.com/v2fly/domain-list-community/releases/latest/download/dlc.dat
+echo
+green " read https://github.com/iranxray/hope/blob/main/routing.md "
+}
+
 function readStatus() {
 echo 
 green "Show System Status ============================================================================="
@@ -1364,7 +1374,7 @@ echo "5)  Firewall [DIS/EN]ABLER"
 blue "--- X-UI BASED VPN SERVERS --------------------------------------------------------------------------"
 echo "10) X-UI MIGRATION SCRIPT - MOVE FILES TO NEW SERVER"
 echo "11) Install VAXILU v2RAY X-UI Panel                      19) Misaka X-UI Panel"
-echo "12) Install ProxyKingDEV v2RAY X-UI Panel  "
+echo "12) Install ProxyKingDEV v2RAY X-UI Panel                20) Iran Geo and Dat files"
 echo "13) Install NIDUKA AKALANKA ENGLISH X-UI Panel  "
 echo "14) Install HAMED-AP V2RAY Panel  "
 echo "15) Install MACK-A v2RAY AGENT Script [ENGLISH]"
@@ -1516,6 +1526,11 @@ enter2main
 
 19) # MISAKA
 bash <(curl -Ls https://raw.githubusercontent.com/Misaka-blog/x-ui-msk/master/install.sh)
+enter2main
+;;
+
+20) # Iran DAT FILES
+irandatGeofiles
 enter2main
 ;;
 
