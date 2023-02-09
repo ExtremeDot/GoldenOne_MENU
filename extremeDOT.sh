@@ -1010,6 +1010,7 @@ echo
 echo
 blue " Blocked Country - IRAN -------------------------------------------------------"
 yellow " Edit vpn_server.config file"
+echo
 green "	declare DDnsClient"
 green "	{"
 green "		bool Disabled true"
@@ -1038,7 +1039,9 @@ green "- no IPsec/L2TP"
 green "- no OpenVPN/MS-SSTP"
 green "- add only 1 VPN user"
 echo
+green "Modify the value of "bool DisableJsonRpcWebApi" from "false" to "true" on the vpn_server.config or vpn_bridge.config."
 green "Now cascade from the blocked SE Server to the unblocked SE Server on port 443 to avoid detection."
+
 echo
 }
 
