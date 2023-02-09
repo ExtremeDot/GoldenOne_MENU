@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.10
+scriptVersion=1.11
 
 # root checker
 function isRoot() {
@@ -1005,6 +1005,42 @@ green "run above command to have your custom loadbalancer by running commands.sh
 enter2main
 
 }
+function softEtherNote() {
+echo
+echo
+blue " Blocked Country - IRAN -------------------------------------------------------"
+yellow " Edit vpn_server.config file"
+green "	declare DDnsClient"
+green "	{"
+green "		bool Disabled true"
+echo
+green "	declare ServerConfiguration"
+echo
+green "		bool DisableNatTraversal true "
+echo
+echo
+yellow " In the blocked country setup SE Server with a vHUB as follows"
+green "- no bridge"
+green "- no SecureNAT"
+green "- no L3"
+green "- no VPN Azure"
+green "- yes IPsec/L2TP"
+green "- yes OpenVPN/MS-SSTP"
+green "- add VPN users"
+echo 
+blue " UnBlocked Country - WorldWide ----------------------------------------------"
+yellow " On the VPS in unblocked country setup SE Server with a vHUB as follows:"
+green "- no bridge"
+green "- yes SecureNAT (with all defaults)"
+green "- no L3"
+green "- no VPN Azure"
+green "- no IPsec/L2TP"
+green "- no OpenVPN/MS-SSTP"
+green "- add only 1 VPN user"
+echo
+green "Now cascade from the blocked SE Server to the unblocked SE Server on port 443 to avoid detection."
+echo
+}
 
 function sstpClientConfigs() {
 mkdir -p /Golden1/SSTP/
@@ -1324,7 +1360,7 @@ echo "5)  Firewall [DIS/EN]ABLER"
 
 blue "--- X-UI BASED VPN SERVERS --------------------------------------------------------------------------"
 echo "10) X-UI MIGRATION SCRIPT - MOVE FILES TO NEW SERVER"
-echo "11) Install VAXILU v2RAY X-UI Panel  "
+echo "11) Install VAXILU v2RAY X-UI Panel                      19) Misaka X-UI Panel"
 echo "12) Install ProxyKingDEV v2RAY X-UI Panel  "
 echo "13) Install NIDUKA AKALANKA ENGLISH X-UI Panel  "
 echo "14) Install HAMED-AP V2RAY Panel  "
@@ -1338,7 +1374,7 @@ echo "17) Install ShodowSocksR Server"
 blue "--- SoftEther ---------------------------------------------------------------------------------------"
 echo "Install Softether Server          21) [OUTSIDE IRAN]      22)[INSIDE IRAN]"
 echo "                                  23) Secure NAT MODE     24) Show Settings "
-echo "                                  25) Restart "
+echo "                                  25) Restart             26) Installation Note"
 
 blue "--- Configs, Tools, Clients & Misc. -----------------------------------------------------------------"
 echo "31) XRAY CLIENT STATUS CHECK                              36) EDIT CONFIG: NEKORAY CLI"				
@@ -1475,6 +1511,11 @@ changeSshApachePorts
 enter2main
 ;;
 
+19) # MISAKA
+bash <(curl -Ls https://raw.githubusercontent.com/Misaka-blog/x-ui-msk/master/install.sh)
+enter2main
+;;
+
 21) # Install Softether Server [OUTSIDE IRAN]
 softEtherv4Install
 enter2main
@@ -1497,6 +1538,11 @@ enter2main
 
 25) #Softether Restart
 restartSoftEtherServer
+enter2main
+;;
+
+26) # SoftEther Install NOTE
+softEtherNote
 enter2main
 ;;
 
