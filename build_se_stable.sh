@@ -594,7 +594,7 @@ echo ""
 echo "to Show Login Information, run "seshow" command."
 # CRONTAB 
 sudo crontab -l | { cat; echo "@reboot /etc/init.d/vpnserver start" ; } | crontab -
-sudo crontab -l | { cat; echo "@reboot sleep 5 && service dnsmasq restart" ; } | crontab -
+sudo crontab -l | { cat; echo "@reboot sleep 15 && service dnsmasq restart" ; } | crontab -
 
 
 # remove the file
