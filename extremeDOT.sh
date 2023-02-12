@@ -1359,6 +1359,14 @@ colorScript
 installTools
 }
 
+function extractCert() {
+DOMAINNM1=""
+read -e -i "$DOMAINNM1" -p "Please Enter The Domain Name " input
+DOMAINNM1="${input:-$DOMAINNM1}"
+~/.acme.sh/acme.sh --installcert -d $DOMAINNM1 --key-file /root/private.key --fullchain-file /root/cert.crt
+green " /root/private.key & /root/cert.crt"
+}
+
 function mainMenuRun() {
 #MAIN MENU SCRIPt
 echo -e "${GREEN}"
@@ -1394,7 +1402,7 @@ echo "31) XRAY CLIENT STATUS CHECK                              36) EDIT CONFIG:
 echo "32) CLIENT RESTART                                        37) Install SSTP Client"
 echo "33) Install V2Fly-V2ray Client                            38) EDIT CONFIG: SSTP Client 1"
 echo "34) EDIT CONFIG: V2Fly V2ray                              39) EDIT CONFIG: SSTP Client 2"
-echo "35) Install NEKORAY CLI Client"
+echo "35) Install NEKORAY CLI Client                            40) ACME extract Cert to /root/*"
 
 blue "--- Local Server/Clients ----------------------------------------------------------------------------"
 echo "51) Install DHCP Server                                   56) Install XRAY Client"
@@ -1561,6 +1569,11 @@ enter2main
 
 26) # SoftEther Install NOTE
 softEtherNote
+enter2main
+;;
+
+40) #ACME extract Cert to /root/
+extractCert
 enter2main
 ;;
 
