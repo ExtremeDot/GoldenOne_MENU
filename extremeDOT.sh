@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.11
+scriptVersion=1.12
 
 # root checker
 function isRoot() {
@@ -512,8 +512,8 @@ read -rp "Installing ExtremeDot V2ray-Agent ? [y/n]: " -e -i y extremeDotv2rayAg
 done
 if [[ $extremeDotv2rayAgentAsk == "y" ]]; then
 mkdir -p /tmp/v2Server && cd /tmp/v2Server
-wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/ExtremeDot/v2ray-agent/EnglishVersion/en-2_6_25-install.sh" && chmod 700 /root/en-2_6_25-install.sh
-mv /root/en-2_6_25-install.sh /root/install.sh 
+wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/ExtremeDot/v2ray-agent/EnglishVersion/en-install.sh" && chmod 700 /root/en-install.sh
+mv /root/en-install.sh /root/install.sh 
 bash /root/install.sh
 fi
 echo
@@ -1391,7 +1391,7 @@ echo "                                  25) Restart             26) Installation
 
 blue "--- Configs, Tools, Clients & Misc. -----------------------------------------------------------------"
 echo "31) XRAY CLIENT STATUS CHECK                              36) EDIT CONFIG: NEKORAY CLI"				
-echo "32) LIENT RESTART                                         37) Install SSTP Client"
+echo "32) CLIENT RESTART                                        37) Install SSTP Client"
 echo "33) Install V2Fly-V2ray Client                            38) EDIT CONFIG: SSTP Client 1"
 echo "34) EDIT CONFIG: V2Fly V2ray                              39) EDIT CONFIG: SSTP Client 2"
 echo "35) Install NEKORAY CLI Client"
