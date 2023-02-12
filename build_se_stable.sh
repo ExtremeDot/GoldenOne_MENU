@@ -371,6 +371,9 @@ iptables -t nat -A POSTROUTING -s \${TAP_NETWORK} -j SNAT --to-source \${SERVER_
 #iptables -A INPUT -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT
 #iptables -A OUTPUT -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT
 #iptables -A FORWARD -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT
+sleep 5
+service dnsmasq restart
+
 ;;
 stop)
 \$DAEMON stop
@@ -596,6 +599,3 @@ echo "to Show Login Information, run "seshow" command."
 sudo crontab -l | { cat; echo "@reboot /etc/init.d/vpnserver start" ; } | crontab -
 sudo crontab -l | { cat; echo "@reboot sleep 15 && service dnsmasq restart" ; } | crontab -
 
-
-# remove the file
-rm build_se_latest.sh
