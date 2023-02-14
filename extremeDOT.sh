@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.15
+scriptVersion=1.16
 
 # root checker
 function isRoot() {
@@ -1462,6 +1462,38 @@ chmod +x /bin/tun2socks
 green "finishing tun2socks ......"
 }
 
+function portCheckCustom() {
+echo
+V2RAYPORT=10808
+read -e -i "$V2RAYPORT" -p "Enter The V2ray Running Local Port: " input
+V2RAYPORT="${input:-$V2RAYPORT}"
+V2RAYPING=`curl --silent --connect-timeout 20 --socks5 socks5://localhost:$V2RAYPORT -o /dev/null -s -w 'Total: %{time_total}s\n' google.com | cut -c 7-20`
+V2RAYIP=`curl --silent --connect-timeout 20 --socks5 socks5://localhost:$V2RAYPORT https://myip.wtf/json | grep YourFuckingIPAddress | sed  's/.*"\(.*\)".*/\1/'`
+V2RAYLOCATION=`curl --silent --connect-timeout 20 --socks5 socks5://localhost:$V2RAYPORT https://myip.wtf/json | grep YourFuckingLocation | sed  's/.*"\(.*\)".*/\1/'`
+echo
+echo -e "${YELLOW}Connection Name [V2RAY]= NEEDUPDATE" ;echo ""
+echo -e "${RED}IP=$V2RAYIP ${GREEN}IP Location=$V2RAYLOCATION "
+echo -e "${BLUE}Ping to Google=$V2RAYPING ${NC}"
+echo
+}
+
+
+function interfaceCheckCustom() {
+echo
+customInterfaceName=xray-tun
+read -e -i "$customInterfaceName" -p "Enter Interface to check running net over it: " input
+customInterfaceName="${input:-$customInterfaceName}"
+INTERFACEPING=`curl --connect-timeout 20 --interface $customInterfaceName -o /dev/null -s -w 'Total: %{time_total}s\n' google.com | cut -c 7-20`
+INTERFACEIP=`curl --silent --connect-timeout 20 --interface $customInterfaceName -4 myip.wtf/json | grep YourFuckingIPAddress | sed  's/.*"\(.*\)".*/\1/'`
+INTERFACELOCATION=`curl --silent --connect-timeout 20 --interface $customInterfaceName -4 myip.wtf/json | grep YourFuckingLocation | sed  's/.*"\(.*\)".*/\1/'`
+echo -e "${YELLOW}Connection Name $customInterfaceName"
+echo
+echo -e "${RED}IP=$INTERFACEIP ${GREEN}IP Location=$INTERFACELOCATION "
+echo -e "${BLUE}Ping to Google=$INTERFACEPING ${NC}"
+echo
+}
+
+
 function mainMenuRun() {
 #MAIN MENU SCRIPt
 echo -e "${GREEN}"
@@ -1500,11 +1532,11 @@ echo "34) Config Edit V2ray                                     39) EDIT CONFIG:
 echo "35) Install NEKORAY CLI Client                            40) ACME extract Cert to /root/*"
 
 blue "--- Local Server/Clients ----------------------------------------------------------------------------"
-echo "51) Install DHCP Server                                   56) Install XRAY Client"
+echo "51) Install DHCP Server                                   56) Interface net check "
 echo "52) Install DOT ROUTER                                    57) EDIT CONFIG: XRAY Client"
 echo "53) Install LOAD BALANCER"
 echo "54) Install BADVPN-TUN2SOCKS & TUN2SOCKS"
-echo "55) -"
+echo "55) Cutom Port Number Check "
 
 blue "--- OpenVPN, WireGuard and Open Connect Servers -----------------------------------------------------"
 echo "71) Install ANGRISTAN OPEN VPN SERVER"
@@ -1699,6 +1731,16 @@ enter2main
 
 54) # Install BADVPN-TUN2SOCKS & TUN2SOCKS
 tuns2socksInstaller
+enter2main
+;;
+
+55) # Port check
+portCheckCustom
+enter2main
+;;
+
+56) # Interface Check
+interfaceCheckCustom
 enter2main
 ;;
 
