@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.14
+scriptVersion=1.15
 
 # root checker
 function isRoot() {
@@ -1342,6 +1342,40 @@ green "openVpnAngristanInstall"
 green "wireGuardAngristanInstall"
 green "sshPanelUMHamedAP"	#Ssh-User-management In Persian Language
 }
+
+function xrayv2rayInstall() {
+mkdir -p /Golden1/V2ray
+cd /Golden1/V2ray/
+echo ""
+echo "Installing latest V2Ray,V2fly clients"
+bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh)
+echo ""
+echo "Updating Geo Files for V2ray Client"
+bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh)
+
+echp "Installing latest xray core"
+mkdir -p /Golden1/Xray
+cd /Golden1/Xray
+bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
+
+sleep 2
+echo "Updating geo files to latest"
+cd /Golden1/Xray
+
+bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install-geodata
+
+systemctl enable xray
+sleep 2
+systemctl enable v2ray
+}
+
+function xrayvrayRestart() {
+green "Restarting V2ray and Xray Services"
+systemctl restart v2ray
+sleep 2
+systemctl restart xray
+}
+
 function updateTheScript() {
 mkdir -p /tmp/extdot
 cd /tmp/extdot
@@ -1365,6 +1399,67 @@ read -e -i "$DOMAINNM1" -p "Please Enter The Domain Name " input
 DOMAINNM1="${input:-$DOMAINNM1}"
 ~/.acme.sh/acme.sh --installcert -d $DOMAINNM1 --key-file /root/private.key --fullchain-file /root/cert.crt
 green " /root/private.key & /root/cert.crt"
+}
+
+function xrayconfigEdit() {
+nano /usr/local/etc/xray/config.json
+}
+
+function v2rayconfigEdit() {
+nano /usr/local/etc/v2ray/config.json
+}
+
+function loadbalancerInstall() {
+green "Install LoadBalancer"
+apt-get install -y build-essential
+apt-get install -y perl
+mkdir -p /Golden1/loadbalancer
+cd /Golden1/loadbalancer
+wget https://github.com/lstein/Net-ISP-Balance/archive/master.zip
+sleep 2
+unzip /Golden1/loadbalancer/master.zip
+sleep 1
+cd /Golden1/loadbalancer/Net-ISP-Balance-master
+cpan Module::Build
+sleep 1
+perl ./Build.PL
+sleep 1
+./Build installdeps
+sleep 1
+./Build test
+sleep 2
+sudo ./Build install
+echo
+green "nano /etc/network/balance.conf to edit load balancer config"
+echo
+green "load_balance.pl  -d > commands.sh "
+green "run above command to have your custom loadbalancer by running commands.sh script"
+}
+
+function tuns2socksInstaller() {
+green "Installing BADVPN " 
+mkdir -p /Golden1/badvpn && cd /Golden1/badvpn && wget https://github.com/ambrop72/badvpn/archive/refs/tags/1.999.130.zip
+sleep 2
+unzip /Golden1/badvpn/1.999.130.zip && cd /Golden1/badvpn/badvpn-1.999.130/
+sleep 2
+cmake -DBUILD_NOTHING_BY_DEFAULT=1 -DBUILD_TUN2SOCKS=1
+sleep 1
+make
+sleep 1
+make install
+sleep 1
+green "badvpn finished ...."
+echo
+green "Installing tune2socks"
+mkdir -p /Golden1/tun2s
+cd /Golden1/tun2s
+wget https://github.com/xjasonlyu/tun2socks/releases/download/v2.4.1/tun2socks-linux-amd64.zip
+unzip tun2socks-linux-amd64.zip
+# 7z x tun2socks-linux-amd64.zip
+rm *.zip
+mv tun2socks-linux-amd64 /bin/tun2socks
+chmod +x /bin/tun2socks
+green "finishing tun2socks ......"
 }
 
 function mainMenuRun() {
@@ -1398,18 +1493,18 @@ echo "                                  23) Secure NAT MODE     24) Show Setting
 echo "                                  25) Restart             26) Installation Note"
 
 blue "--- Configs, Tools, Clients & Misc. -----------------------------------------------------------------"
-echo "31) XRAY CLIENT STATUS CHECK                              36) EDIT CONFIG: NEKORAY CLI"				
-echo "32) CLIENT RESTART                                        37) Install SSTP Client"
-echo "33) Install V2Fly-V2ray Client                            38) EDIT CONFIG: SSTP Client 1"
-echo "34) EDIT CONFIG: V2Fly V2ray                              39) EDIT CONFIG: SSTP Client 2"
+echo "31) Install XRAY and V2RAY                                36) EDIT CONFIG: NEKORAY CLI"				
+echo "32) Restarting V2ray And Xray Services                    37) Install SSTP Client"
+echo "33) Config Edit X-ray                                     38) EDIT CONFIG: SSTP Client 1"
+echo "34) Config Edit V2ray                                     39) EDIT CONFIG: SSTP Client 2"
 echo "35) Install NEKORAY CLI Client                            40) ACME extract Cert to /root/*"
 
 blue "--- Local Server/Clients ----------------------------------------------------------------------------"
 echo "51) Install DHCP Server                                   56) Install XRAY Client"
 echo "52) Install DOT ROUTER                                    57) EDIT CONFIG: XRAY Client"
 echo "53) Install LOAD BALANCER"
-echo "54) Install BADVPN-TUN2SOCKS"
-echo "55) Install TUN2SOCKS"
+echo "54) Install BADVPN-TUN2SOCKS & TUN2SOCKS"
+echo "55) -"
 
 blue "--- OpenVPN, WireGuard and Open Connect Servers -----------------------------------------------------"
 echo "71) Install ANGRISTAN OPEN VPN SERVER"
@@ -1572,8 +1667,38 @@ softEtherNote
 enter2main
 ;;
 
+31) # Install XRAY and V2RAY
+xrayv2rayInstall
+enter2main
+;;
+
+32) # Restarting V2ray And Xray Services
+xrayvrayRestart
+enter2main
+;;
+
+33) # xray config
+xrayconfigEdit
+enter2main
+;;
+
+34) # xray config
+v2rayconfigEdit
+enter2main
+;;
+
 40) #ACME extract Cert to /root/
 extractCert
+enter2main
+;;
+
+53) # LOAD BALANCER INSTALL
+loadbalancerInstall
+enter2main
+;;
+
+54) # Install BADVPN-TUN2SOCKS & TUN2SOCKS
+tuns2socksInstaller
 enter2main
 ;;
 
