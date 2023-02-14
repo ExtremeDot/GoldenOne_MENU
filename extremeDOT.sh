@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.16
+scriptVersion=1.17
 
 # root checker
 function isRoot() {
@@ -1467,9 +1467,9 @@ echo
 V2RAYPORT=10808
 read -e -i "$V2RAYPORT" -p "Enter The V2ray Running Local Port: " input
 V2RAYPORT="${input:-$V2RAYPORT}"
-V2RAYPING=`curl --silent --connect-timeout 20 --socks5 socks5://localhost:$V2RAYPORT -o /dev/null -s -w 'Total: %{time_total}s\n' google.com | cut -c 7-20`
-V2RAYIP=`curl --silent --connect-timeout 20 --socks5 socks5://localhost:$V2RAYPORT https://myip.wtf/json | grep YourFuckingIPAddress | sed  's/.*"\(.*\)".*/\1/'`
-V2RAYLOCATION=`curl --silent --connect-timeout 20 --socks5 socks5://localhost:$V2RAYPORT https://myip.wtf/json | grep YourFuckingLocation | sed  's/.*"\(.*\)".*/\1/'`
+V2RAYPING=`curl --silent --connect-timeout 10 -m 10 --socks5 socks5://localhost:$V2RAYPORT -o /dev/null -s -w 'Total: %{time_total}s\n' google.com | cut -c 7-20`
+V2RAYIP=`curl --silent --connect-timeout 10 -m 10 --socks5 socks5://localhost:$V2RAYPORT https://myip.wtf/json | grep YourFuckingIPAddress | sed  's/.*"\(.*\)".*/\1/'`
+V2RAYLOCATION=`curl --silent --connect-timeout 10 -m 10 --socks5 socks5://localhost:$V2RAYPORT https://myip.wtf/json | grep YourFuckingLocation | sed  's/.*"\(.*\)".*/\1/'`
 echo
 echo -e "${YELLOW}Connection Name [V2RAY]= NEEDUPDATE" ;echo ""
 echo -e "${RED}IP=$V2RAYIP ${GREEN}IP Location=$V2RAYLOCATION "
@@ -1483,9 +1483,9 @@ echo
 customInterfaceName=xray-tun
 read -e -i "$customInterfaceName" -p "Enter Interface to check running net over it: " input
 customInterfaceName="${input:-$customInterfaceName}"
-INTERFACEPING=`curl --connect-timeout 20 --interface $customInterfaceName -o /dev/null -s -w 'Total: %{time_total}s\n' google.com | cut -c 7-20`
-INTERFACEIP=`curl --silent --connect-timeout 20 --interface $customInterfaceName -4 myip.wtf/json | grep YourFuckingIPAddress | sed  's/.*"\(.*\)".*/\1/'`
-INTERFACELOCATION=`curl --silent --connect-timeout 20 --interface $customInterfaceName -4 myip.wtf/json | grep YourFuckingLocation | sed  's/.*"\(.*\)".*/\1/'`
+INTERFACEPING=`curl --connect-timeout 10 -m 10 --interface $customInterfaceName -o /dev/null -s -w 'Total: %{time_total}s\n' google.com | cut -c 7-20`
+INTERFACEIP=`curl --silent --connect-timeout 10 -m 10 --interface $customInterfaceName -4 myip.wtf/json | grep YourFuckingIPAddress | sed  's/.*"\(.*\)".*/\1/'`
+INTERFACELOCATION=`curl --silent --connect-timeout 10 -m 10 --interface $customInterfaceName -4 myip.wtf/json | grep YourFuckingLocation | sed  's/.*"\(.*\)".*/\1/'`
 echo -e "${YELLOW}Connection Name $customInterfaceName"
 echo
 echo -e "${RED}IP=$INTERFACEIP ${GREEN}IP Location=$INTERFACELOCATION "
