@@ -417,7 +417,6 @@ sleep 1
 sleep 1
 ~/.acme.sh/acme.sh --issue -d $DOMAIN_ADDRESS --standalone
 sleep 1
-clear
 ~/.acme.sh/acme.sh --installcert -d $DOMAIN_ADDRESS --key-file /root/private.key --fullchain-file /root/cert.crt
 echo
 green "Certfiles are installed and copied to :"
