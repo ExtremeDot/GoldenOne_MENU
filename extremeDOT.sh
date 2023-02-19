@@ -15,6 +15,7 @@ if ! isRoot; then
         exit 1
 fi
 
+apt --fix-broken install
 
 # Load Colors
 function colorScript() {
