@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.17
+scriptVersion=1.18
 
 # root checker
 function isRoot() {
@@ -1771,7 +1771,8 @@ updateTheScript
 esac
 
 }
+
 firstStart
 clear
 mainMenuRun
-echo -e "${NC}
+echo -e "${NC}"
