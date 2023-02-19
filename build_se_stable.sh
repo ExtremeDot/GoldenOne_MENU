@@ -66,6 +66,7 @@ systemctl restart systemd-networkd
 sleep 3
 
 echo " update the linux to latest, wait for finish"
+apt install --fix-broken
 apt-get update
 apt-get -y upgrade
 
