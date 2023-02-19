@@ -373,6 +373,7 @@ sleep 1
 stop)
 \$DAEMON stop
 rm \$LOCK
+
 ;;
 
 restart)
@@ -390,6 +391,8 @@ exit 0
 
 EOF
 
+echo "DNSStubListener=no" >> /etc/systemd/resolved.conf
+
 iptables -t nat -F
 iptables -t nat -A POSTROUTING -s \${TAP_NETWORK} -j SNAT --to-source \${SERVER_IP}
 #iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
@@ -398,37 +401,8 @@ iptables -t nat -A POSTROUTING -s \${TAP_NETWORK} -j SNAT --to-source \${SERVER_
 #iptables -A INPUT -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT
 #iptables -A OUTPUT -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT
 #iptables -A FORWARD -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT
-sleep 5
-service dnsmasq restart
-
-;;
-stop)
-\$DAEMON stop
-rm \$LOCK
-;;
-restart)
-\$DAEMON stop
-sleep 3
-\$DAEMON start
-sleep 1
-#/sbin/ifconfig \$TAP_INTERFACE \$TAP_ADDR
-/sbin/ifconfig tap_soft \$TAP_ADDR
-iptables -t nat -F
-iptables -t nat -A POSTROUTING -s \${TAP_NETWORK} -j SNAT --to-source \${SERVER_IP}
-#iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
-#iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
-#iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
-#iptables -A INPUT -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT
-#iptables -A OUTPUT -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT
-#iptables -A FORWARD -s $LOCALIP.0/24 -m state --state NEW -j ACCEPT
-;;
-*)
-echo "Usage: \$0 {start|stop|restart}"
-exit 1
-esac
-exit 0
-
-EOF
+sleep 2
+service netfilter-persistent save
 
 
 echo "vpnserver is configured with dnsmasq"
@@ -475,7 +449,7 @@ bogus-priv
 
 # ; GATEWAY
 #except-interface=eth0
-#listen-address=$LOCALIP.1
+listen-address=$LOCALIP.1
 #dhcp-option=3,$LOCALIP.1
 
 
@@ -490,35 +464,33 @@ bogus-priv
 # ; CLIENT DNS IPv6 SERVER #AdGuard DNS V6
 #dhcp-option=option6:dns-server,[2a10:50c0::ad1:ff],[2a10:50c0::ad2:ff]
 
-# ; TUNING
-#dhcp-authoritative
-#enable-ra
-#expand-hosts
-#strict-order
-#dhcp-no-override
-#domain-needed
-#bogus-priv
-#stop-dns-rebind
-#rebind-localhost-ok
-#dns-forward-max=300
-#dhcp-option=252,"\n"
-#cache-size=10000
-#neg-ttl=80000
-#local-ttl=3600
-#dhcp-option=23,64
-#dhcp-option=vendor:MSFT,2,1i
-#dhcp-option=44,$LOCALIP.1
-#dhcp-option=45,$LOCALIP.1
-#dhcp-option=46,8
-#dhcp-option=47
-#read-ethers
-#quite-dhcp6
+# TUNING
+dhcp-authoritative
+enable-ra
+expand-hosts
+strict-order
+dhcp-no-override
+domain-needed
+bogus-priv
+stop-dns-rebind
+rebind-localhost-ok
+dns-forward-max=300
+dhcp-option=252,"\n"
+cache-size=10000
+neg-ttl=80000
+local-ttl=3600
+dhcp-option=23,64
+dhcp-option=vendor:MSFT,2,1i
+dhcp-option=44,$LOCALIP.1
+dhcp-option=45,$LOCALIP.1
+dhcp-option=46,8
+dhcp-option=47
 
 EOF
 
 
 sleep 2
-echo ""
+echo
 
 ## FOR WRONG INPUT
 else
@@ -625,4 +597,3 @@ echo "to Show Login Information, run "seshow" command."
 # CRONTAB 
 sudo crontab -l | { cat; echo "@reboot /etc/init.d/vpnserver start" ; } | crontab -
 sudo crontab -l | { cat; echo "@reboot sleep 15 && service dnsmasq restart" ; } | crontab -
-
