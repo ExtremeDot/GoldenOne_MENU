@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.18
+scriptVersion=1.19
 
 # root checker
 function isRoot() {
@@ -236,13 +236,10 @@ green "New Server Domain Check"; echo
 if [[ -z $DOMAIN_ADDRESS ]]; then #DOMAIN ADDRESS IS NOT ENTERED
 getDomainInfoHelper
 else
-DOMAINANMES=""
-until [[ $DOMAINANMES =~ (y|n) ]]; do
-read -rp "NEW SERVER: Confirm Domain Name [$DOMAIN_ADDRESS]? [y/n]: " -e -i y DOMAINANMES
-done
 if [[ $DOMAINANMES == "n" ]]; then
 yellow "Specify Domain Name"
 getDomainInfoHelper
+
 fi; fi
 }
 
@@ -260,14 +257,12 @@ green "New Server Email Address Check"; echo
 if [[ -z $EMAIL_ADDRESS ]]; then #E-MAIL ADDRESS IS NOT ENTERED
 getEmailInfoHelper
 else
-EMAILANMES=""
-until [[ $EMAILANMES =~ (y|n) ]]; do
-read -rp "NEW SERVER: Confirm E-MAIL Address [$EMAIL_ADDRESS]? [y/n]: " -e -i y EMAILANMES
-done
+
 if [[ $EMAILANMES == "n" ]]; then
 yellow "Specify E-MAIL ADDRESS"
 getEmailInfoHelper
 fi; fi
+
 }
 
 # CHECK DOMAIN NAME WITH IP
