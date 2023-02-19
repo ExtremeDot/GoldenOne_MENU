@@ -347,6 +347,7 @@ LOCALIP="${input:-$LOCALIP}"
 
 # UPDATE vpnserver running mode to local bridge
 cat <<EOF > /etc/init.d/vpnserver
+
 #!/bin/sh
 # chkconfig: 2345 99 01
 # description: SoftEther VPN Server
@@ -356,6 +357,7 @@ TAP_INTERFACE=tap_soft
 TAP_ADDR=$LOCALIP.1
 TAP_NETWORK=$LOCALIP.0/24
 SERVER_IP=$SERVER_IP
+
 test -x \$DAEMON || exit 0
 case "\$1" in
 start)
@@ -363,7 +365,31 @@ start)
 touch \$LOCK
 sleep 1
 #/sbin/ifconfig \$TAP_INTERFACE \$TAP_ADDR
+/sbin/ifconfig \$TAP_INTERFACE \$TAP_ADDR
+/etc/init.d/dnsmasq restart
+
+;;
+
+stop)
+\$DAEMON stop
+rm \$LOCK
+;;
+
+restart)
+\$DAEMON stop
+sleep 3
+\$DAEMON start
+sleep 1
 /sbin/ifconfig tap_soft \$TAP_ADDR
+;;
+*)
+echo "Usage: \$0 {start|stop|restart}"
+exit 1
+esac
+exit 0
+
+EOF
+
 iptables -t nat -F
 iptables -t nat -A POSTROUTING -s \${TAP_NETWORK} -j SNAT --to-source \${SERVER_IP}
 #iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
