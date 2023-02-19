@@ -231,7 +231,6 @@ getDomainInfo
 
 # DOMAIN CHECK
 function getDomainInfo() {
-clear
 green "New Server Domain Check"; echo
 if [[ -z $DOMAIN_ADDRESS ]]; then #DOMAIN ADDRESS IS NOT ENTERED
 getDomainInfoHelper
@@ -405,6 +404,11 @@ else
 
 fi
 echo && green "Installing ACME certificate tool"
+ufw allow https
+ufw allow http
+ufw allow 443
+ufw allow 80
+
 curl https://get.acme.sh | sh
 sleep 1
 ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
