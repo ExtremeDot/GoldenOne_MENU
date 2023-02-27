@@ -66,24 +66,28 @@ sleep 2
 /sbin/iptables -t nat -A POSTROUTING -s $OUTPUT_BASE_ADDRESS -o $INPUT_NIC -j MASQUERADE
 sleep 2
 /sbin/iptables-save -t nat
-
+/usr/sbin/iptables
 touch /route_$DEF_TABLE.sh
 cat <<EOF > /route_$DEF_TABLE.sh
-
 #!/bin/bash
 # ROUTING TO CUSTOM TABLE
-/sbin/ip route add $INPUT_BASE_ADDRESS dev $INPUT_NIC table $DEF_TABLE
-/sbin/ip route add $OUTPUT_BASE_ADDRESS dev $OUTPUT_NIC table $DEF_TABLE
-/sbin/ip route add default via $INPUT_IP dev $INPUT_NIC table $DEF_TABLE
-/sbin/ip rule add iif $INPUT_NIC lookup $DEF_TABLE
-/sbin/ip rule add iif $OUTPUT_NIC lookup $DEF_TABLE
+
+IPBIN=/sbin/ip
+IPTABLESBIN=/usr/sbin/iptables
+IPTABLESAVEBIN=/usr/sbin/iptables-save
+
+\$IPBIN route add $INPUT_BASE_ADDRESS dev $INPUT_NIC table $DEF_TABLE
+\$IPBIN route add $OUTPUT_BASE_ADDRESS dev $OUTPUT_NIC table $DEF_TABLE
+\$IPBIN route add default via $INPUT_IP dev $INPUT_NIC table $DEF_TABLE
+\$IPBIN rule add iif $INPUT_NIC lookup $DEF_TABLE
+\$IPBIN rule add iif $OUTPUT_NIC lookup $DEF_TABLE
 
 # FLUSHING IP FORWARDING
-/sbin/iptables -t nat -F
+\$IPTABLESBIN s -t nat -F
 sleep 2
-/sbin/iptables -t nat -A POSTROUTING -s $OUTPUT_BASE_ADDRESS -o $INPUT_NIC -j MASQUERADE
+\$IPTABLESBIN -t nat -A POSTROUTING -s $OUTPUT_BASE_ADDRESS -o $INPUT_NIC -j MASQUERADE
 sleep 2
-/sbin/iptables-save -t nat
+\$IPTABLESAVEBIN -t nat
 
 EOF
 
