@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.20
+scriptVersion=1.21
 
 # root checker
 function isRoot() {
@@ -1538,7 +1538,7 @@ echo "54) Install BADVPN-TUN2SOCKS & TUN2SOCKS"
 echo "55) Cutom Port Number Check "
 
 blue "--- OpenVPN, WireGuard and Open Connect Servers -----------------------------------------------------"
-echo "71) Install ANGRISTAN OPEN VPN SERVER"
+echo "71) Install ANGRISTAN OPEN VPN SERVER                     74) Custom Routing between two connections"
 echo "72) Install ANGRISTAN WIREGUARD SERVER"
 echo "73) Install Open Connect SERVER"
 
@@ -1748,6 +1748,10 @@ openVpnAngristanInstall
 enter2main
 ;;
 
+74) # custom routing
+customRouting
+enter2main
+;;
 
 84) #Show Busy/Used Ports by System
 checkRunningPorts
