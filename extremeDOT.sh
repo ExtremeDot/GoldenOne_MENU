@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.19
+scriptVersion=1.20
 
 # root checker
 function isRoot() {
@@ -1742,6 +1742,12 @@ enter2main
 interfaceCheckCustom
 enter2main
 ;;
+
+71) # Install ANGRISTAN OPEN VPN SERVER
+openVpnAngristanInstall 
+enter2main
+;;
+
 
 84) #Show Busy/Used Ports by System
 checkRunningPorts
