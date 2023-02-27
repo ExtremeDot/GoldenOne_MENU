@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.21
+scriptVersion=1.22
 
 # root checker
 function isRoot() {
@@ -707,14 +707,14 @@ function customRouting() {
 
 if test -f "/Golden1/ROUTE.sh";
 then
-bash /Golden1/ROUTE.sh
-else
+rm /Golden1/ROUTE.sh
+fi
+
 mkdir -p /Golden1
 cd /Golden1
 curl -O https://raw.githubusercontent.com/ExtremeDot/golden_one/master/ROUTE.sh
 chmod +x /Golden1/ROUTE.sh
 bash /Golden1/ROUTE.sh
-fi
 
 }
 
