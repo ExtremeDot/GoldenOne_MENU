@@ -1,5 +1,5 @@
 #!/bin/bash
-echo " Version 1.1"
+echo " Version 1.2"
 echo "STRUCTURE: [INCOMING] will route to [DESTINATION]"
 echo "[INCOMING] could be running OpenVPN , WireGuard or SoftEther Server is running on this machine!"
 echo ""
@@ -53,7 +53,7 @@ OUTPUT_BASE_ADDRESS=$(echo "${OUTPUT_BASE_ADDRESS0}/24")
 sleep 2
 /sbin/ip route add $OUTPUT_BASE_ADDRESS dev $OUTPUT_NIC table $DEF_TABLE
 sleep 2
-/sbin/ip route add default via $INPUT_IP dev $INPUT_NIC table $DEF_TABLE
+/sbin/ip route add default via $OUTPUT_IP dev $OUTPUT_NIC table $DEF_TABLE
 sleep 2
 /sbin/ip rule add iif $INPUT_NIC lookup $DEF_TABLE
 sleep 2
@@ -63,12 +63,13 @@ sleep 2
 # FLUSHING IP FORWARDING
 /sbin/iptables -t nat -F
 sleep 2
-/sbin/iptables -t nat -A POSTROUTING -s $OUTPUT_BASE_ADDRESS -o $INPUT_NIC -j MASQUERADE
+/sbin/iptables -t nat -A POSTROUTING -s $INPUT_BASE_ADDRESS -o $OUTPUT_NIC -j MASQUERADE
 sleep 2
 /sbin/iptables-save -t nat
 /usr/sbin/iptables
-touch /route_$DEF_TABLE.sh
-cat <<EOF > /route_$DEF_TABLE.sh
+
+touch /Golden1/route_$DEF_TABLE.sh
+cat <<EOF > /Golden1/route_$DEF_TABLE.sh
 #!/bin/bash
 # ROUTING TO CUSTOM TABLE
 
@@ -78,17 +79,17 @@ IPTABLESAVEBIN=/usr/sbin/iptables-save
 
 \$IPBIN route add $INPUT_BASE_ADDRESS dev $INPUT_NIC table $DEF_TABLE
 \$IPBIN route add $OUTPUT_BASE_ADDRESS dev $OUTPUT_NIC table $DEF_TABLE
-\$IPBIN route add default via $INPUT_IP dev $INPUT_NIC table $DEF_TABLE
+\$IPBIN route add default via $OUTPUT_IP dev $OUTPUT_NIC table $DEF_TABLE
 \$IPBIN rule add iif $INPUT_NIC lookup $DEF_TABLE
 \$IPBIN rule add iif $OUTPUT_NIC lookup $DEF_TABLE
 
 # FLUSHING IP FORWARDING
 \$IPTABLESBIN s -t nat -F
 sleep 2
-\$IPTABLESBIN -t nat -A POSTROUTING -s $OUTPUT_BASE_ADDRESS -o $INPUT_NIC -j MASQUERADE
+\$IPTABLESBIN -t nat -A POSTROUTING -s $INPUT_BASE_ADDRESS -o $OUTPUT_NIC -j MASQUERADE
 sleep 2
 \$IPTABLESAVEBIN -t nat
 
 EOF
 
-echo " The Routing Structure has saved on /route_$DEF_TABLE.sh"
+echo " The Routing Structure has saved on /Golden1/route_$DEF_TABLE.sh"
