@@ -76,15 +76,16 @@ cat <<EOF > /Golden1/route_$DEF_TABLE.sh
 IPBIN=/sbin/ip
 IPTABLESBIN=/usr/sbin/iptables
 IPTABLESAVEBIN=/usr/sbin/iptables-save
+DEF_TABLE=$DEF_TABLE
 
-\$IPBIN route add $INPUT_BASE_ADDRESS dev $INPUT_NIC table $DEF_TABLE
-\$IPBIN route add $OUTPUT_BASE_ADDRESS dev $OUTPUT_NIC table $DEF_TABLE
-\$IPBIN route add default via $OUTPUT_IP dev $OUTPUT_NIC table $DEF_TABLE
-\$IPBIN rule add iif $INPUT_NIC lookup $DEF_TABLE
-\$IPBIN rule add iif $OUTPUT_NIC lookup $DEF_TABLE
+\$IPBIN route add $INPUT_BASE_ADDRESS dev $INPUT_NIC table \$DEF_TABLE
+\$IPBIN route add $OUTPUT_BASE_ADDRESS dev $OUTPUT_NIC table \$DEF_TABLE
+\$IPBIN route add default via $OUTPUT_IP dev $OUTPUT_NIC table \$DEF_TABLE
+\$IPBIN rule add iif $INPUT_NIC lookup \$DEF_TABLE
+\$IPBIN rule add iif $OUTPUT_NIC lookup \$DEF_TABLE
 
 # FLUSHING IP FORWARDING
-\$IPTABLESBIN s -t nat -F
+\$IPTABLESBIN -t nat -F
 sleep 2
 \$IPTABLESBIN -t nat -A POSTROUTING -s $INPUT_BASE_ADDRESS -o $OUTPUT_NIC -j MASQUERADE
 sleep 2
