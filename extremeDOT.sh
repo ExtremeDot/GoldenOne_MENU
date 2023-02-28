@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.23
+scriptVersion=1.24
 
 # root checker
 function isRoot() {
@@ -1749,7 +1749,7 @@ enter2main
 ;;
 
 72) # Install ANGRISTAN WIREGUARD SERVER"
-openVpnAngristanInstall 
+wireGuardAngristanInstall
 enter2main
 ;;
 
