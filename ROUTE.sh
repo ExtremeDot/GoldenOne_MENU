@@ -1,5 +1,5 @@
 #!/bin/bash
-echo " Version 1.2"
+echo " Version 1.3"
 echo "STRUCTURE: [INCOMING] will route to [DESTINATION]"
 echo "[INCOMING] could be running OpenVPN , WireGuard or SoftEther Server is running on this machine!"
 echo ""
