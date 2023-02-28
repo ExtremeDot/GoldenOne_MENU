@@ -347,12 +347,13 @@ LOCALIP="${input:-$LOCALIP}"
 
 # UPDATE vpnserver running mode to local bridge
 cat <<EOF > /etc/init.d/vpnserver
-
 #!/bin/sh
 # chkconfig: 2345 99 01
 # description: SoftEther VPN Server
 DAEMON=/usr/local/vpnserver/vpnserver
 LOCK=/var/lock/subsys/vpnserver
+SERVER_NIC=\$(ip -4 route ls | grep default | grep -Po '(?<=dev )(\S+)' | head -1)
+IPTABLESBIN=/usr/sbin/iptables
 TAP_INTERFACE=tap_soft
 TAP_ADDR=$LOCALIP.1
 TAP_NETWORK=$LOCALIP.0/24
@@ -360,17 +361,26 @@ SERVER_IP=$SERVER_IP
 
 test -x \$DAEMON || exit 0
 case "\$1" in
+
 start)
+echo " Setting IP Tables"
+\$IPTABLESBIN -t nat -D POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
+\$IPTABLESBIN -t nat -D POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
+\$IPTABLESBIN -t nat -D POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
+sleep 1
+\$IPTABLESBIN -t nat -A POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
 \$DAEMON start
 touch \$LOCK
 sleep 1
-#/sbin/ifconfig \$TAP_INTERFACE \$TAP_ADDR
 /sbin/ifconfig \$TAP_INTERFACE \$TAP_ADDR
 /etc/init.d/dnsmasq restart
-
+\$IPTABLESBIN -t nat -A POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
 ;;
 
 stop)
+\$IPTABLESBIN -t nat -D POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
+\$IPTABLESBIN -t nat -D POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
+\$IPTABLESBIN -t nat -D POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
 \$DAEMON stop
 rm \$LOCK
 
@@ -378,11 +388,16 @@ rm \$LOCK
 
 restart)
 \$DAEMON stop
-sleep 3
+\$IPTABLESBIN -t nat -D POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
+\$IPTABLESBIN -t nat -D POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
+\$IPTABLESBIN -t nat -D POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
+sleep 1
 \$DAEMON start
+\$IPTABLESBIN -t nat -A POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
 sleep 1
 /sbin/ifconfig tap_soft \$TAP_ADDR
 ;;
+
 *)
 echo "Usage: \$0 {start|stop|restart}"
 exit 1
