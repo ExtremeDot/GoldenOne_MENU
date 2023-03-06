@@ -374,7 +374,7 @@ touch \$LOCK
 sleep 1
 /sbin/ifconfig \$TAP_INTERFACE \$TAP_ADDR
 /etc/init.d/dnsmasq restart
-\$IPTABLESBIN -t nat -A POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
+# \$IPTABLESBIN -t nat -A POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
 ;;
 
 stop)
