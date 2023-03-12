@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.30
+scriptVersion=1.31
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
@@ -1265,9 +1265,10 @@ function readStatus() {
 echo 
 green "Show System Status ============================================================================="
 echo -e "${YELLOW} Current Installed Kernel= `cat /proc/version | sed 's/.(.*//'`"
-echo 
-echo -e "${YELLOW} Current IPV4= `ifconfig eth0 | grep inet | grep netmask | grep -o -P '(?<=inet ).*(?=  netmask)'`"
-echo -e "${YELLOW} Current IPV6= [`ifconfig eth0 | grep inet6 | grep global | grep -o -P '(?<=inet6 ).*(?=  prefixlen)'`]"
+echo
+VPSSERVER_NIC=$(ip -4 route ls | grep default | grep -Po '(?<=dev )(\S+)' | head -1)
+echo -e "${YELLOW} Current IPV4= `ifconfig $VPSSERVER_NIC | grep inet | grep netmask | grep -o -P '(?<=inet ).*(?=  netmask)'`"
+echo -e "${YELLOW} Current IPV6= [`ifconfig $VPSSERVER_NIC | grep inet6 | grep global | grep -o -P '(?<=inet6 ).*(?=  prefixlen)'`]"
 echo 
 echo -e "${YELLOW} BBR Status= `sysctl -n net.ipv4.tcp_congestion_control` - `lsmod | grep bbr`" 
 echo
