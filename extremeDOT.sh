@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.31
+scriptVersion=1.32
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
@@ -98,6 +98,16 @@ apt install -y iptables-persistent
 else
 green "iptables-persistent has installed"
 fi
+
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
+if [ $(dpkg-query -W -f='${Status}' crontab 2>/dev/null | grep -c "ok installed") -eq 0 ];
+then
+yellow "Installing cron services"
+apt-get install cron
+else
+green "cron service has allready installed"
+fi
+
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 # installing unzip
 if [ $(dpkg-query -W -f='${Status}' unzip 2>/dev/null | grep -c "ok installed") -eq 0 ];
