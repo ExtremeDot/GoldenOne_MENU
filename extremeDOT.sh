@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.28
+scriptVersion=1.29
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
