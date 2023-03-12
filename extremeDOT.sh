@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.27
+scriptVersion=1.28
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
@@ -1463,6 +1463,21 @@ chmod +x /bin/tun2socks
 green "finishing tun2socks ......"
 }
 
+function setDNSpermanent() {
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
+apt install -y resolvconf
+sudo systemctl start resolvconf.service
+sudo systemctl enable resolvconf.service
+echo "nameserver 8.8.8.8" > /etc/resolvconf/resolv.conf.d/head
+echo "nameserver 8.8.4.4" >> /etc/resolvconf/resolv.conf.d/head
+sudo systemctl restart resolvconf.service
+sudo systemctl restart systemd-resolved.service
+echo " Do reboot to take effects."
+echo
+echo "you can change the configs from /etc/resolvconf/resolv.conf.d/head file"
+echo
+}
+
 function portCheckCustom() {
 echo
 V2RAYPORT=10808
@@ -1548,7 +1563,7 @@ echo "73) Install Open Connect SERVER"
 blue "--- Diagnostics,troubleshooting tools ---------------------------------------------------------------"
 echo "80) SpeedTest Client to check the real SPEED              85) Show Current IPTABLES ROUTING"
 echo "81) Show Current System Public IP                         86) GET BBR STATUS"
-echo "82) Check Public IP by Socks 5 Port's Number"
+echo "82) Check Public IP by Socks 5 Port's Number              87) Set DNS Permanently to Google"
 echo "83) Check Public IP by Interface's Name"
 echo "84) Show Busy/Used Ports by System"
 echo "0)  EXIT                                                  98) Reboot Linux      99) Update ExtremeDOT "
@@ -1794,6 +1809,11 @@ enter2main
 
 86) # GET BBR STATUS
 getBbrStatus
+enter2main
+;;
+
+87) # Set DNS Permanent
+setDNSpermanent
 enter2main
 ;;
 
