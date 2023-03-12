@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.24
+scriptVersion=1.25
 
 # root checker
 function isRoot() {
@@ -1756,6 +1756,26 @@ enter2main
 
 74) # custom routing
 customRouting
+enter2main
+;;
+
+80) # SpeedTest Client to check the real SPEED
+speedTestcli
+enter2main
+;;
+
+81) #Show Current System Public IP
+curl -4 myip.wtf/json
+enter2main
+;;
+
+82) # Check Public IP by Socks 5 Port's Number
+portCheckCustom
+enter2main
+;;
+
+83) # Check Public IP by Interface's Name
+interfaceCheckCustom
 enter2main
 ;;
 
