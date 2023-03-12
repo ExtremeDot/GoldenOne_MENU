@@ -1495,6 +1495,7 @@ echo
 
 function mainMenuRun() {
 #MAIN MENU SCRIPt
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
 echo -e "${GREEN}"
 yellow "EXTREME DOT - GOLDEN1 MENU ============================================================[Version $scriptVersion]"
 
