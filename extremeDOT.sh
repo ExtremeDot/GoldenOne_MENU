@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.29
+scriptVersion=1.30
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
@@ -162,6 +162,14 @@ else
 green "net tools has installed allready"
 fi
 
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
+if [ $(dpkg-query -W -f='${Status}' ifupdown  2>/dev/null | grep -c "ok installed") -eq 0 ];
+then
+yellow "Installing ifupdown package"
+apt-get install -y ifupdown
+else
+green "ifupdown has installed allready"
+fi
 }
 
 # OLD SERVER GET DATA HELPER
