@@ -65,10 +65,11 @@ Font_color_suffix="\033[0m"
 # Installing Tools
 function installTools() {
 
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
 # get apt updates
 apt-get updates
 
-
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
 # installing lsof
 if [ $(dpkg-query -W -f='${Status}' lsof 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
@@ -78,7 +79,7 @@ else
 green "lsof has installed"
 fi
 
-
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
 # installing shadowsocks-libev
 if [ $(dpkg-query -W -f='${Status}' shadowsocks-libev 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
@@ -88,6 +89,7 @@ else
 green "shadowsocks-libev has installed"
 fi
 
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
 # installing iptables-persistent
 if [ $(dpkg-query -W -f='${Status}' iptables-persistent 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
@@ -96,7 +98,7 @@ apt install -y iptables-persistent
 else
 green "iptables-persistent has installed"
 fi
-
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
 # installing unzip
 if [ $(dpkg-query -W -f='${Status}' unzip 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
@@ -105,7 +107,7 @@ apt install -y unzip
 else
 green "unzip has installed"
 fi
-
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
 # installing socat
 if [ $(dpkg-query -W -f='${Status}' socat 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
@@ -114,7 +116,7 @@ apt install -y socat
 else
 green "socat has installed"
 fi
-
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
 # installing curl
 if [ $(dpkg-query -W -f='${Status}' curl 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
@@ -123,7 +125,7 @@ apt install -y curl
 else
 green "curl has installed"
 fi
-
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
 # installing sshpass
 if [ $(dpkg-query -W -f='${Status}' sshpass 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
@@ -132,7 +134,7 @@ apt install -y sshpass
 else
 green "sshpass has installed"
 fi
-
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
 # installing dnsutils
 if [ $(dpkg-query -W -f='${Status}' dnsutils  2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
@@ -141,7 +143,7 @@ apt install -y dnsutils
 else
 green "dnsutils has installed"
 fi
-
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
 # installing mc
 if [ $(dpkg-query -W -f='${Status}' mc  2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
@@ -149,6 +151,15 @@ yellow "Installing mc file explorer"
 apt install -y mc 
 else
 green "mc has installed"
+fi
+
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
+if [ $(dpkg-query -W -f='${Status}' net-tools  2>/dev/null | grep -c "ok installed") -eq 0 ];
+then
+yellow "Installing net tools package"
+apt install -y net-tools 
+else
+green "net tools has installed allready"
 fi
 
 }
@@ -1251,7 +1262,10 @@ echo -e "${YELLOW} Current IPV4= `ifconfig eth0 | grep inet | grep netmask | gre
 echo -e "${YELLOW} Current IPV6= [`ifconfig eth0 | grep inet6 | grep global | grep -o -P '(?<=inet6 ).*(?=  prefixlen)'`]"
 echo 
 echo -e "${YELLOW} BBR Status= `sysctl -n net.ipv4.tcp_congestion_control` - `lsmod | grep bbr`" 
-echo 
+echo
+green "Current DNS status --"
+cat /etc/resolv.conf
+echo
 green "User Variables Info --"
 echo -e "${YELLOW} OLD SERVER: IP:$OLD_IPv4 | Username: $OLD_LOGINNAME | Password: $OLD_PASSWORD"
 echo -e "${YELLOW} NEW SERVER: IP:$NEW_IPv4 | Username: $NEW_LOGINNAME | Password: $NEW_PASSWORD"
