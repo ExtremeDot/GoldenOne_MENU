@@ -1,6 +1,8 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.25
+scriptVersion=1.27
+
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
 # root checker
 function isRoot() {
