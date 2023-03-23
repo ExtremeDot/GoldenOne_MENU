@@ -162,13 +162,15 @@ clear
 echo " "
 echo "always check the GitHUB for latest releases"
 echo "https://github.com/SoftEtherVPN/SoftEtherVPN_Stable"
-echo " "
+echo
+echo "https://www.softether-download.com/en.aspx"
+echo
 echo " If you want to install another version, replace your link to the current one!"
 echo " "
-echo " The Current Selected Version IS: v4.41-9782-beta [17.NOV.2022]"
-echo " "
-echo " "
-DLLINK=https://github.com/SoftEtherVPN/SoftEtherVPN_Stable/releases/download/v4.41-9782-beta/softether-vpnserver-v4.41-9782-beta-2022.11.17-linux-x64-64bit.tar.gz
+echo " The Current Selected Version IS: v4.41-9787-beta [Release Date: 2023-03-14]"
+echo
+echo
+DLLINK=https://www.softether-download.com/files/softether/v4.41-9787-rtm-2023.03.14-tree/Linux/SoftEther_VPN_Server/64bit_-_Intel_x64_or_AMD64/softether-vpnserver-v4.41-9787-rtm-2023.03.14-linux-x64-64bit.tar.gz
 DLFILE=/selatest_install/Soft.tar.gz
 read -e -i "$DLLINK" -p "SoftEther Link: " input
 DLLINK="${input:-$DLLINK}"
@@ -180,8 +182,8 @@ if [ -f "$DLFILE" ];
   then
     echo "Installation files are downloaded."
     tar xzvf $DLFILE -C $TARGET
-    sleep 1
-    rm -rf softether-vpnserver-v4.41-9782-beta-2022.11.17-linux-x64-64bit.tar.gz
+    sleep 2
+    rm -rf softether-vpnserver-v*
     sleep 2
   else
     echo "Installation files are not downloaded, EXIT "
