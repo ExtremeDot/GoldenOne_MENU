@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT GL1MENU
-scriptVersion=1.32
+scriptVersion=1.33
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
@@ -1558,7 +1558,7 @@ echo "5)  Firewall [DIS/EN]ABLER"
 
 blue "--- X-UI BASED VPN SERVERS --------------------------------------------------------------------------"
 echo "10) X-UI MIGRATION SCRIPT - MOVE FILES TO NEW SERVER"
-echo "11) Install VAXILU v2RAY X-UI Panel                      19) Misaka X-UI Panel"
+echo "11) Install VAXILU v2RAY X-UI Panel                      19) Sanae 3X-UI Panel"
 echo "12) Install ProxyKingDEV v2RAY X-UI Panel                20) Iran Geo and Dat files"
 echo "13) Install NIDUKA AKALANKA ENGLISH X-UI Panel  "
 echo "14) Install HAMED-AP V2RAY Panel  "
@@ -1709,8 +1709,9 @@ changeSshApachePorts
 enter2main
 ;;
 
-19) # MISAKA
-bash <(curl -Ls https://raw.githubusercontent.com/Misaka-blog/x-ui-msk/master/install.sh)
+19) # Sanaee3x-ui
+#MISAKA #bash <(curl -Ls https://raw.githubusercontent.com/Misaka-blog/x-ui-msk/master/install.sh)
+bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
 enter2main
 ;;
 
