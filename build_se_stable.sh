@@ -19,7 +19,7 @@ if ! isRoot; then
 fi
 
 clear
-sudo ufw disable
+ufw disable
 TARGET="/usr/local/"
 mkdir -p $TARGET
 
@@ -73,7 +73,7 @@ apt-get -y upgrade
 echo " INSTALLING PRE-REQ APPS"
 apt-get -y install build-essential
 apt-get -y install net-tools
-sudo apt-get -y install cmake gcc g++ make rpm pkg-config libncurses5-dev libssl-dev libsodium-dev libreadline-dev zlib1g-dev
+apt-get -y install cmake gcc g++ make rpm pkg-config libncurses5-dev libssl-dev libsodium-dev libreadline-dev zlib1g-dev
 sleep 2
 apt-get -y install expect && sleep 2
 clear
@@ -141,7 +141,7 @@ echo ""
 # installing dnsmasq
 echo ""
 echo "Installing DNSMASQ"
-sudo apt-get -y install dnsmasq
+apt-get -y install dnsmasq
 sleep 1
 echo "port=5353" >> /etc/dnsmasq.conf
 sleep 2
@@ -611,5 +611,5 @@ echo "IP_SEC: $SHARED_KEY"
 echo ""
 echo "to Show Login Information, run "seshow" command."
 # CRONTAB 
-sudo crontab -l | { cat; echo "@reboot /etc/init.d/vpnserver start" ; } | crontab -
-sudo crontab -l | { cat; echo "@reboot sleep 15 && service dnsmasq restart" ; } | crontab -
+crontab -l | { cat; echo "@reboot /etc/init.d/vpnserver start" ; } | crontab -
+crontab -l | { cat; echo "@reboot sleep 15 && service dnsmasq restart" ; } | crontab -
