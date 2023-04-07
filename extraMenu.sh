@@ -606,7 +606,7 @@ echo "15) V2RAY, XRAY"
 blue "--- MultiBalance Menu -------------------------------------------------------------------------------"
 
 echo
-echo "0)  EXIT                                                  98) Reboot Linux      99) Update ExtremeDOT "
+echo "0)  EXIT                                             98) Reboot Linux      99) Update MultiBalanceVPN"
 yellow "Please Enter the Number ============================================================================="
 echo -e "${GREEN}"
 MENUITEMR=""
