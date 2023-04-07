@@ -399,7 +399,7 @@ else
 red "cloudflare-warp not found, please install it first"
 fi
 enter2CLmain
-
+;;
 
 9) #Delete Cloudflare account
 clear
@@ -409,8 +409,8 @@ else
 red "cloudflare-warp not found, please install it first"
 fi
 enter2CLmain
-
 ;;
+
 11) #WARP
 if [ $CLSTATUS == "TRUE" ]; then
 warp-cli set-mode warp
