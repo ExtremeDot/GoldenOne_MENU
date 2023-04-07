@@ -599,6 +599,18 @@ sleep 1
 lsmod | grep bbr
 }
 
+function wireGuardAngristanInstall() {
+if test -f "/Golden1/WireGuard/wireguard-install.sh";
+then
+bash /Golden1/WireGuard/wireguard-install.sh
+else
+mkdir -p /Golden1/WireGuard/
+cd /Golden1/WireGuard/
+curl -O https://raw.githubusercontent.com/angristan/wireguard-install/master/wireguard-install.sh
+chmod +x /Golden1/WireGuard/wireguard-install.sh
+bash /Golden1/WireGuard/wireguard-install.sh
+fi
+}
 
 
 function mainMenuRun() {
@@ -693,6 +705,11 @@ enter2main
 
 11)
 cloudflaremenu
+enter2main
+;;
+
+12)
+wireGuardAngristanInstall
 enter2main
 ;;
 
