@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT Multibalance Menu
-scriptVersion=0.04
+scriptVersion=0.05
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
@@ -214,7 +214,6 @@ echo "nameserver 8.8.8.8" > /etc/resolv.conf
 echo "nameserver 1.1.1.1" >> /etc/resolv.conf
 wget https://raw.githubusercontent.com/ExtremeDot/GoldenOne_MENU/main/extraMenu.sh
 chmod +x /tmp/extdotmenu1/extraMenu.sh
-mv /tmp/extdotmenu1/extraMenu.sh /bin/extremeDOT
 mv /tmp/extdotmenu1/extraMenu.sh /bin/eMenu
 chmod +x /bin/eMenu
 bash /bin/eMenu ; exit
