@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT Multibalance Menu
-scriptVersion=0.03
+scriptVersion=0.04
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
@@ -239,12 +239,14 @@ fi
 ## MENU
 echo -e "${GREEN}"
 clear
-green "EXTREME DOT - Cloudflare MENU =================================================[Version $CLFscriptVersion]"
-
+blue "EXTREME DOT - Cloudflare MENU =================================================[Version $CLFscriptVersion]"
+echo
 echo "1) Cloudflare Warp+ Client Details                2) Install Cloudflare Warp+"
 echo "3) Register and Enable New Account                4) Set New Licence Key"
 echo "5) Connect                                        6) Disconnect"
 echo "7) Connection Full Stat                           8) Check IP Location of CloudFlare Client"
+red "9) Delete Cloudflare account"
+echo
 blue "--- Cloudflare Mods ------------------------------------------------------------------------"
 echo "11) WARP"
 echo "12) DOH"
@@ -252,19 +254,20 @@ echo "13) DOT"
 echo "14) WARP + DOH"
 echo "15) WARP + DOT"
 echo "16) PROXY                                        17) Set Proxy port"
-
+echo
 blue "--- Cloudflare Warp Info -------------------------------------------------------------------"
 if [ $CLSTATUS == "TRUE" ]; then
 echo "CloudFlare Warp $(warp-cli status)" | head -c -2
 echo "Connection Details: ==================="
 warp-cli warp-stats
 else 
-red "CloudFlare Warp Not Installed."
+echo
+red "CloudFlare Warp Not Installed! ."
 echo
 fi
 blue "--- Cloudflare Warp Info -------------------------------------------------------------------"
 echo 
-yellow  "Please Enter the Number ============================== ENTER 0  Back to Main-Menu ============"
+yellow  "Please Enter the Number ============================== ENTER 0  Back to Main-Menu =========="
 echo -e "${GREEN}"
 CLMENUITEMR=""
 until [[ $CLMENUITEMR =~ ^[0-9]+$ ]] && [ "$CLMENUITEMR" -ge 0 ] && [ "$CLMENUITEMR" -le 99 ]; do
@@ -394,6 +397,17 @@ else
 red "cloudflare-warp not found, please install it first"
 fi
 enter2CLmain
+
+
+9) #Delete Cloudflare account
+clear
+if [ $CLSTATUS == "TRUE" ]; then
+warp-cli delete
+else
+red "cloudflare-warp not found, please install it first"
+fi
+enter2CLmain
+
 ;;
 11) #WARP
 if [ $CLSTATUS == "TRUE" ]; then
