@@ -312,7 +312,7 @@ echo " -----"
 echo " https://pkg.cloudflareclient.com/packages/cloudflare-warp"
 echo 
 DLLINK=https://pkg.cloudflareclient.com/uploads/cloudflare_warp_2023_3_258_1_amd64_f876b846af.deb
-DLFILE=//ExtremeDOT/cloudflare_warp.deb
+DLFILE=/ExtremeDOT/cloudflare_warp.deb
 read -e -i "$DLLINK" -p "Cloudflare Deb package address: " input
 DLLINK="${input:-$DLLINK}"
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
