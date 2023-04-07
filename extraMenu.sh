@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT Multibalance Menu
-scriptVersion=0.01
+scriptVersion=0.02
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
@@ -207,6 +207,17 @@ colorScript
 installTools
 }
 
+function updateTheScript() {
+mkdir -p /tmp/extdotmenu1
+cd /tmp/extdotmenu1
+wget https://raw.githubusercontent.com/ExtremeDot/GoldenOne_MENU/main/extraMenu.sh
+chmod +x /tmp/extdotmenu1/extraMenu.sh
+mv /tmp/extdotmenu1/extraMenu.sh /bin/extremeDOT
+mv /tmp/extdotmenu1/extraMenu.sh /bin/eMenu
+chmod +x /bin/eMenu
+bash /bin/eMenu ; exit
+}
+
 ####################### CLOUDFLARE MENU
 function enter2CLmain() {
 read -p "Press enter to back to Cloudflare menu"
@@ -230,19 +241,17 @@ echo -e "${GREEN}"
 clear
 green "EXTREME DOT - Cloudflare MENU =================================================[Version $CLFscriptVersion]"
 
-echo "1) Cloudflare Warp+ Client Details"
-echo "2) Install Cloudflare Warp+"
-echo "3) Set New Licence Key"
-echo "4) Check IP Location of CloudFlare Client"
-echo "5) Connect                                          6) Disconnect"
-echo "7) Connection Full Stat"
+echo "1) Cloudflare Warp+ Client Details                2) Install Cloudflare Warp+"
+echo "3) Register and Enable New Account                4) Set New Licence Key"
+echo "5) Connect                                        6) Disconnect"
+echo "7) Connection Full Stat                           8) Check IP Location of CloudFlare Client"
 blue "--- Cloudflare Mods ------------------------------------------------------------------------"
 echo "11) WARP"
 echo "12) DOH"
 echo "13) DOT"
 echo "14) WARP + DOH"
 echo "15) WARP + DOT"
-echo "16) PROXY                                          17) Set Proxy port"
+echo "16) PROXY                                        17) Set Proxy port"
 
 blue "--- Cloudflare Warp Info -------------------------------------------------------------------"
 if [ $CLSTATUS == "TRUE" ]; then
@@ -319,7 +328,14 @@ fi
 enter2CLmain
 ;;
 
-3) # Set New Licence Key
+3) #Register and Enable New Account 
+warp-cli register
+warp-cli enable-always-on
+warp-cli enable-connectivity-checks
+enter2CLmain
+;;
+
+4) # Set New Licence Key
 clear
 if [ $CLSTATUS == "TRUE" ]; then
 CL_KEY=''
@@ -332,7 +348,7 @@ fi
 enter2CLmain
 ;;
 
-4) # Get Cloudflare Network
+8) # Get Cloudflare Network
 if [ $CLSTATUS == "TRUE" ]; then
 echo
 echo "==========================================================="
