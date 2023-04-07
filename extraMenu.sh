@@ -286,8 +286,32 @@ yellow "Cloudflare has installed allready."
 else
 echo "Insatlling CloudFlare Warp+"
 apt --fix-broken install
-apt-get install desktop-file-utils dirmngr gnupg gnupg-l10n gnupg-utils gnupg2 gpg gpg-agent gpg-wks-client gpg-wks-server gpgconf gpgsm libassuan0 libksba8 libnpth0 libnspr4 libnss3 libnss3-tools pinentry-curses -y
-apt install cloudflare-warp -y
+apt-get install desktop-file-utils dirmngr gnupg gnupg-l10n gnupg-utils gnupg2 gpg gpg-agent gpg-wks-client gpg-wks-server gpgconf gpgsm libassuan0 libksba8 libnpth0 libnspr4 libnss3 libnss3-tools pinentry-curses
+#apt install cloudflare-warp
+###
+echo "----------------------------------------------------------------------------"
+echo " Enter the package link of cloudflare for your OS, default is for Debian11"
+echo " check the site and paste latest link"
+echo " -----"
+echo " https://pkg.cloudflareclient.com/packages/cloudflare-warp"
+echo 
+DLLINK=https://pkg.cloudflareclient.com/uploads/cloudflare_warp_2023_3_258_1_amd64_f876b846af.deb
+DLFILE=//ExtremeDOT/cloudflare_warp.deb
+read -e -i "$DLLINK" -p "Cloudflare Deb package address: " input
+DLLINK="${input:-$DLLINK}"
+curl -L $DLLINK --output $DLFILE
+sleep 2
+if [ -f "$DLFILE" ];
+  then
+    echo "Deab package file has downloaded."
+    dpkg -i $DLFILE
+    sleep 2
+  else
+    echo "Installation files are not downloaded, EXIT "
+    sleep 5
+    echo " check Network and Source files and retry again."
+fi
+
 warp-cli register
 warp-cli enable-always-on
 warp-cli enable-connectivity-checks
