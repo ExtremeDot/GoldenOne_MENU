@@ -310,6 +310,7 @@ echo " Enter the package link of cloudflare for your OS, default is for Debian11
 echo " check the site and paste latest link"
 echo " -----"
 echo " https://pkg.cloudflareclient.com/packages/cloudflare-warp"
+mkdir -p /ExtremeDOT/
 echo 
 DLLINK=https://pkg.cloudflareclient.com/uploads/cloudflare_warp_2023_3_258_1_amd64_f876b846af.deb
 DLFILE=/ExtremeDOT/cloudflare_warp.deb
