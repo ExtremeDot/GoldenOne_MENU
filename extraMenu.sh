@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT Multibalance Menu
-scriptVersion=0.02
+scriptVersion=0.03
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
@@ -258,11 +258,13 @@ if [ $CLSTATUS == "TRUE" ]; then
 echo "CloudFlare Warp $(warp-cli status)" | head -c -2
 echo "Connection Details: ==================="
 warp-cli warp-stats
-else echo "CloudFlare Warp Not Installed."
+else 
+red "CloudFlare Warp Not Installed."
+echo
 fi
 blue "--- Cloudflare Warp Info -------------------------------------------------------------------"
-
-blue  "Please Enter the Number ============================== ENTER 0  Back to Main-Menu ============"
+echo 
+yellow  "Please Enter the Number ============================== ENTER 0  Back to Main-Menu ============"
 echo -e "${GREEN}"
 CLMENUITEMR=""
 until [[ $CLMENUITEMR =~ ^[0-9]+$ ]] && [ "$CLMENUITEMR" -ge 0 ] && [ "$CLMENUITEMR" -le 99 ]; do
@@ -308,6 +310,8 @@ DLLINK=https://pkg.cloudflareclient.com/uploads/cloudflare_warp_2023_3_258_1_amd
 DLFILE=//ExtremeDOT/cloudflare_warp.deb
 read -e -i "$DLLINK" -p "Cloudflare Deb package address: " input
 DLLINK="${input:-$DLLINK}"
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
+sleep 2
 curl -L $DLLINK --output $DLFILE
 sleep 2
 if [ -f "$DLFILE" ];
