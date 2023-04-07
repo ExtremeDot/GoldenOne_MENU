@@ -589,7 +589,7 @@ function mainMenuRun() {
 #MAIN MENU SCRIPt
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 echo -e "${GREEN}"
-yellow "EXTREME DOT - MultiBalanceVPN  MENU =================================================[Version $scriptVersion]"
+yellow " === EXTREME DOT - MultiBalanceVPN  MENU ==============================================[Version $scriptVersion]"
 
 blue "--- Initial Setup -----------------------------------------------------------------------------------"
 echo "1) System Status & Show Status                         6) Show Busy/Used Ports by System"
