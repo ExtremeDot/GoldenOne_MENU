@@ -210,6 +210,8 @@ installTools
 function updateTheScript() {
 mkdir -p /tmp/extdotmenu1
 cd /tmp/extdotmenu1
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
+echo "nameserver 1.1.1.1" >> /etc/resolv.conf
 wget https://raw.githubusercontent.com/ExtremeDot/GoldenOne_MENU/main/extraMenu.sh
 chmod +x /tmp/extdotmenu1/extraMenu.sh
 mv /tmp/extdotmenu1/extraMenu.sh /bin/extremeDOT
