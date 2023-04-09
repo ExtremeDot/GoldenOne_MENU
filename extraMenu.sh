@@ -308,6 +308,7 @@ echo "--------------------------------------------------------------------------
 echo " Enter the package link of cloudflare for your OS, default is for Debian11"
 echo " check the site and paste latest link"
 echo " -----"
+apt --fix-broken install -y
 echo " https://pkg.cloudflareclient.com/packages/cloudflare-warp"
 mkdir -p /ExtremeDOT/
 echo 
