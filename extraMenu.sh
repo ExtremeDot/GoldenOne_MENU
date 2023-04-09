@@ -80,16 +80,6 @@ green "lsof has installed"
 fi
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
-# installing shadowsocks-libev
-if [ $(dpkg-query -W -f='${Status}' shadowsocks-libev 2>/dev/null | grep -c "ok installed") -eq 0 ];
-then
-yellow "Installing shadowsocks-libev"
-apt install -y shadowsocks-libev
-else
-green "shadowsocks-libev has installed"
-fi
-
-echo "nameserver 8.8.8.8" > /etc/resolv.conf
 # installing iptables-persistent
 if [ $(dpkg-query -W -f='${Status}' iptables-persistent 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
@@ -139,11 +129,6 @@ echo "nameserver 8.8.8.8" > /etc/resolv.conf
 # installing sshpass
 if [ $(dpkg-query -W -f='${Status}' sshpass 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
-yellow "Installing sshpass"
-apt install -y sshpass
-else
-green "sshpass has installed"
-fi
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 # installing dnsutils
 if [ $(dpkg-query -W -f='${Status}' dnsutils  2>/dev/null | grep -c "ok installed") -eq 0 ];
@@ -152,15 +137,6 @@ yellow "Installing dnsutils"
 apt install -y dnsutils
 else
 green "dnsutils has installed"
-fi
-echo "nameserver 8.8.8.8" > /etc/resolv.conf
-# installing mc
-if [ $(dpkg-query -W -f='${Status}' mc  2>/dev/null | grep -c "ok installed") -eq 0 ];
-then
-yellow "Installing mc file explorer"
-apt install -y mc
-else
-green "mc has installed"
 fi
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
@@ -232,8 +208,8 @@ DEST_RESOLV="/etc/resolvconf/resolv.conf.d/head"
 case $DNS in
         
         1) # Cloudflare
-                echo 'nameserver 1.0.0.1' > $DEST_RESOLV
-                echo 'nameserver 1.1.1.1' >> $DEST_RESOLV
+                echo 'nameserver 1.1.1.1' > $DEST_RESOLV
+                echo 'nameserver 1.0.0.1' >> $DEST_RESOLV
 		DNSMSQ_SERV=1.1.1.1
 		DNSMSQ_SERV2=1.0.0.1
                 ;;
