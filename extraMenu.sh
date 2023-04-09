@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT Multibalance Menu
-scriptVersion=0.05
+scriptVersion=0.06
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
@@ -185,12 +185,127 @@ fi
 ### DNS
 function setDNSpermanent() {
 clear
-echo "nameserver 8.8.8.8" > /etc/resolv.conf
+echo " CURRNET DNS LIST"
+if grep -q "127.0.0.53" "/etc/resolv.conf"; then
+                        RESOLVCONF='/run/systemd/resolve/resolv.conf'
+                else
+                        RESOLVCONF='/etc/resolv.conf'
+fi
+echo " $RESOLVCONF 
+
+echo "`sed -ne 's/^nameserver[[:space:]]\+\([^[:space:]]\+\).*$/\1/p' $RESOLVCONF`"
+echo ""
+        echo "What DNS resolvers do you want to use with the VPN?"
+        echo "   1) Cloudflare (Anycast: worldwide)"
+        echo "   2) Quad9 (Anycast: worldwide)"
+        echo "   3) Quad9 uncensored (Anycast: worldwide)"
+        echo "   4) FDN (France)"
+        echo "   5) DNS.WATCH (Germany)"
+        echo "   6) OpenDNS (Anycast: worldwide)"
+        echo "   7) Google (Anycast: worldwide)"
+        echo "   8) Yandex Basic (Russia)"
+        echo "   9) AdGuard DNS (Anycast: worldwide)"
+        echo "   10) NextDNS (Anycast: worldwide)"
+        echo "   11) SKIP, No change"
+	echo "   12) Custom"
+        until [[ $DNS =~ ^[0-9]+$ ]] && [ "$DNS" -ge 1 ] && [ "$DNS" -le 12 ]; do
+                read -rp "DNS [1-12]: " -e -i 9 DNS
+                
+                if [[ $DNS == "12" ]]; then
+                        until [[ $DNS1 =~ ^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$ ]]; do
+                                read -rp "Primary DNS: " -e DNS1
+                        done
+                        until [[ $DNS2 =~ ^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$ ]]; do
+                                read -rp "Secondary DNS (optional): " -e DNS2
+                                if [[ $DNS2 == "" ]]; then
+                                        break
+                                fi
+                        done
+                fi
+        done
+		
 apt install -y resolvconf
 sudo systemctl start resolvconf.service
 sudo systemctl enable resolvconf.service
-echo "nameserver 8.8.8.8" > /etc/resolvconf/resolv.conf.d/head
-echo "nameserver 8.8.4.4" >> /etc/resolvconf/resolv.conf.d/head
+
+DEST_RESOLV="/etc/resolvconf/resolv.conf.d/head"
+case $DNS in
+        
+        1) # Cloudflare
+                echo 'nameserver 1.0.0.1' > $DEST_RESOLV
+                echo 'nameserver 1.1.1.1' >> $DEST_RESOLV
+		DNSMSQ_SERV=1.1.1.1
+		DNSMSQ_SERV2=1.0.0.1
+                ;;
+        2) # Quad9
+                echo 'nameserver 9.9.9.9' > $DEST_RESOLV
+                echo 'nameserver 149.112.112.112' >> $DEST_RESOLV
+		DNSMSQ_SERV=9.9.9.9
+		DNSMSQ_SERV2=149.112.112.112
+                ;;
+        3) # Quad9 uncensored
+                echo 'nameserver 9.9.9.10' > $DEST_RESOLV
+                echo 'nameserver 149.112.112.10' >> $DEST_RESOLV
+		DNSMSQ_SERV=9.9.9.10
+		DNSMSQ_SERV2=149.112.112.10
+                ;;
+        4) # FDN
+                echo 'nameserver 80.67.169.40' > $DEST_RESOLV
+                echo 'nameserver 80.67.169.12' >> $DEST_RESOLV
+		DNSMSQ_SERV=80.67.169.40
+		DNSMSQ_SERV2=80.67.169.12
+                ;;
+        5) # DNS.WATCH
+                echo 'nameserver 84.200.69.80' > $DEST_RESOLV
+                echo 'nameserver 84.200.70.40' >> $DEST_RESOLV
+		DNSMSQ_SERV=84.200.69.80
+		DNSMSQ_SERV2=84.200.70.40
+                ;;
+        6) # OpenDNS
+                echo 'nameserver 208.67.222.222' > $DEST_RESOLV
+                echo 'nameserver 208.67.220.220' >> $DEST_RESOLV
+		DNSMSQ_SERV=208.67.222.222
+		DNSMSQ_SERV2=208.67.220.220
+                ;;
+        7) # Google
+                echo 'nameserver 8.8.8.8' > $DEST_RESOLV
+                echo 'nameserver 8.8.4.4' >> $DEST_RESOLV
+		DNSMSQ_SERV=8.8.8.8
+		DNSMSQ_SERV2=8.8.4.4
+                ;;
+	8) # Yandex Basic
+                echo 'nameserver 77.88.8.8' > $DEST_RESOLV
+                echo 'nameserver 77.88.8.1' >> $DEST_RESOLV
+		DNSMSQ_SERV=77.88.8.8
+		DNSMSQ_SERV2=77.88.8.1
+                ;;
+        9) # AdGuard DNS
+                echo 'nameserver 94.140.14.14' > $DEST_RESOLV
+                echo 'nameserver 94.140.15.15' >> $DEST_RESOLV
+		DNSMSQ_SERV=94.140.14.14
+		DNSMSQ_SERV2=94.140.15.15
+                ;;
+        10) # NextDNS
+                echo 'nameserver 45.90.28.167' > $DEST_RESOLV
+                echo 'nameserver 45.90.30.167' >> $DEST_RESOLV
+		DNSMSQ_SERV=45.90.28.167
+		DNSMSQ_SERV2=45.90.30.167
+                ;;
+	11) # NO CHNAGE
+        	DNSMSQ_SERV=8.8.8.8
+		DNSMSQ_SERV2=8.8.4.4        
+                ;;
+        12) # Custom DNS
+                echo "nameserver $DNS1" > $DEST_RESOLV
+		DNSMSQ_SERV=$DNS1
+		DNSMSQ_SERV2=8.8.8.8
+                if [[ $DNS2 != "" ]]; then
+                        echo "nameserver $DNS2" >> $DEST_RESOLV
+			DNSMSQ_SERV2=$DNS2
+                fi
+                ;;
+        esac
+
 sudo systemctl restart resolvconf.service
 sudo systemctl restart systemd-resolved.service
 echo " Do reboot to take effects."
@@ -625,7 +740,7 @@ echo "1) System Status & Show Status                         6) Show Busy/Used P
 echo "2) JINWYP Kernel Tuner Script                          7) Show Current IPTABLES ROUTING"
 echo "3) Edit SSH config file                                8) Check Public IP by Socks5 Port's Number"
 echo "4) GET BBR STATUS                                      9) Check Public IP by Interface's Name"
-echo "5) All Network Interfaces"
+echo "5) All Network Interfaces                              10) Set DNS Setting Permanently"
 blue "--- VPN Protocoles Menu -----------------------------------------------------------------------------"
 echo "11) CloudFlare WARP+"
 echo "12) WireGuard"
@@ -703,6 +818,12 @@ enter2main
 interfaceCheckCustom
 enter2main
 ;;
+
+11)
+setDNSpermanent
+enter2main
+;;
+
 
 11)
 cloudflaremenu
