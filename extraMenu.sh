@@ -301,7 +301,7 @@ yellow "Cloudflare has installed allready."
 else
 echo "Insatlling CloudFlare Warp+"
 apt --fix-broken install
-apt-get install desktop-file-utils dirmngr gnupg gnupg-l10n gnupg-utils gnupg2 gpg gpg-agent gpg-wks-client gpg-wks-server gpgconf gpgsm libassuan0 libksba8 libnpth0 libnspr4 libnss3 libnss3-tools pinentry-curses
+apt-get install desktop-file-utils nftables dirmngr gnupg gnupg-l10n gnupg-utils gnupg2 gpg gpg-agent gpg-wks-client gpg-wks-server gpgconf gpgsm libassuan0 libksba8 libnpth0 libnspr4 libnss3 libnss3-tools pinentry-curses
 #apt install cloudflare-warp
 ###
 echo "----------------------------------------------------------------------------"
