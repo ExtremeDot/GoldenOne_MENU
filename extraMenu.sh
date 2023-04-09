@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT Multibalance Menu
-scriptVersion=0.06
+scriptVersion=0.07
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
@@ -819,7 +819,7 @@ interfaceCheckCustom
 enter2main
 ;;
 
-11)
+10)
 setDNSpermanent
 enter2main
 ;;
