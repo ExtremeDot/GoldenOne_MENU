@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT Multibalance Menu
-scriptVersion=0.07
+scriptVersion=0.08
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
@@ -191,10 +191,10 @@ if grep -q "127.0.0.53" "/etc/resolv.conf"; then
                 else
                         RESOLVCONF='/etc/resolv.conf'
 fi
-echo " $RESOLVCONF 
+echo "$RESOLVCONF "
 
 echo "`sed -ne 's/^nameserver[[:space:]]\+\([^[:space:]]\+\).*$/\1/p' $RESOLVCONF`"
-echo ""
+echo 
         echo "What DNS resolvers do you want to use with the VPN?"
         echo "   1) Cloudflare (Anycast: worldwide)"
         echo "   2) Quad9 (Anycast: worldwide)"
