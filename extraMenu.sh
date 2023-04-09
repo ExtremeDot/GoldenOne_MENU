@@ -330,9 +330,9 @@ if [ -f "$DLFILE" ];
     echo " check Network and Source files and retry again."
 fi
 
-warp-cli register
-warp-cli enable-always-on
-warp-cli enable-connectivity-checks
+#warp-cli register
+#warp-cli enable-always-on
+#warp-cli enable-connectivity-checks
 fi
 enter2CLmain
 ;;
