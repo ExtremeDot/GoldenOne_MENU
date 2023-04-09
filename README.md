@@ -27,6 +27,17 @@ mv MAIN.sh /bin/GoldenONE && chmod +x /bin/GoldenONE
 
 ```
 
+***
+### eMenu
+
+```
+curl -O https://raw.githubusercontent.com/ExtremeDot/GoldenOne_MENU/main/extraMenu.sh && chmod +x extraMenu.sh
+
+mv extraMenu.sh /bin/eMenu && chmod +x /bin/eMenu
+
+eMenu
+```
+
 
 ***
 
