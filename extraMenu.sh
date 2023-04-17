@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT Multibalance Menu
-scriptVersion=0.08
+scriptVersion=0.09
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
@@ -126,10 +126,6 @@ else
 green "curl has installed"
 fi
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
-# installing sshpass
-if [ $(dpkg-query -W -f='${Status}' sshpass 2>/dev/null | grep -c "ok installed") -eq 0 ];
-then
-echo "nameserver 8.8.8.8" > /etc/resolv.conf
 # installing dnsutils
 if [ $(dpkg-query -W -f='${Status}' dnsutils  2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
@@ -149,6 +145,7 @@ green "net tools has installed allready"
 fi
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
+
 if [ $(dpkg-query -W -f='${Status}' ifupdown  2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
 yellow "Installing ifupdown package"
@@ -156,6 +153,7 @@ apt-get install -y ifupdown
 else
 green "ifupdown has installed allready"
 fi
+
 }
 
 ### DNS
