@@ -1128,9 +1128,11 @@ TAP_INTERFACE=${TAP_INTERFACE:-tap_ext}
 function read_admin_info() {
     echo
     color_echo $GREEN "SoftEther VPN Server Administration Information:"
-    echo
+    echo "------------------------"
+    /bin/seshow
+    echo "------------------------"
     sudo /usr/local/vpnserver/vpncmd localhost /server /adminhub:DEFAULT /cmd ServerStatusGet
-	/bin/seshow
+/bin/seshow
     read -p "Press enter to continue..."
 }
 
