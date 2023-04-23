@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT Multibalance Menu
-scriptVersion=0.12
+scriptVersion=0.13
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
@@ -720,8 +720,7 @@ function mainMenuRun() {
 #MAIN MENU SCRIPt
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 echo -e "${GREEN}"
-yellow " === EXTREME DOT - MultiBalanceVPN  MENU ==============================================[Version $scriptVersion]"
-
+yellow "=== EXTREME DOT - Multi VPN Installer MENU ============================================[Version $scriptVersion]"
 blue "--- Initial Setup -----------------------------------------------------------------------------------"
 echo "1) System Status & Show Status                         6) Show Busy/Used Ports by System"
 echo "2) JINWYP Kernel Tuner Script                          7) Show Current IPTABLES ROUTING"
@@ -737,7 +736,7 @@ echo "15) V2RAY, XRAY"
 blue "--- MultiBalance Menu -------------------------------------------------------------------------------"
 
 echo
-echo "0)  EXIT                                             98) Reboot Linux      99) Update MultiBalanceVPN"
+echo "0)  EXIT                                             98) Reboot Linux      99) Update eMenu Script"
 yellow "Please Enter the Number ============================================================================="
 echo -e "${GREEN}"
 MENUITEMR=""
