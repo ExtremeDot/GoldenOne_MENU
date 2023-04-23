@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT Multibalance Menu
-scriptVersion=0.13
+scriptVersion=0.14
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
