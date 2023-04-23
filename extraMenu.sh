@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT Multibalance Menu
-scriptVersion=0.09
+scriptVersion=0.10
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
@@ -702,6 +702,17 @@ bash /Golden1/WireGuard/wireguard-install.sh
 fi
 }
 
+function softEtherMenu() {
+if test -f "/Golden1/SoftEther/softether2023.sh";
+then
+bash /Golden1/SoftEther/softether2023.sh
+else
+mkdir -p /Golden1/WireSoftEtherGuard/
+cd /Golden1/SoftEther/
+curl -O https://raw.githubusercontent.com/ExtremeDot/GoldenOne_MENU/main/softether2023.sh
+chmod +x /SoftEther/softether2023.sh
+bash /SoftEther/softether2023.sh
+}
 
 function mainMenuRun() {
 #MAIN MENU SCRIPt
@@ -806,6 +817,11 @@ enter2main
 
 12)
 wireGuardAngristanInstall
+enter2main
+;;
+
+14)
+softEtherMenu
 enter2main
 ;;
 
