@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT Multibalance Menu
-scriptVersion=0.11
+scriptVersion=0.12
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
@@ -710,8 +710,8 @@ else
 mkdir -p /Golden1/SoftEther/
 cd /Golden1/SoftEther/
 curl -O https://raw.githubusercontent.com/ExtremeDot/GoldenOne_MENU/main/softether2023.sh
-chmod +x /SoftEther/softether2023.sh
-bash /SoftEther/softether2023.sh
+chmod +x /Golden1/SoftEther/softether2023.sh
+bash /Golden1/SoftEther/softether2023.sh
 fi
 
 }
