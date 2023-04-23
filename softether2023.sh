@@ -1000,10 +1000,10 @@ echo -e "${GREEN}Script is running as root.${NC}"
 # Function to display the main menu
 function SE_main_menu() {
     clear
-    color_echo $BLUE "==========================="
+    color_echo $BLUE "===================================================="
     color_echo $BLUE " $SCRIPT_NAME "
     color_echo $BLUE " Version: $SCRIPT_VERSION "
-    color_echo $BLUE "==========================="
+    color_echo $BLUE "===================================================="
     echo
     color_echo $YELLOW "1) Auto Installer SoftEther VPNServer"
     color_echo $YELLOW "2) Start VPNServer"
