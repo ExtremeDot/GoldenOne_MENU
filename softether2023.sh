@@ -14,6 +14,11 @@ function color_echo() {
 }
 
 
+# Define version info
+SCRIPT_NAME="Softether VPN Server Installer Script By ExtremeDot"
+SCRIPT_VERSION="1.0"
+
+
 # Function to display a progress bar with time remaining and a custom message
 function time_remaining_progress_bar() {
   local duration=$1
@@ -992,38 +997,142 @@ fi
 
 echo -e "${GREEN}Script is running as root.${NC}"
 
-# Set target directory and create it if it does not exist
+# Function to display the main menu
+function SE_main_menu() {
+    clear
+    color_echo $BLUE "==========================="
+    color_echo $BLUE " $SCRIPT_NAME "
+    color_echo $BLUE " Version: $SCRIPT_VERSION "
+    color_echo $BLUE "==========================="
+    echo
+    color_echo $YELLOW "1) Auto Installer SoftEther VPNServer"
+    color_echo $YELLOW "2) Start VPNServer"
+    color_echo $YELLOW "3) Stop VPNServer"
+    color_echo $YELLOW "4) Edit vpnserver file"
+    color_echo $YELLOW "5) Edit dnsmasq config"
+    color_echo $YELLOW "6) Restart dnsmasq"
+    color_echo $YELLOW "7) Generate vpnserver file"
+    color_echo $YELLOW "8) Generate dnsmasq config file"
+    color_echo $YELLOW "9) Read Softether Administration Info"
+    color_echo $YELLOW "0) Exit"
+    color_echo $YELLOW "99) Back to extraMenu script"
+    echo
+    read -p "Please enter your choice: " choice
+    case $choice in
+        1) auto_installer;;
+        2) start_vpnserver;;
+        3) stop_vpnserver;;
+        4) edit_vpnserver_file;;
+        5) edit_dnsmasq_config;;
+        6) restart_dnsmasq;;
+        7) generate_vpnserver_file;;
+        8) customInstallDNSMASQ;;
+        9) read_admin_info;;
+        0) exit;;
+        99) ./extraMenu.sh;;
+        *) echo "Invalid option. Press enter to continue..."
+           read enterKey;;
+    esac
+}
+
+# Function to install SoftEther VPN Server
+function auto_installer() {
+    color_echo $GREEN "Starting SoftEther VPN Server installation..."
+	# Check if script is running as root
+if ! 01_isRoot; then
+    echo -e "${RED}Sorry, you need to run this as root.${NC}"
+	time_remaining_progress_bar 2 "Root access has failed, exit."
+    exit 1
+fi
+
+echo -e "${GREEN}Script is running as root.${NC}"
 02_setTarget
-
-# Clean SoftEther installation
 03_cleanInstall
-
-# Check and install prerequisite apps
 04_checkPrereq
-
-# Ask for default values
 05_askDefaults
-
-# Installing DNSMSQ Service
 06_dnsmasqInstall
-
-# Install SoftEtherVPN_Installer
 07_SoftEtherVPN_Installer
-
-# Function to prompt user to select DNS resolvers
 08_selectDNS
-
-# Function to set up DNS
 09_dnsVpnApply
-
-# Call install mode function
 10_SoftEtherInstallMode
+13_dnsmasqConfigGenerator
+14_runVPNServer1st
+15_firstTimeConfigurator
+read -p "Press enter to continue..."
+}
 
-# dnsmasqConfigGenerator
+# Function to start VPN server
+function start_vpnserver() {
+    sudo /etc/init.d/vpnserver start
+    read -p "Press enter to continue..."
+}
+
+# Function to stop VPN server
+function stop_vpnserver() {
+    sudo /etc/init.d/vpnserver stop
+    read -p "Press enter to continue..."
+}
+
+# Function to edit vpnserver file
+function edit_vpnserver_file() {
+    sudo nano /etc/init.d/vpnserver
+    read -p "Press enter to continue..."
+}
+
+# Function to edit dnsmasq config
+function edit_dnsmasq_config() {
+    sudo nano /etc/dnsmasq.conf
+    read -p "Press enter to continue..."
+}
+
+# Function to restart dnsmasq
+function restart_dnsmasq() {
+    sudo systemctl restart dnsmasq
+    read -p "Press enter to continue..."
+}
+
+# Function to generate vpnserver file
+function generate_vpnserver_file() {
+    10_SoftEtherInstallMode
+    read -p "Press enter to continue..."
+}
+
+# Function to generate dnsmasq config file
+function customInstallDNSMASQ() {
+    SERVER_IP=$(ip -4 addr | sed -ne 's|^.* inet \([^/]*\)/.* scope global.*$|\1|p' | head -1)
+    if [[ -z $SERVER_IP ]]; then
+        # Detect public IPv6 address
+        SERVER_IP=$(ip -6 addr | sed -ne 's|^.* inet6 \([^/]*\)/.* scope global.*$|\1|p' | head -1)
+    fi
+
+    read -rp "IP address: " -e -i "$SERVER_IP" IP
+    SERVER_IP="${IP:-$SERVER_IP}"
+    echo " "
+	
+read -p "Enter the IP address range for the TAP interface [10.10.129.0/24]: " TAP_NETWORK
+TAP_NETWORK=${TAP_NETWORK:-10.10.129.0/24}
+
+read -p "Enter the gateway IP address for the TAP interface [10.10.129.1]: " TAP_GATEWAY
+TAP_GATEWAY=${TAP_GATEWAY:-10.10.129.1}
+
+read -p "Enter the name of the TAP interface [tap_ext]: " TAP_INTERFACE
+TAP_INTERFACE=${TAP_INTERFACE:-tap_ext}
+
+08_selectDNS
 13_dnsmasqConfigGenerator
 
-# run VPN SERVER
-14_runVPNServer1st
+    color_echo $GREEN "dnsmasq config file generated!"
+    read -p "Press enter to continue..."
+}
 
-# first run setup config generator
-15_firstTimeConfigurator
+# Function to read Softether Administration Info
+function read_admin_info() {
+    echo
+    color_echo $GREEN "SoftEther VPN Server Administration Information:"
+    echo
+    sudo /usr/local/vpnserver/vpncmd localhost /server /adminhub:DEFAULT /cmd ServerStatusGet
+	/bin/seshow
+    read -p "Press enter to continue..."
+}
+
+SE_main_menu
