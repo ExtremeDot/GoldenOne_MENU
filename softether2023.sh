@@ -1,5 +1,5 @@
 #!/bin/bash
-
+clear
 # Define color sets for different types of messages
 RED='\033[0;31m'
 YELLOW='\033[0;33m'
@@ -1014,8 +1014,8 @@ function SE_main_menu() {
     color_echo $YELLOW "7) Generate vpnserver file"
     color_echo $YELLOW "8) Generate dnsmasq config file"
     color_echo $YELLOW "9) Read Softether Administration Info"
-    color_echo $YELLOW "0) Exit"
-    color_echo $YELLOW "99) Back to extraMenu script"
+    color_echo $YELLOW "0) Exit and Back to extraMenu script"
+
     echo
     read -p "Please enter your choice: " choice
     case $choice in
@@ -1029,7 +1029,6 @@ function SE_main_menu() {
         8) customInstallDNSMASQ;;
         9) read_admin_info;;
         0) exit;;
-        99) ./extraMenu.sh;;
         *) echo "Invalid option. Press enter to continue..."
            read enterKey;;
     esac
