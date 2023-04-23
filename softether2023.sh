@@ -1028,7 +1028,7 @@ function SE_main_menu() {
         7) generate_vpnserver_file;;
         8) customInstallDNSMASQ;;
         9) read_admin_info;;
-        0) exit;;
+        0) clear && exit;;
         *) echo "Invalid option. Press enter to continue..."
            read enterKey;;
     esac
@@ -1058,42 +1058,49 @@ echo -e "${GREEN}Script is running as root.${NC}"
 14_runVPNServer1st
 15_firstTimeConfigurator
 read -p "Press enter to continue..."
+SE_main_menu
 }
 
 # Function to start VPN server
 function start_vpnserver() {
     sudo /etc/init.d/vpnserver start
     read -p "Press enter to continue..."
+    SE_main_menu
 }
 
 # Function to stop VPN server
 function stop_vpnserver() {
     sudo /etc/init.d/vpnserver stop
     read -p "Press enter to continue..."
+    SE_main_menu
 }
 
 # Function to edit vpnserver file
 function edit_vpnserver_file() {
     sudo nano /etc/init.d/vpnserver
     read -p "Press enter to continue..."
+    SE_main_menu
 }
 
 # Function to edit dnsmasq config
 function edit_dnsmasq_config() {
     sudo nano /etc/dnsmasq.conf
     read -p "Press enter to continue..."
+    SE_main_menu
 }
 
 # Function to restart dnsmasq
 function restart_dnsmasq() {
     sudo systemctl restart dnsmasq
     read -p "Press enter to continue..."
+    SE_main_menu
 }
 
 # Function to generate vpnserver file
 function generate_vpnserver_file() {
     10_SoftEtherInstallMode
     read -p "Press enter to continue..."
+    SE_main_menu
 }
 
 # Function to generate dnsmasq config file
@@ -1122,6 +1129,7 @@ TAP_INTERFACE=${TAP_INTERFACE:-tap_ext}
 
     color_echo $GREEN "dnsmasq config file generated!"
     read -p "Press enter to continue..."
+    SE_main_menu
 }
 
 # Function to read Softether Administration Info
@@ -1134,6 +1142,7 @@ function read_admin_info() {
     sudo /usr/local/vpnserver/vpncmd localhost /server /adminhub:DEFAULT /cmd ServerStatusGet
 /bin/seshow
     read -p "Press enter to continue..."
+    SE_main_menu
 }
 
 SE_main_menu
