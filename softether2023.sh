@@ -16,7 +16,7 @@ function color_echo() {
 
 # Define version info
 SCRIPT_NAME="Softether VPN Server Installer Script By ExtremeDot"
-SCRIPT_VERSION="1.3"
+SCRIPT_VERSION="1.4"
 
 
 # Function to display a progress bar with time remaining and a custom message
@@ -242,10 +242,10 @@ function 07_SoftEtherVPN_Installer() {
 
     # Install SoftEther
     color_echo $BLUE "Installing SoftEther..."
-    cd ${DOWNLOAD_FOLDER}vpnserver
+    cd ${TARGET}vpnserver
     expect -c 'spawn make; expect number:; send 1\r; expect number:; send 1\r; expect number:; send 1\r; interact'
-    find ${DOWNLOAD_FOLDER}vpnserver -type f -print0 | xargs -0 chmod 600
-    chmod 700 ${DOWNLOAD_FOLDER}vpnserver/vpnserver ${DOWNLOAD_FOLDER}vpnserver/vpncmd
+    find ${TARGET}vpnserver -type f -print0 | xargs -0 chmod 600
+    chmod 700 ${TARGET}vpnserver/vpnserver ${TARGET}vpnserver/vpncmd
     mkdir -p /var/lock/subsys
 
     color_echo $GREEN "SoftEther installation complete."
@@ -555,7 +555,7 @@ cat > $vpnServerPathFile <<EOF
 #!/bin/bash
 
 # Set the path to the VPN server binary
-VPN_SERVER=${VPN_SERVER_PATH}
+DAEMON=${VPN_SERVER_PATH}
 
 # Set the path to the lock file
 LOCK_FILE=${LOCK_FILE_PATH}
@@ -605,7 +605,7 @@ case "\$1" in
     # Start the VPN server and configure the network settings
     start)
         echo "Setting up IP tables"
-        \$VPN_SERVER start
+        \$DAEMON start
         touch \$LOCK_FILE
         sleep 1
         \$IP_BIN addr add \$TAP_STATIC brd + dev \$TAP_INTERFACE
@@ -660,15 +660,15 @@ cat >> $vpnServerPathFile <<EOF
 
     # Stop the VPN server and remove the lock file
     stop)
-        \$VPN_SERVER stop
+        \$DAEMON stop
         rm \$LOCK_FILE
         ;;
 
     # Restart the VPN server and configure the network settings
     restart)
-        \$VPN_SERVER stop
+        \$DAEMON stop
         sleep 1
-        \$VPN_SERVER start
+        \$DAEMON start
         sleep 1
         \$IP_BIN addr add \$TAP_STATIC brd + dev \$TAP_INTERFACE
         ;;
@@ -691,7 +691,7 @@ cat > $vpnServerPathFile <<EOF
 #!/bin/bash
 
 # Set the path to the VPN server binary
-VPN_SERVER=${VPN_SERVER_PATH}
+DAEMON=${VPN_SERVER_PATH}
 
 # Set the path to the lock file
 LOCK_FILE=${LOCK_FILE_PATH}
@@ -725,7 +725,7 @@ case "\$1" in
     # Start the VPN server and configure the network settings
     start)
         echo "Setting up IP tables"
-        \$VPN_SERVER start
+        \$DAEMON start
         touch \$LOCK_FILE
         sleep 1
 #        \$IP_BIN addr add \$TAP_GATEWAY brd + dev \$TAP_INTERFACE
@@ -747,17 +747,17 @@ case "\$1" in
 
     # Stop the VPN server and remove the lock file
     stop)
-        \$VPN_SERVER stop
+        \$DAEMON stop
         rm \$LOCK_FILE
 		\$IPTABLES_BIN -t nat -D POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
         ;;
 
     # Restart the VPN server and configure the network settings
     restart)
-        \$VPN_SERVER stop
+        \$DAEMON stop
 		\$IPTABLES_BIN -t nat -D POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
         sleep 1
-        \$VPN_SERVER start
+        \$DAEMON start
 		\$IPTABLES_BIN -t nat -A POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
         sleep 1
 #        \$IP_BIN addr add \$TAP_GATEWAY brd + dev \$TAP_INTERFACE
