@@ -179,10 +179,11 @@ function 06_dnsmasqInstall() {
 
 function 07_SoftEtherVPN_Installer() {
     DOWNLOAD_FOLDER="/Golden1/SoftEther/"
-    color_echo $BLUE " "
-    color_echo $BLUE "Always check the GitHUB or Official Site for latest releases"
-    color_echo $YELLOW "GITHUB:           https://github.com/SoftEtherVPN/SoftEtherVPN_Stable"
-    color_echo $YELLOW "OFFICIAL Site:    https://www.softether-download.com/en.aspx"
+    echo
+    color_echo $BLUE "========================================================================"
+    color_echo $YELLOW "Always check the GitHUB or Official Site for latest releases"
+    color_echo $BLUE "GITHUB:           https://github.com/SoftEtherVPN/SoftEtherVPN_Stable"
+    color_echo $BLUE "OFFICIAL Site:    https://www.softether-download.com/en.aspx"
     color_echo $BLUE ""
 
     while true; do
@@ -282,7 +283,7 @@ color_echo $YELLOW "Current DNS is set to:  $RESOLVCONF"
   echo "   11) SKIP, No change"
   echo "   12) Custom"
   until [[ $DNS =~ ^[0-9]+$ ]] && [ "$DNS" -ge 1 ] && [ "$DNS" -le 12 ]; do
-    read -rp "DNS [1-12]: " -e -i 9 DNS
+    read -rp "DNS [1-12]: " -e -i 1 DNS
 
     if [[ $DNS == "12" ]]; then
       until [[ $DNS1 =~ ^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$ ]]; do
