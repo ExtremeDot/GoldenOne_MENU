@@ -193,10 +193,11 @@ function 07_SoftEtherVPN_Installer() {
 
     while true; do
         color_echo $GREEN "Select the SoftEther VPN server download link:"
-        color_echo $BLUE "1. Use v4.41-9787-beta version (Release Date: 2023-03-14)"
+	echo
+        color_echo $YELLOW "1. Use v4.41-9787-beta version (Release Date: 2023-03-14)"
         color_echo $YELLOW "2. Use custom version"
         color_echo $RED "3. Exit"
-        color_echo $BLUE " "
+        color_echo $GREEN " "
         read -p "Enter your choice [1, 2 or 3]: " choice
 
         case $choice in
@@ -477,13 +478,13 @@ EOF
 function 12_dnsMsqSoftEtherInstallMode() {
 
 DNSMSQMODE=1
-# Set the default value for IPTABLESBIN
-IPTABLESBIN=/usr/sbin/iptables
+# Set the default value for IPTABLES_BIN
+IPTABLES_BIN=/usr/sbin/iptables
 
 # Check if the iptables binary exists
-if [ -x "$IPTABLESBIN" ]; then
-    # Set the default value for IPTABLESBIN
-    IPTABLESBIN=$IPTABLESBIN
+if [ -x "$IPTABLES_BIN" ]; then
+    # Set the default value for IPTABLES_BIN
+    IPTABLES_BIN=$IPTABLES_BIN
 else
     # If the binary does not exist, print an error message and exit
 	if ! command -v iptables &> /dev/null; then
@@ -535,6 +536,8 @@ LOCK_FILE_PATH=${LOCK_FILE_PATH:-/var/lock/subsys/vpnserver}
 
 read -p "Enter the name of the TAP interface [tap_ext]: " TAP_INTERFACE
 TAP_INTERFACE=${TAP_INTERFACE:-tap_ext}
+
+TAP_INTERFACECMD="${TAP_INTERFACE#tap_}"
 
 read -p "Enter the IP address range for the TAP interface [10.10.129.0/24]: " TAP_NETWORK
 TAP_NETWORK=${TAP_NETWORK:-10.10.129.0/24}
@@ -599,7 +602,7 @@ LOCK_FILE=${LOCK_FILE_PATH}
 
 # Set the path to the IP tool binary
 IP_BIN=${IP_BIN}
-IPTABLES_BIN=${IPTABLESBIN}
+IPTABLES_BIN=${IPTABLES_BIN}
 
 # Set the name of the TAP interface
 TAP_INTERFACE=${TAP_INTERFACE}
@@ -690,8 +693,8 @@ cat >> $vpnServerPathFile <<EOF
 # Enable IP forwarding
 echo 1 > /proc/sys/net/ipv4/ip_forward
 # Add iptables rules to allow traffic through
-\$IPTABLESBIN -A FORWARD -o \$TAP_INTERFACE -j ACCEPT
-\$IPTABLESBIN -A FORWARD -i \$TAP_INTERFACE -j ACCEPT
+\$IPTABLES_BIN -A FORWARD -o \$TAP_INTERFACE -j ACCEPT
+\$IPTABLES_BIN -A FORWARD -i \$TAP_INTERFACE -j ACCEPT
 ;;
 
 # Stop the VPN server and remove the lock file
@@ -734,7 +737,7 @@ LOCK_FILE=${LOCK_FILE_PATH}
 
 # Set the path to the IP tool binary
 IP_BIN=${IP_BIN}
-IPTABLES_BIN=${IPTABLESBIN}
+IPTABLES_BIN=${IPTABLES_BIN}
 IFCONFIG_BIN=/sbin/ifconfig
 DNSMASQ_BIN=/etc/init.d/dnsmasq
 
@@ -776,8 +779,8 @@ sleep 1
 # Enable IP forwarding
 echo 1 > /proc/sys/net/ipv4/ip_forward
 # Add iptables rules to allow traffic through
-\$IPTABLESBIN -A FORWARD -o \$TAP_INTERFACE -j ACCEPT
-\$IPTABLESBIN -A FORWARD -i \$TAP_INTERFACE -j ACCEPT
+\$IPTABLES_BIN -A FORWARD -o \$TAP_INTERFACE -j ACCEPT
+\$IPTABLES_BIN -A FORWARD -i \$TAP_INTERFACE -j ACCEPT
 ;;
 
 # Stop the VPN server and remove the lock file
@@ -974,7 +977,7 @@ update-rc.d vpnserver defaults
 
 function 15_firstTimeConfigurator() {
 echo ""
-echo "Do you want to run optimized First RUN Setup Script [IRAN]?"
+echo "Do you want to run optimized First RUN Setup Script?"
 echo "It will set the initial setup for yor server."
 echo ""
 until [[ $CUSTOMIZE_SETUP =~ (y|n) ]]; do
@@ -997,7 +1000,7 @@ ${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD Hu
 ${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /HUB:${HUB} /CMD UserCreate ${USER} /GROUP:none /REALNAME:none /NOTE:none
 ${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /HUB:${HUB} /CMD UserPasswordSet ${USER} /PASSWORD:${USER_PASSWORD}
 ${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD IPsecEnable /L2TP:yes /L2TPRAW:yes /ETHERIP:yes /PSK:${SHARED_KEY} /DEFAULTHUB:${HUB}
-${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD BridgeCreate ${HUB} /DEVICE:soft /TAP:yes
+${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD BridgeCreate ${HUB} /DEVICE:${TAP_INTERFACECMD} /TAP:yes
 ${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD ServerCipherSet AES128-SHA256
 ${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD ServerCertRegenerate ${SERVER_IP}
 ${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD VpnOverIcmpDnsEnable /ICMP:yes /DNS:yes
@@ -1005,6 +1008,9 @@ ${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD Vp
 if [ "$SECUREMODESTAT" = "1" ]; then
 echo "Enabling Secure NAT"
 ${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /HUB:VPN /CMD SecureNatEnable
+else
+echo "Disabling Secure NAT"
+${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /HUB:VPN /CMD SecureNatDisable
 fi
 
 else
