@@ -16,7 +16,7 @@ function color_echo() {
 
 # Define version info
 SCRIPT_NAME="Softether VPN Server Installer Script By ExtremeDot"
-SCRIPT_VERSION="1.5"
+SCRIPT_VERSION="1.6"
 
 
 # Function to display a progress bar with time remaining and a custom message
@@ -246,6 +246,9 @@ function 07_SoftEtherVPN_Installer() {
 
     # Install SoftEther
     color_echo $BLUE "Installing SoftEther..."
+    HUB="VPN"
+    HUB_PASSWORD=${SERVER_PASSWORD}
+    USER_PASSWORD=${SERVER_PASSWORD}
     cd ${TARGET}vpnserver
     expect -c 'spawn make; expect number:; send 1\r; expect number:; send 1\r; expect number:; send 1\r; interact'
     find ${TARGET}vpnserver -type f -print0 | xargs -0 chmod 600
