@@ -245,7 +245,28 @@ function 07_SoftEtherVPN_Installer() {
 		time_remaining_progress_bar 10 "Failed to download files, exit."
         exit 0
     fi
+    EXTRACT_FLDR="/usr/local/vpnserver"
+    FILESVPNR=("Authors.txt" "hamcore.se2" "Makefile" "ReadMeFirst_Important_Notices_cn.txt" "ReadMeFirst_Important_Notices_en.txt" "ReadMeFirst_Important_Notices_ja.txt" "ReadMeFirst_License.txt" "vpn_server.config")
+    FOUND_ALL_FILES=false
+    
+    while [ "$FOUND_ALL_FILES" = false ]
+    do
+    	MISSING_FILES=()
+	for file in "${FILESVPNR[@]}"
+	do
+		if [ ! -f "$EXTRACT_FLDR/$file" ]; then
+			MISSING_FILES+=("$file")
+		fi
+	done
+	
+    if [ ${#MISSING_FILES[@]} -eq 0 ]; then
+        FOUND_ALL_FILES=true
+        echo "All files are available in $EXTRACT_FLDR"
+    else
+    	echo "Error: The following files are missing in $EXTRACT_FLDR: ${MISSING_FILES[*]}"
+	time_remaining_progress_bar 10 "Waiting to Extracting file get finished..."
 
+    fi
     # Install SoftEther
     color_echo $BLUE "Installing SoftEther..."
     HUB="VPN"
@@ -1166,7 +1187,6 @@ function read_admin_info() {
     /bin/seshow
     echo "------------------------"
     sudo /usr/local/vpnserver/vpncmd localhost /server /adminhub:DEFAULT /cmd ServerStatusGet
-/bin/seshow
     read -p "Press enter to continue..."
     SE_main_menu
 }
