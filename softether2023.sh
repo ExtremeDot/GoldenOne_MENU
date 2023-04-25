@@ -16,7 +16,7 @@ function color_echo() {
 
 # Define version info
 SCRIPT_NAME="Softether VPN Server Installer Script By ExtremeDot"
-SCRIPT_VERSION="1.7"
+SCRIPT_VERSION="1.8"
 
 
 # Function to display a progress bar with time remaining and a custom message
@@ -1040,7 +1040,7 @@ function SE_main_menu() {
     color_echo $YELLOW "7) Generate vpnserver file"
     color_echo $YELLOW "8) Generate dnsmasq config file"
     color_echo $YELLOW "9) Read Softether Administration Info"
-    color_echo $YELLOW "0) Exit and Back to eMenu script"
+    color_echo $YELLOW "0) Exit and Back to extraMenu script"
 
     echo
     read -p "Please enter your choice: " choice
