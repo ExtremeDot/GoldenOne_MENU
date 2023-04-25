@@ -1,4 +1,9 @@
 #!/bin/bash
+
+# Define version info
+SCRIPT_NAME="Softether VPN Server Installer Script By ExtremeDot"
+SCRIPT_VERSION="1.12"
+
 clear
 # Define color sets for different types of messages
 RED='\033[0;31m'
@@ -12,12 +17,6 @@ function color_echo() {
     shift
     echo -e "${COLOR}$@${NC}"
 }
-
-
-# Define version info
-SCRIPT_NAME="Softether VPN Server Installer Script By ExtremeDot"
-SCRIPT_VERSION="1.11"
-
 
 # Function to display a progress bar with time remaining and a custom message
 function time_remaining_progress_bar() {
@@ -250,7 +249,7 @@ function 07_SoftEtherVPN_Installer() {
         exit 0
     fi
     EXTRACT_FLDR="/usr/local/vpnserver"
-    FILESVPNR=("Authors.txt" "hamcore.se2" "Makefile" "ReadMeFirst_Important_Notices_cn.txt" "ReadMeFirst_Important_Notices_en.txt" "ReadMeFirst_Important_Notices_ja.txt" "ReadMeFirst_License.txt" "vpn_server.config")
+    FILESVPNR=("hamcore.se2" "Makefile" "Makefile install.sh" )
     FOUND_ALL_FILES=false
     
     while [ "$FOUND_ALL_FILES" = false ]
