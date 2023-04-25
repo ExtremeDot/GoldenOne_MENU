@@ -631,21 +631,21 @@ fi
 
 cat >> $vpnServerPathFile <<EOF
 # Check if the VPN server binary exists
-if [ ! -x "\$VPN_SERVER" ]; then
-    echo "Error: \$VPN_SERVER not found or not executable"
-    exit 1
+if [ ! -x "\$DAEMON" ]; then
+echo "Error: \$DAEMON not found or not executable"
+exit 1
 fi
 
 case "\$1" in
 
-    # Start the VPN server and configure the network settings
-    start)
-        echo "Setting up IP tables"
-        \$DAEMON start
-        touch \$LOCK_FILE
-        sleep 1
-        \$IP_BIN addr add \$TAP_STATIC brd + dev \$TAP_INTERFACE
-        sleep 3
+# Start the VPN server and configure the network settings
+start)
+echo "Setting up IP tables"
+\$DAEMON start
+touch \$LOCK_FILE
+sleep 1
+\$IP_BIN addr add \$TAP_STATIC brd + dev \$TAP_INTERFACE
+sleep 3
 EOF
 
 # Append variables for each VPN hop to the script file
@@ -654,21 +654,21 @@ for ((i=1; i<=num_hops; i++)); do
 eval "desc=\$VPN_HOP_${i}_DESC"
 eval "network=\$VPN_HOP_${i}_NETWORK"
 cat >> $vpnServerPathFile <<EOF
-		# Check if the routing rule for ${desc} already exists before adding it
-        if ! \$IP_BIN rule show | grep -q "from \$${desc}_NETWORK lookup \$VPN_TABLE"; then
-            \$IP_BIN rule add from \$${desc}_NETWORK lookup \$VPN_TABLE
-        fi
+# Check if the routing rule for ${desc} already exists before adding it
+if ! \$IP_BIN rule show | grep -q "from \$${desc}_NETWORK lookup \$VPN_TABLE"; then
+\$IP_BIN rule add from \$${desc}_NETWORK lookup \$VPN_TABLE
+fi
 
 EOF
 done
 fi
 
 cat >> $vpnServerPathFile <<EOF
-        sleep 1
-        \$IP_BIN route add default via \$TAP_GATEWAY dev \$TAP_INTERFACE proto static table \$VPN_TABLE
-        sleep 1
-        \$IPTABLES_BIN -t nat -F
-        sleep 1
+sleep 1
+\$IP_BIN route add default via \$TAP_GATEWAY dev \$TAP_INTERFACE proto static table \$VPN_TABLE
+sleep 1
+\$IPTABLES_BIN -t nat -F
+sleep 1
 EOF
 
 # Append variables for each VPN hop to the script file
@@ -677,43 +677,42 @@ for ((i=1; i<=num_hops; i++)); do
 eval "desc=\$VPN_HOP_${i}_DESC"
 eval "network=\$VPN_HOP_${i}_NETWORK"
 cat >> $vpnServerPathFile <<EOF
-        # Multi-Hops - Routing ${desc} to Use $TAP_INTERFACE network
-		\$IPTABLES_BIN -t nat -A POSTROUTING -s \$${desc}_NETWORK -o \$TAP_INTERFACE -j MASQUERADE
-        sleep 1
+# Multi-Hops - Routing ${desc} to Use $TAP_INTERFACE network
+\$IPTABLES_BIN -t nat -A POSTROUTING -s \$${desc}_NETWORK -o \$TAP_INTERFACE -j MASQUERADE
+sleep 1
 
 EOF
 done
 fi
 
 cat >> $vpnServerPathFile <<EOF
-        # Enable IP forwarding
-        echo 1 > /proc/sys/net/ipv4/ip_forward
+# Enable IP forwarding
+echo 1 > /proc/sys/net/ipv4/ip_forward
+# Add iptables rules to allow traffic through
+\$IPTABLESBIN -A FORWARD -o \$TAP_INTERFACE -j ACCEPT
+\$IPTABLESBIN -A FORWARD -i \$TAP_INTERFACE -j ACCEPT
+;;
 
-        # Add iptables rules to allow traffic through
-        \$IPTABLESBIN -A FORWARD -o \$TAP_INTERFACE -j ACCEPT
-        \$IPTABLESBIN -A FORWARD -i \$TAP_INTERFACE -j ACCEPT
-        ;;
+# Stop the VPN server and remove the lock file
+stop)
+\$DAEMON stop
+rm \$LOCK_FILE
+;;
 
-    # Stop the VPN server and remove the lock file
-    stop)
-        \$DAEMON stop
-        rm \$LOCK_FILE
-        ;;
+# Restart the VPN server and configure the network settings
+restart)
+\$DAEMON stop
+sleep 1
+\$DAEMON start
+sleep 1
+\$IP_BIN addr add \$TAP_STATIC brd + dev \$TAP_INTERFACE
+;;
 
-    # Restart the VPN server and configure the network settings
-    restart)
-        \$DAEMON stop
-        sleep 1
-        \$DAEMON start
-        sleep 1
-        \$IP_BIN addr add \$TAP_STATIC brd + dev \$TAP_INTERFACE
-        ;;
-
-    # Display usage information
-    *)
-        echo "Usage: \$0 {start|stop|restart}"
-        exit 1
-        ;;
+# Display usage information
+*)
+echo "Usage: \$0 {start|stop|restart}"
+exit 1
+;;
 esac
 
 exit 0
@@ -751,60 +750,60 @@ TAP_NETWORK=${TAP_NETWORK}
 TAP_GATEWAY=${TAP_GATEWAY}
 
 # Check if the VPN server binary exists
-if [ ! -x "\$VPN_SERVER" ]; then
-    echo "Error: \$VPN_SERVER not found or not executable"
+if [ ! -x "\$DAEMON" ]; then
+    echo "Error: \$DAEMON not found or not executable"
     exit 1
 fi
 
 case "\$1" in
 
-    # Start the VPN server and configure the network settings
-    start)
-        echo "Setting up IP tables"
-        \$DAEMON start
-        touch \$LOCK_FILE
-        sleep 1
+# Start the VPN server and configure the network settings
+start)
+echo "Setting up IP tables"
+\$DAEMON start
+touch \$LOCK_FILE
+sleep 1
 #        \$IP_BIN addr add \$TAP_GATEWAY brd + dev \$TAP_INTERFACE
-		\$IFCONFIG_BIN \$TAP_INTERFACE \$TAP_GATEWAY
-        sleep 3
-		\$DNSMASQ_BIN restart
-        sleep 1
-        \$IPTABLES_BIN -t nat -A POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
-        sleep 1
-        \$IPTABLES_BIN -t nat -F
-        sleep 1
-        # Enable IP forwarding
-        echo 1 > /proc/sys/net/ipv4/ip_forward
+\$IFCONFIG_BIN \$TAP_INTERFACE \$TAP_GATEWAY
+sleep 3
+\$DNSMASQ_BIN restart
+sleep 1
+\$IPTABLES_BIN -t nat -A POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
+sleep 1
+\$IPTABLES_BIN -t nat -F
+sleep 1
+# Enable IP forwarding
+echo 1 > /proc/sys/net/ipv4/ip_forward
+# Add iptables rules to allow traffic through
+\$IPTABLESBIN -A FORWARD -o \$TAP_INTERFACE -j ACCEPT
+\$IPTABLESBIN -A FORWARD -i \$TAP_INTERFACE -j ACCEPT
+;;
 
-        # Add iptables rules to allow traffic through
-        \$IPTABLESBIN -A FORWARD -o \$TAP_INTERFACE -j ACCEPT
-        \$IPTABLESBIN -A FORWARD -i \$TAP_INTERFACE -j ACCEPT
-        ;;
+# Stop the VPN server and remove the lock file
+stop)
 
-    # Stop the VPN server and remove the lock file
-    stop)
-        \$DAEMON stop
-        rm \$LOCK_FILE
-		\$IPTABLES_BIN -t nat -D POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
-        ;;
+\$DAEMON stop
+rm \$LOCK_FILE
+\$IPTABLES_BIN -t nat -D POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
+;;
 
-    # Restart the VPN server and configure the network settings
-    restart)
-        \$DAEMON stop
-		\$IPTABLES_BIN -t nat -D POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
-        sleep 1
-        \$DAEMON start
-		\$IPTABLES_BIN -t nat -A POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
-        sleep 1
-#        \$IP_BIN addr add \$TAP_GATEWAY brd + dev \$TAP_INTERFACE
-		\$IFCONFIG_BIN \$TAP_INTERFACE \$TAP_GATEWAY
-        ;;
+# Restart the VPN server and configure the network settings
+restart)
+\$DAEMON stop
+\$IPTABLES_BIN -t nat -D POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
+sleep 1
+\$DAEMON start
+\$IPTABLES_BIN -t nat -A POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
+sleep 1
+#\$IP_BIN addr add \$TAP_GATEWAY brd + dev \$TAP_INTERFACE
+\$IFCONFIG_BIN \$TAP_INTERFACE \$TAP_GATEWAY
+;;
 
-    # Display usage information
-    *)
-        echo "Usage: \$0 {start|stop|restart}"
-        exit 1
-        ;;
+# Display usage information
+*)
+echo "Usage: \$0 {start|stop|restart}"
+exit 1
+;;
 esac
 
 exit 0
