@@ -16,7 +16,7 @@ function color_echo() {
 
 # Define version info
 SCRIPT_NAME="Softether VPN Server Installer Script By ExtremeDot"
-SCRIPT_VERSION="1.0"
+SCRIPT_VERSION="1.1"
 
 
 # Function to display a progress bar with time remaining and a custom message
@@ -69,11 +69,18 @@ function 01_isRoot() {
 # Function 02: Set target directory and create it if it does not exist
 function 02_setTarget() {
     TARGET="/usr/local/"
+    DOWNLOAD_FOLDER="/Golden1/SoftEther/"
 
     if [ ! -d "$TARGET" ]; then
         echo -e "${YELLOW}Target directory does not exist, creating it...${NC}"
         mkdir -p $TARGET
         echo -e "${GREEN}Target directory created.${NC}"
+    fi
+    
+    if [ ! -d "$DOWNLOAD_FOLDER" ]; then
+        echo -e "${YELLOW} SoftEthe directory does not exist, creating it...${NC}"
+        mkdir -p $DOWNLOAD_FOLDER
+        echo -e "${GREEN} SoftEther directory created.${NC}"
     fi
 }
 
@@ -168,7 +175,7 @@ function 06_dnsmasqInstall() {
 
 
 function 07_SoftEtherVPN_Installer() {
-    DOWNLOAD_FOLDER="/selatest_install/"
+    DOWNLOAD_FOLDER="/Golden1/SoftEther/"
     color_echo $BLUE " "
     color_echo $BLUE "Always check the GitHUB or Official Site for latest releases"
     color_echo $YELLOW "GITHUB:           https://github.com/SoftEtherVPN/SoftEtherVPN_Stable"
