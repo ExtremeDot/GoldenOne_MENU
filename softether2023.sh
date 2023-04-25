@@ -16,7 +16,7 @@ function color_echo() {
 
 # Define version info
 SCRIPT_NAME="Softether VPN Server Installer Script By ExtremeDot"
-SCRIPT_VERSION="1.1"
+SCRIPT_VERSION="1.3"
 
 
 # Function to display a progress bar with time remaining and a custom message
@@ -228,7 +228,7 @@ function 07_SoftEtherVPN_Installer() {
     if [ -f "$DLFILE" ];
     then
         color_echo $GREEN "Installation files are downloaded."
-        tar xzvf $DLFILE -C $DOWNLOAD_FOLDER
+        tar xzvf $DLFILE -C $TARGET
         sleep 2
         rm -rf $DOWNLOAD_FOLDER/softether-vpnserver-v*
         sleep 2
