@@ -2,7 +2,7 @@
 
 # Define version info
 SCRIPT_NAME="Softether VPN Server Installer Script By ExtremeDot"
-SCRIPT_VERSION="1.13"
+SCRIPT_VERSION="1.15"
 SECUREMODESTAT=0
 clear
 # Define color sets for different types of messages
