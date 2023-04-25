@@ -148,6 +148,8 @@ echo
     SHARED_KEY=$(shuf -i 12345678-99999999 -n 1)
     read -e -i "$SHARED_KEY" -p "Set IPSec Shared Keys: " input
     SHARED_KEY="${input:-$SHARED_KEY}"
+    echo "========================================================="
+    echo "DNSMASQ ---------"
 #    clear
 #    echo -e "${BLUE}Default values:${NC}"
 #    echo "IP: $SERVER_IP"
