@@ -3,7 +3,7 @@
 # Define version info
 SCRIPT_NAME="Softether VPN Server Installer Script By ExtremeDot"
 SCRIPT_VERSION="1.13"
-
+SECUREMODESTAT=0
 clear
 # Define color sets for different types of messages
 RED='\033[0;31m'
@@ -409,7 +409,7 @@ function 10_SoftEtherInstallMode() {
   clear
   echo ""
   echo "Softether Installation Method?"
-  echo "   1) Default, I will set up from SoftEther Manager Program"
+  echo "   1) SecureNAT , I will set up from SoftEther Manager Program [Not Recommended]"
   echo "   2) Local Bridge Mode using virtual tap by dnsmasq"
   until [[ $SETMOD =~ ^[0-2]+$ ]] && [ "$SETMOD" -ge 1 ] && [ "$SETMOD" -le 2 ]; do
     read -rp "SETMOD [1-2]: " -e -i 1 SETMOD
@@ -433,7 +433,8 @@ function 10_SoftEtherInstallMode() {
 
 # 11-secureSoftEtherInstallMode
 function 11_secureSoftEtherInstallMode() {
-  echo "Setting up SoftEther in SECURE-NAT mode..."
+SECUREMODESTAT=1
+echo "Setting up SoftEther in SECURE-NAT mode..."
 
 # Add vpnserver init script for SECURE-NAT mode
   cat <<EOF > /etc/init.d/vpnserver
@@ -1000,6 +1001,12 @@ ${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD Br
 ${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD ServerCipherSet AES128-SHA256
 ${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD ServerCertRegenerate ${SERVER_IP}
 ${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD VpnOverIcmpDnsEnable /ICMP:yes /DNS:yes
+
+if [ "$SECUREMODESTAT" = "1" ]; then
+echo "Enabling Secure NAT"
+${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /HUB:VPN /CMD SecureNatEnable
+fi
+
 else
 echo " Nothing has changed on SoftEther Server."
 fi
