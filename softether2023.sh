@@ -2,7 +2,7 @@
 
 # Define version info
 SCRIPT_NAME="Softether VPN Server Installer Script By ExtremeDot"
-SCRIPT_VERSION="1.12"
+SCRIPT_VERSION="1.13"
 
 clear
 # Define color sets for different types of messages
@@ -242,14 +242,15 @@ function 07_SoftEtherVPN_Installer() {
         rm -rf $DOWNLOAD_FOLDER/softether-vpnserver-v*
         sleep 2
     else
-        color_echo $RED "Installation files are not downloaded, EXIT "        
+        color_echo $RED "Installation files are not downloaded, EXIT "
         color_echo $RED "Check network and source files and retry again."
 		# Call the function with a duration of 10 seconds and a custom message
 		time_remaining_progress_bar 10 "Failed to download files, exit."
         exit 0
     fi
+    sleep 5
     EXTRACT_FLDR="/usr/local/vpnserver"
-    FILESVPNR=("hamcore.se2" "Makefile" "Makefile install.sh" )
+    FILESVPNR=("hamcore.se2" "Makefile" ".install.sh" )
     FOUND_ALL_FILES=false
     
     while [ "$FOUND_ALL_FILES" = false ]
@@ -268,7 +269,6 @@ function 07_SoftEtherVPN_Installer() {
     else
     	echo "Error: The following files are missing in $EXTRACT_FLDR: ${MISSING_FILES[*]}"
 	time_remaining_progress_bar 10 "Waiting to Extracting file get finished..."
-
     fi
     done
     # Install SoftEther
