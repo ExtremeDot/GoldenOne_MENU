@@ -90,6 +90,10 @@ function 03_cleanInstall() {
     case "$choice" in 
         y|Y )
             echo -e "${YELLOW}Removing previous SoftEther VPN Server configurations...${NC}"
+	    systemctl daemon-reload
+	    sleep 2
+	    systemctl stop vpnserver.service
+	    sleep 2
             /etc/init.d/vpnserver stop >/dev/null 2>&1
             rm -rf /usr/local/vpnserver/ >/dev/null 2>&1
             rm -f /etc/init.d/vpnserver >/dev/null 2>&1
