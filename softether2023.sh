@@ -16,7 +16,7 @@ function color_echo() {
 
 # Define version info
 SCRIPT_NAME="Softether VPN Server Installer Script By ExtremeDot"
-SCRIPT_VERSION="1.8"
+SCRIPT_VERSION="1.11"
 
 
 # Function to display a progress bar with time remaining and a custom message
@@ -267,6 +267,7 @@ function 07_SoftEtherVPN_Installer() {
 	time_remaining_progress_bar 10 "Waiting to Extracting file get finished..."
 
     fi
+    done
     # Install SoftEther
     color_echo $BLUE "Installing SoftEther..."
     HUB="VPN"
