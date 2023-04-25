@@ -16,7 +16,7 @@ function color_echo() {
 
 # Define version info
 SCRIPT_NAME="Softether VPN Server Installer Script By ExtremeDot"
-SCRIPT_VERSION="1.4"
+SCRIPT_VERSION="1.5"
 
 
 # Function to display a progress bar with time remaining and a custom message
@@ -121,6 +121,10 @@ function 04_checkPrereq() {
 
 # Function 05: Ask for default values
 function 05_askDefaults() {
+clear
+echo "========================================================="
+echo "Initial Setup Data "
+echo
     SERVER_IP=$(ip -4 addr | sed -ne 's|^.* inet \([^/]*\)/.* scope global.*$|\1|p' | head -1)
     if [[ -z $SERVER_IP ]]; then
         # Detect public IPv6 address
@@ -129,29 +133,28 @@ function 05_askDefaults() {
 
     read -rp "IP address: " -e -i "$SERVER_IP" IP
     SERVER_IP="${IP:-$SERVER_IP}"
-    echo " "
+    echo "--------- "
 
     USER=$(echo -e $(openssl rand -hex 1)"admin"$(openssl rand -hex 4))
     read -e -i "$USER" -p "Please enter your username: " input
     USER="${input:-$USER}"
-    echo " "
+    echo "--------- "
 
     SERVER_PASSWORD=$(echo -e $(openssl rand -hex 1)"PAsS"$(openssl rand -hex 4))
     read -e -i "$SERVER_PASSWORD" -p "Please Set VPN Password: " input
     SERVER_PASSWORD="${input:-$SERVER_PASSWORD}"
-    echo " "
+    echo "--------- "
 
     SHARED_KEY=$(shuf -i 12345678-99999999 -n 1)
     read -e -i "$SHARED_KEY" -p "Set IPSec Shared Keys: " input
     SHARED_KEY="${input:-$SHARED_KEY}"
-    clear
-
-    echo -e "${BLUE}Default values:${NC}"
-    echo "IP: $SERVER_IP"
-    echo "USER: $USER"
-    echo "PASSWORD: $SERVER_PASSWORD"
-    echo "IP_SEC: $SHARED_KEY"
-    sleep 2
+#    clear
+#    echo -e "${BLUE}Default values:${NC}"
+#    echo "IP: $SERVER_IP"
+#    echo "USER: $USER"
+#    echo "PASSWORD: $SERVER_PASSWORD"
+#    echo "IP_SEC: $SHARED_KEY"
+#    sleep 2
 }
 
 function 06_dnsmasqInstall() {
