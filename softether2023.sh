@@ -16,7 +16,7 @@ function color_echo() {
 
 # Define version info
 SCRIPT_NAME="Softether VPN Server Installer Script By ExtremeDot"
-SCRIPT_VERSION="1.6"
+SCRIPT_VERSION="1.7"
 
 
 # Function to display a progress bar with time remaining and a custom message
@@ -400,6 +400,7 @@ function 10_SoftEtherInstallMode() {
       echo "SoftEther will be set up in Local Bridge Mode using virtual tap by dnsmasq."
       # Call function
 	  12_dnsMsqSoftEtherInstallMode
+	  13_dnsmasqConfigGenerator
 
       ;;
   esac
@@ -449,6 +450,7 @@ EOF
 
 function 12_dnsMsqSoftEtherInstallMode() {
 
+DNSMSQMODE=1
 # Set the default value for IPTABLESBIN
 IPTABLESBIN=/usr/sbin/iptables
 
@@ -956,7 +958,15 @@ done
 if [[ $CUSTOMIZE_SETUP == "y" ]]; then
 # CUSTOMIZED SETUP
 ## SETTING UP SERVER
+echo "== Auto Configuration ========================"
+echo "Server IP= $SERVER_IP"
+echo "Traget Folder= $TARGET"
+echo "HUB Name= $HUB"
+echo "User Name= $USER"
+echo "HUB PASSWORD= $HUB_PASSWORD"
 echo "SERVER PASSWORD= $SERVER_PASSWORD"
+echo "Shared KEY= $SHARED_KEY"
+echo "=============================================="
 ${TARGET}vpnserver/vpncmd localhost /SERVER /CMD ServerPasswordSet ${SERVER_PASSWORD}
 ${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD HubCreate ${HUB} /PASSWORD:${HUB_PASSWORD}
 ${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /HUB:${HUB} /CMD UserCreate ${USER} /GROUP:none /REALNAME:none /NOTE:none
@@ -1070,7 +1080,7 @@ echo -e "${GREEN}Script is running as root.${NC}"
 08_selectDNS
 09_dnsVpnApply
 10_SoftEtherInstallMode
-13_dnsmasqConfigGenerator
+#13_dnsmasqConfigGenerator
 14_runVPNServer1st
 15_firstTimeConfigurator
 read -p "Press enter to continue..."
