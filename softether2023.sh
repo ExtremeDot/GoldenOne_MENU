@@ -1040,7 +1040,7 @@ function SE_main_menu() {
     color_echo $YELLOW "7) Generate vpnserver file"
     color_echo $YELLOW "8) Generate dnsmasq config file"
     color_echo $YELLOW "9) Read Softether Administration Info"
-    color_echo $YELLOW "0) Exit and Back to extraMenu script"
+    color_echo $YELLOW "0) Exit and Back to eMenu script"
 
     echo
     read -p "Please enter your choice: " choice
