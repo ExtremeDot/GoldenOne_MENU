@@ -390,6 +390,8 @@ yellow "Cloudflare has installed allready."
 else
 echo "Insatlling CloudFlare Warp+"
 apt --fix-broken install
+apt-get upgrade
+apt --fix-broken install
 apt-get install desktop-file-utils nftables dirmngr gnupg gnupg-l10n gnupg-utils gnupg2 gpg gpg-agent gpg-wks-client gpg-wks-server gpgconf gpgsm libassuan0 libksba8 libnpth0 libnspr4 libnss3 libnss3-tools pinentry-curses
 #apt install cloudflare-warp
 ###
@@ -419,10 +421,11 @@ if [ -f "$DLFILE" ];
     sleep 5
     echo " check Network and Source files and retry again."
 fi
-
-#warp-cli register
-#warp-cli enable-always-on
-#warp-cli enable-connectivity-checks
+warp-cli set-mode proxy
+warp-cli set-proxy-port 41234
+warp-cli register
+warp-cli enable-always-on
+warp-cli enable-connectivity-checks
 fi
 enter2CLmain
 ;;
