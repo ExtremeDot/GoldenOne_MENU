@@ -848,7 +848,7 @@ echo "4) GET BBR STATUS                                      9) Check Public IP 
 echo "5) All Network Interfaces                              10) Set DNS Setting Permanently"
 blue "--- VPN Protocoles Menu -----------------------------------------------------------------------------"
 echo "11) CloudFlare WARP+                                   16) Install SSl certificate"
-echo "12) WireGuard"
+echo "12) WireGuard                                          17) Install Sanaee 3X-UI Panel"
 echo "13) OpenVPN"
 echo "14) SoftEther"
 echo "15) V2RAY, XRAY"
@@ -947,6 +947,11 @@ enter2main
 
 16)
 ssl_cert_issue
+enter2main
+;;
+
+17)
+bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
 enter2main
 ;;
 
