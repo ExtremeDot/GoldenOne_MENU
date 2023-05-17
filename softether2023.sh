@@ -2,7 +2,7 @@
 
 # Define version info
 SCRIPT_NAME="Softether VPN Server Installer Script By ExtremeDot"
-SCRIPT_VERSION="1.18"
+SCRIPT_VERSION="1.19"
 SECUREMODESTAT=0
 clear
 # Define color sets for different types of messages
@@ -229,6 +229,11 @@ function 07_SoftEtherVPN_Installer() {
     done
 
     DLFILE="${DOWNLOAD_FOLDER}Soft.tar.gz"
+    echo "remove previous data if exsits"
+    if [ -f "$DLFILE" ];
+    then
+    rm -f $DLFILE
+    fi
 
     # Download SoftEther installation files
     color_echo $GREEN "Downloading SoftEther installation files..."
