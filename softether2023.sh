@@ -2,7 +2,7 @@
 
 # Define version info
 SCRIPT_NAME="Softether VPN Server Installer Script By ExtremeDot"
-SCRIPT_VERSION="1.15"
+SCRIPT_VERSION="1.16"
 SECUREMODESTAT=0
 clear
 # Define color sets for different types of messages
@@ -213,7 +213,8 @@ function 07_SoftEtherVPN_Installer() {
                     continue
                 else
                     color_echo $YELLOW "Custom download link set to: $DLLINK"
-                    continue
+                    #continue
+		    break
                 fi
                 ;;
              3)
