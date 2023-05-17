@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT Multibalance Menu
-scriptVersion=0.16
+scriptVersion=0.17
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
@@ -708,14 +708,15 @@ fi
 function softEtherMenu() {
 if test -f "/Golden1/SoftEther/softether2023.sh";
 then
-bash /Golden1/SoftEther/softether2023.sh
-else
+rm -f /Golden1/SoftEther/softether2023.sh
+fi
+
 mkdir -p /Golden1/SoftEther/
 cd /Golden1/SoftEther/
 curl -O https://raw.githubusercontent.com/ExtremeDot/GoldenOne_MENU/main/softether2023.sh
 chmod +x /Golden1/SoftEther/softether2023.sh
 bash /Golden1/SoftEther/softether2023.sh
-fi
+
 
 }
 
