@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT Multibalance Menu
-scriptVersion=0.14
+scriptVersion=0.15
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
@@ -719,6 +719,112 @@ fi
 
 }
 
+# sanaee 3x script
+install_acme() {
+    cd ~
+    green "install acme..."
+    curl https://get.acme.sh | sh
+    if [ $? -ne 0 ]; then
+        red "install acme failed"
+        return 1
+    else
+        green "install acme succeed"
+    fi
+    return 0
+}
+
+#method for standalone mode
+ssl_cert_issue() {
+    #check for acme.sh first
+    if ! command -v ~/.acme.sh/acme.sh &>/dev/null; then
+        echo "acme.sh could not be found. we will install it"
+        install_acme
+        if [ $? -ne 0 ]; then
+            red "install acme failed, please check logs"
+        fi
+    fi
+    #install socat second
+    if [[ "${release}" == "centos" ]] || [[ "${release}" == "fedora" ]]; then
+        yum install socat -y
+    else
+        apt install socat -y
+    fi
+    if [ $? -ne 0 ]; then
+        red "install socat failed,please check logs"
+    else
+        green "install socat succeed..."
+    fi
+	ufw allow http
+	ufw allow https
+    #get the domain here,and we need verify it
+    local domain=""
+    read -p "Please enter your domain name:" domain
+    yellow "your domain is:${domain},check it..."
+    #here we need to judge whether there exists cert already
+    local currentCert=$(~/.acme.sh/acme.sh --list | tail -1 | awk '{print $1}')
+    if [ ${currentCert} == ${domain} ]; then
+        local certInfo=$(~/.acme.sh/acme.sh --list)
+        red "system already have certs here,can not issue again,current certs details:"
+        green "$certInfo"
+
+    else
+        green "your domain is ready for issuing cert now..."
+    fi
+
+    #create a directory for install cert
+    certPath="/root/cert/${domain}"
+    if [ ! -d "$certPath" ]; then
+        mkdir -p "$certPath"
+    else
+        rm -rf "$certPath"
+        mkdir -p "$certPath"
+    fi
+
+    #get needed port here
+    local WebPort=80
+    read -p "please choose which port do you use,default will be 80 port:" WebPort
+    if [[ ${WebPort} -gt 65535 || ${WebPort} -lt 1 ]]; then
+        red "your input ${WebPort} is invalid,will use default port"
+    fi
+    green "will use port:${WebPort} to issue certs,please make sure this port is open..."
+    #NOTE:This should be handled by user
+    #open the port and kill the occupied progress
+    ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+    ~/.acme.sh/acme.sh --issue -d ${domain} --standalone --httpport ${WebPort}
+    if [ $? -ne 0 ]; then
+        red "issue certs failed,please check logs"
+        rm -rf ~/.acme.sh/${domain}
+
+    else
+        red "issue certs succeed,installing certs..."
+    fi
+    #install cert
+    ~/.acme.sh/acme.sh --installcert -d ${domain} \
+        --key-file /root/cert/${domain}/privkey.pem \
+        --fullchain-file /root/cert/${domain}/fullchain.pem
+
+    if [ $? -ne 0 ]; then
+        red "install certs failed,exit"
+        rm -rf ~/.acme.sh/${domain}
+
+    else
+        green "install certs succeed,enable auto renew..."
+    fi
+
+    ~/.acme.sh/acme.sh --upgrade --auto-upgrade
+    if [ $? -ne 0 ]; then
+        red "auto renew failed, certs details:"
+        ls -lah cert/*
+        chmod 755 $certPath/*
+
+    else
+        green "auto renew succeed, certs details:"
+        ls -lah cert/*
+        chmod 755 $certPath/*
+    fi
+
+}
+
 function mainMenuRun() {
 #MAIN MENU SCRIPt
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
@@ -731,7 +837,7 @@ echo "3) Edit SSH config file                                8) Check Public IP 
 echo "4) GET BBR STATUS                                      9) Check Public IP by Interface's Name"
 echo "5) All Network Interfaces                              10) Set DNS Setting Permanently"
 blue "--- VPN Protocoles Menu -----------------------------------------------------------------------------"
-echo "11) CloudFlare WARP+"
+echo "11) CloudFlare WARP+                                   16) Install SSl certificate"
 echo "12) WireGuard"
 echo "13) OpenVPN"
 echo "14) SoftEther"
@@ -826,6 +932,11 @@ enter2main
 
 14)
 softEtherMenu
+enter2main
+;;
+
+16)
+ssl_cert_issue
 enter2main
 ;;
 
