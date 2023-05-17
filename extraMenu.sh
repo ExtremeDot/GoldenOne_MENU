@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT Multibalance Menu
-scriptVersion=0.15
+scriptVersion=0.16
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
@@ -822,7 +822,17 @@ ssl_cert_issue() {
         ls -lah cert/*
         chmod 755 $certPath/*
     fi
-
+    green " - - - FINISH - - - - - - - - - - - - - - - - - - - - - - - "
+    green "============================================================"
+    green " - Panel certificate public key file path address:"
+    green "   - [ /root/cert/${domain}/fullchain.pem ]"
+    echo
+    echo
+    green " - Panel certificate key file path: "
+    green "   - [ /root/cert/${domain}/privkey.pem ]"
+    echo
+    green "============================================================"
+    echo
 }
 
 function mainMenuRun() {
