@@ -2,7 +2,7 @@
 
 # Define version info
 SCRIPT_NAME="Softether VPN Server Installer Script By ExtremeDot"
-SCRIPT_VERSION="1.19"
+SCRIPT_VERSION="1.20"
 SECUREMODESTAT=0
 clear
 # Define color sets for different types of messages
@@ -715,19 +715,17 @@ restart)
 sleep 1
 \$DAEMON start
 sleep 1
-\$IP_BIN addr add \$TAP_STATIC brd + dev \$TAP_INTERFACE
+#\$IP_BIN addr add \$TAP_STATIC brd + dev \$TAP_INTERFACE
 ;;
 
 # Display usage information
 *)
 echo "Usage: \$0 {start|stop|restart}"
 exit 1
-;;
 esac
-
 exit 0
-EOF
 
+EOF
 }
 
 function freeNet_vpnserver_file_creation() {
