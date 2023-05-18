@@ -2,7 +2,7 @@
 
 # Define version info
 SCRIPT_NAME="Softether VPN Server Installer Script By ExtremeDot"
-SCRIPT_VERSION="1.20"
+SCRIPT_VERSION="1.21"
 SECUREMODESTAT=0
 clear
 # Define color sets for different types of messages
@@ -976,15 +976,7 @@ update-rc.d vpnserver defaults
 
 }
 
-function 15_firstTimeConfigurator() {
-echo ""
-echo "Do you want to run optimized First RUN Setup Script?"
-echo "It will set the initial setup for yor server."
-echo ""
-until [[ $CUSTOMIZE_SETUP =~ (y|n) ]]; do
-read -rp "GoldenOne - First RUN Setup? [y/n]: " -e -i y CUSTOMIZE_SETUP
-done
-if [[ $CUSTOMIZE_SETUP == "y" ]]; then
+function firstTimeConfiguratorY() {
 # CUSTOMIZED SETUP
 ## SETTING UP SERVER
 echo "== Auto Configuration ========================"
@@ -1013,11 +1005,22 @@ else
 echo "Disabling Secure NAT"
 ${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /HUB:VPN /CMD SecureNatDisable
 fi
+}	
 
-else
-echo " Nothing has changed on SoftEther Server."
-fi
-	
+function 15_firstTimeConfigurator() {
+echo ""
+echo "Do you want to run optimized First RUN Setup Script?"
+echo "It will set the initial setup for yor server."
+echo ""
+while true; do
+    read -rp "GoldenOne - First RUN Setup? [y/n] " yn
+    case $yn in
+        [Yy]|[Yy][Ee][Ss]) firstTimeConfiguratorY ; break;;
+        [Nn]|[Nn][Oo]) echo "Nothing has changed on SoftEther Server."; break;;
+        *) echo "Please enter y or n.";;
+    esac
+done
+
 
 echo " restarting DNSMASQ"
 sleep 3
