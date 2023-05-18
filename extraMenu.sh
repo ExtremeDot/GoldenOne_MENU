@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT Multibalance Menu
-scriptVersion=0.17
+scriptVersion=0.18
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
@@ -850,7 +850,7 @@ echo "5) All Network Interfaces                              10) Set DNS Setting
 blue "--- VPN Protocoles Menu -----------------------------------------------------------------------------"
 echo "11) CloudFlare WARP+                                   16) Install SSl certificate"
 echo "12) WireGuard                                          17) Install Sanaee 3X-UI Panel"
-echo "13) OpenVPN"
+echo "13) OpenVPN                                            18) Mack-A v2ray-agent Script"
 echo "14) SoftEther"
 echo "15) V2RAY, XRAY"
 blue "--- MultiBalance Menu -------------------------------------------------------------------------------"
@@ -953,6 +953,12 @@ enter2main
 
 17)
 bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
+enter2main
+;;
+
+18)
+rm -f /root/install.sh
+wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
 enter2main
 ;;
 
