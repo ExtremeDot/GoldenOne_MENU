@@ -801,7 +801,7 @@ sleep 1
 \$IPTABLES_BIN -t nat -A POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
 sleep 1
 #\$IP_BIN addr add \$TAP_GATEWAY brd + dev \$TAP_INTERFACE
-#\$IFCONFIG_BIN \$TAP_INTERFACE \$TAP_GATEWAY
+\$IFCONFIG_BIN \$TAP_INTERFACE \$TAP_GATEWAY
 ;;
 
 # Display usage information
@@ -1050,7 +1050,7 @@ echo ""
 echo "to Show Login Information, run "seshow" command."
 # CRONTAB 
 crontab -l | { cat; echo "@reboot /etc/init.d/vpnserver start" ; } | crontab -
-crontab -l | { cat; echo "@reboot sleep 15 && service dnsmasq restart" ; } | crontab -
+
 }
 
 # Check if script is running as root
