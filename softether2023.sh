@@ -772,8 +772,8 @@ echo "Setting up IP tables"
 \$DAEMON start
 touch \$LOCK_FILE
 sleep 3
-#\$IP_BIN addr add \$TAP_GATEWAY brd + dev \$TAP_INTERFACE
-\$IFCONFIG_BIN \$TAP_INTERFACE \$TAP_GATEWAY
+\$IP_BIN addr add \$TAP_GATEWAY brd + dev \$TAP_INTERFACE
+#\$IFCONFIG_BIN \$TAP_INTERFACE \$TAP_GATEWAY
 sleep 3
 \$DNSMASQ_BIN restart
 sleep 1
@@ -801,8 +801,8 @@ sleep 1
 \$DAEMON start
 \$IPTABLES_BIN -t nat -A POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
 sleep 1
-#\$IP_BIN addr add \$TAP_GATEWAY brd + dev \$TAP_INTERFACE
-\$IFCONFIG_BIN \$TAP_INTERFACE \$TAP_GATEWAY
+\$IP_BIN addr add \$TAP_GATEWAY brd + dev \$TAP_INTERFACE
+#\$IFCONFIG_BIN \$TAP_INTERFACE \$TAP_GATEWAY
 ;;
 
 # Display usage information
