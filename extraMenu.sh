@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT Multibalance Menu
-scriptVersion=0.18
+scriptVersion=0.19
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
@@ -396,14 +396,14 @@ apt-get install desktop-file-utils nftables dirmngr gnupg gnupg-l10n gnupg-utils
 #apt install cloudflare-warp
 ###
 echo "----------------------------------------------------------------------------"
-echo " Enter the package link of cloudflare for your OS, default is for Debian11"
+echo " Enter the package link of cloudflare for your OS, default is for Ubuntu 22.04"
 echo " check the site and paste latest link"
 echo " -----"
 apt --fix-broken install -y
 echo " https://pkg.cloudflareclient.com/packages/cloudflare-warp"
 mkdir -p /ExtremeDOT/
 echo 
-DLLINK=https://pkg.cloudflareclient.com/uploads/cloudflare_warp_2023_3_258_1_amd64_f876b846af.deb
+DLLINK=https://pkg.cloudflareclient.com/uploads/cloudflare_warp_2023_3_398_1_amd64_ddd2a223f7.deb
 DLFILE=/ExtremeDOT/cloudflare_warp.deb
 read -e -i "$DLLINK" -p "Cloudflare Deb package address: " input
 DLLINK="${input:-$DLLINK}"
@@ -422,7 +422,7 @@ if [ -f "$DLFILE" ];
     echo " check Network and Source files and retry again."
 fi
 warp-cli set-mode proxy
-warp-cli set-proxy-port 41234
+warp-cli set-proxy-port 40000
 warp-cli register
 warp-cli enable-always-on
 warp-cli enable-connectivity-checks
@@ -849,10 +849,10 @@ echo "4) GET BBR STATUS                                      9) Check Public IP 
 echo "5) All Network Interfaces                              10) Set DNS Setting Permanently"
 blue "--- VPN Protocoles Menu -----------------------------------------------------------------------------"
 echo "11) CloudFlare WARP+                                   16) Install SSl certificate"
-echo "12) WireGuard                                          17) Install Sanaee 3X-UI Panel"
+echo "12) WireGuard                                          17) Install IRAN geo dat"
 echo "13) OpenVPN                                            18) Mack-A v2ray-agent Script"
-echo "14) SoftEther"
-echo "15) V2RAY, XRAY"
+echo "14) SoftEther                                          19) Install Sanaee 3X-UI Panel"
+echo "15) V2RAY, XRAY                                        20) Install FranzKafkaYu Panel"
 blue "--- MultiBalance Menu -------------------------------------------------------------------------------"
 
 echo
@@ -952,13 +952,29 @@ enter2main
 ;;
 
 17)
-bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
+cd /usr/local/x-ui/bin
+systemctl stop x-ui
+sleep 2
+wget -N https://github.com/bootmortis/iran-hosted-domains/releases/latest/download/iran.dat
+chmod 755 /usr/local/x-ui/bin/iran.dat
+sleep 1
+systemctl start x-ui
 enter2main
 ;;
 
 18)
 rm -f /root/install.sh
 wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
+enter2main
+;;
+
+19)
+bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
+enter2main
+;;
+
+20)
+bash <(curl -Ls https://raw.githubusercontent.com/FranzKafkaYu/x-ui/master/install_en.sh)
 enter2main
 ;;
 
