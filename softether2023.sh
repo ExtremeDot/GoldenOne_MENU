@@ -623,6 +623,8 @@ TAP_NETWORK=${TAP_NETWORK}
 # Set the gateway IP address for the TAP interface
 TAP_GATEWAY=${TAP_GATEWAY}
 
+TAP_BRDCAST=/${TAP_GATEWAY%.*}.255
+
 # Set the static IP address for the TAP interface
 TAP_STATIC=${TAP_STATIC}
 
@@ -758,6 +760,8 @@ TAP_NETWORK=${TAP_NETWORK}
 # Set the gateway IP address for the TAP interface
 TAP_GATEWAY=${TAP_GATEWAY}
 
+TAP_BRDCAST=/${TAP_GATEWAY%.*}.255
+
 # Check if the VPN server binary exists
 if [ ! -x "\$DAEMON" ]; then
     echo "Error: \$DAEMON not found or not executable"
@@ -772,8 +776,9 @@ echo "Setting up IP tables"
 \$DAEMON start
 touch \$LOCK_FILE
 sleep 3
-\$IP_BIN addr add \$TAP_GATEWAY brd + dev \$TAP_INTERFACE
+#\$IP_BIN addr add \$TAP_GATEWAY brd + dev \$TAP_INTERFACE
 #\$IFCONFIG_BIN \$TAP_INTERFACE \$TAP_GATEWAY
+\$IP_BIN address add \$TAP_GATEWAY/24 broadcast \$TAP_BRDCAST dev \$TAP_INTERFACE
 sleep 3
 \$DNSMASQ_BIN restart
 sleep 1
@@ -801,8 +806,9 @@ sleep 1
 \$DAEMON start
 \$IPTABLES_BIN -t nat -A POSTROUTING -s \$TAP_NETWORK -o \$SERVER_NIC -j MASQUERADE
 sleep 1
-\$IP_BIN addr add \$TAP_GATEWAY brd + dev \$TAP_INTERFACE
+#\$IP_BIN addr add \$TAP_GATEWAY brd + dev \$TAP_INTERFACE
 #\$IFCONFIG_BIN \$TAP_INTERFACE \$TAP_GATEWAY
+\$IP_BIN address add \$TAP_GATEWAY/24 broadcast \$TAP_BRDCAST dev \$TAP_INTERFACE
 ;;
 
 # Display usage information
