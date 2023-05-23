@@ -693,15 +693,16 @@ lsmod | grep bbr
 }
 
 function wireGuardAngristanInstall() {
-if test -f "/Golden1/WireGuard/wireguard-install.sh";
+if test -f "/usr/local/bin/eXdot-WG";
 then
-bash /Golden1/WireGuard/wireguard-install.sh
+bash /usr/local/bin/eXdot-WG
 else
-mkdir -p /Golden1/WireGuard/
-cd /Golden1/WireGuard/
-curl -O https://raw.githubusercontent.com/angristan/wireguard-install/master/wireguard-install.sh
-chmod +x /Golden1/WireGuard/wireguard-install.sh
-bash /Golden1/WireGuard/wireguard-install.sh
+curl -O https://raw.githubusercontent.com/ExtremeDot/wireguard-install/extreme/wireguard-install.sh
+sleep 1
+chmod +x wireguard-install.sh
+cp wireguard-install.sh /usr/local/bin/eXdot-WG
+sleep 2
+chmod +x /usr/local/bin/eXdot-WG
 fi
 }
 
