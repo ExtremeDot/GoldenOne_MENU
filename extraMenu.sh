@@ -1,6 +1,6 @@
 #!/bin/bash
 #EXTREME DOT Multibalance Menu
-scriptVersion=0.20
+scriptVersion=0.21
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
@@ -758,6 +758,7 @@ ssl_cert_issue() {
     fi
 	ufw allow http
 	ufw allow https
+	sudo systemctl stop nginx
     #get the domain here,and we need verify it
     local domain=""
     read -p "Please enter your domain name:" domain
@@ -835,6 +836,7 @@ ssl_cert_issue() {
     echo
     green "============================================================"
     echo
+    sudo systemctl restart nginx
 }
 
 function mainMenuRun() {
