@@ -623,7 +623,7 @@ TAP_NETWORK=${TAP_NETWORK}
 # Set the gateway IP address for the TAP interface
 TAP_GATEWAY=${TAP_GATEWAY}
 
-TAP_BRDCAST=/${TAP_GATEWAY%.*}.255
+TAP_BRDCAST=\${TAP_GATEWAY%.*}.255
 
 # Set the static IP address for the TAP interface
 TAP_STATIC=${TAP_STATIC}
@@ -760,7 +760,7 @@ TAP_NETWORK=${TAP_NETWORK}
 # Set the gateway IP address for the TAP interface
 TAP_GATEWAY=${TAP_GATEWAY}
 
-TAP_BRDCAST=/${TAP_GATEWAY%.*}.255
+TAP_BRDCAST=\${TAP_GATEWAY%.*}.255
 
 # Check if the VPN server binary exists
 if [ ! -x "\$DAEMON" ]; then
