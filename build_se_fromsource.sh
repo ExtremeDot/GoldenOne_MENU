@@ -483,6 +483,31 @@ chmod 755 /etc/init.d/vpnserver
 /etc/init.d/vpnserver start
 update-rc.d vpnserver defaults
 
+#### INFO
+# Check if /bin/seshow exists
+if [ -f /bin/seshow ]; then
+    echo "---------------------------------------------------------------"
+    echo "Previus Admin Password"
+    PREV_SERVER_PASSWORD=$(grep -E 'PASSWORD:' /bin/seshow | awk -F'PASSWORD: ' '{print $2}' | tr -d '"')
+    echo "PreviousPassword: $PREV_SERVER_PASSWORD"
+    echo " "
+    read -n 1 -s -r -p "Press any key to continue"
+else
+    touch /bin/seshow
+fi
+
+cat <<EOF > /bin/seshow
+clear
+echo "SoftEther - GoldenOne Script Data"
+echo " "
+echo "IP:       $SERVER_IP"
+echo "USER:     $USER"
+echo "PASSWORD: $SERVER_PASSWORD"
+echo "IP_SEC:   $SHARED_KEY"
+echo " "
+EOF
+
+
 ## SETTING UP SERVER
 ${TARGET}vpnserver/vpncmd localhost /SERVER /CMD ServerPasswordSet ${SERVER_PASSWORD}
 ${TARGET}vpnserver/vpncmd localhost /SERVER /PASSWORD:${SERVER_PASSWORD} /CMD HubCreate ${HUB} /PASSWORD:${HUB_PASSWORD}
@@ -498,10 +523,7 @@ sleep 5
 service dnsmasq restart
 service vpnserver restart
 echo "+++ Installation finished +++"
-echo "IP: $SERVER_IP"
-echo "USER: $USER"
-echo "PASSWORD: $SERVER_PASSWORD"
-echo "IP_SEC: $SHARED_KEY"
+
 
 # CRONTAB
 # sudo crontab #-l | { cat; echo "@reboot /etc/init.d/vpnserver start" ; } | crontab -
