@@ -6,6 +6,15 @@
 # - https://gist.github.com/abegodong/
 # - https://whattheserver.com/
 
+script_version=1
+
+clear
+echo " ----------------------------------------------------"
+echo " eXtreme DOT SoftEther VPN Server Installer"
+echo "                                   Version: $script_version"
+echo ""
+echo " ----------------------------------------------------"
+echo
 function isRoot() {
         if [ "$EUID" -ne 0 ]; then
                 return 1
@@ -32,7 +41,6 @@ if [ $vpncmd_Install_Status -eq 0 ]; then
 	apt-get upgrade
 fi
 
-sleep 2 && clear
 echo ""
 SERVER_IP=$(ip -4 addr | sed -ne 's|^.* inet \([^/]*\)/.* scope global.*$|\1|p' | head -1)
 if [[ -z $SERVER_IP ]]; then
