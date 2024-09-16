@@ -6,8 +6,6 @@
 # - https://gist.github.com/abegodong/
 # - https://whattheserver.com/
 
-rm build_se_fromsource.sh
-
 function isRoot() {
         if [ "$EUID" -ne 0 ]; then
                 return 1
@@ -18,10 +16,24 @@ if ! isRoot; then
         echo "Sorry, you need to run this as root"
         exit 1
 fi
-apt-get update
-apt-get upgrade
+
+# 0 is for NotInstalled and 1 is For Installed
+vpncmd_Install_Status=0
+
+# Check if vpncmd is installed
+if command -v vpncmd &> /dev/null
+then
+    echo "SoftEther VPN is already installed."
+    vpncmd_Install_Status=1
+fi
+
+if [ $vpncmd_Install_Status -eq 0 ]; then
+	apt-get update
+	apt-get upgrade
+fi
+
 sleep 2 && clear
-echo " "
+echo ""
 SERVER_IP=$(ip -4 addr | sed -ne 's|^.* inet \([^/]*\)/.* scope global.*$|\1|p' | head -1)
 if [[ -z $SERVER_IP ]]; then
 # Detect public IPv6 address
@@ -99,36 +111,39 @@ echo 'nameserver 77.88.8.1' >> $DEST_RESOLV
 
 # installing dnsmasq
 echo ""
-echo "Installing DNSMASQ"
-sudo apt-get -y install dnsmasq
-sleep 2
-echo ""
-echo "STOPING SYSTEM RESOLV"
-systemctl stop systemd-resolved && sleep 5
-echo "RESTARTING DNSMASQ and SYSTEM RESOLVE"
-service dnsmasq restart 
-sleep 5
-systemctl stop systemd-resolved 
-sleep 5
+if [ $vpncmd_Install_Status -eq 0 ]; then
 
-echo " INSTALLING PRE-REQ APPS"
-sudo apt-get -y install build-essential net-tools cmake gcc g++ make rpm pkg-config libncurses5-dev libssl-dev libsodium-dev libreadline-dev zlib1g-dev
-sleep 2
-mkdir -p /se_install 
-sleep 2
-cd /se_install
-sleep 2
-# clone softether source
-echo " GET THE SOURCE"
-git clone https://github.com/SoftEtherVPN/SoftEtherVPN.git
-cd SoftEtherVPN
-sleep 2
-git submodule init && git submodule update
-echo " BUILD THE SOURCE"
-./configure
-sleep 2
-make -C build
-sleep 5
+	echo "Installing DNSMASQ"
+	sudo apt-get -y install dnsmasq
+	sleep 2
+	echo ""
+	echo "STOPING SYSTEM RESOLV"
+	systemctl stop systemd-resolved && sleep 5
+	echo "RESTARTING DNSMASQ and SYSTEM RESOLVE"
+	service dnsmasq restart 
+	sleep 5
+	systemctl stop systemd-resolved 
+	sleep 5
+	
+	echo " INSTALLING PRE-REQ APPS"
+	sudo apt-get -y install build-essential net-tools cmake gcc g++ make rpm pkg-config libncurses5-dev libssl-dev libsodium-dev libreadline-dev zlib1g-dev
+	sleep 2
+	mkdir -p /se_install 
+	sleep 2
+	cd /se_install
+	sleep 2
+	# clone softether source
+	echo " GET THE SOURCE"
+	git clone https://github.com/SoftEtherVPN/SoftEtherVPN.git
+	cd SoftEtherVPN
+	sleep 2
+	git submodule init && git submodule update
+	echo " BUILD THE SOURCE"
+	./configure
+	sleep 2
+	make -C build
+	sleep 5
+fi
 
 ## DNS CHANGE
 # DNS resolvers
@@ -210,16 +225,19 @@ case $DNS in
                 ;;
         esac
 
-# make -C build install
-cd /se_install/SoftEtherVPN/build
-make
-mkdir -p /usr/local/vpnserver/
-cp vpn* /usr/local/vpnserver
-cp libcedar.so libmayaqua.so hamcore.se2 /usr/local/vpnserver/
-cd /usr/local/vpnserver/
-chmod 600 *
-chmod 700 vpnserver
-chmod 700 vpncmd
+if [ $vpncmd_Install_Status -eq 0 ]; then
+	
+	cd /se_install/SoftEtherVPN/build
+	make
+	mkdir -p /usr/local/vpnserver/
+	cp vpn* /usr/local/vpnserver
+	cp libcedar.so libmayaqua.so hamcore.se2 /usr/local/vpnserver/
+	cd /usr/local/vpnserver/
+	chmod 600 *
+	chmod 700 vpnserver
+	chmod 700 vpncmd
+fi
+
 
 # SOFTETHER SETUP
 echo "Setup SoftEther Server"
@@ -477,5 +495,13 @@ echo "USER: $USER"
 echo "PASSWORD: $SERVER_PASSWORD"
 echo "IP_SEC: $SHARED_KEY"
 
-# CRONTAB 
-sudo crontab -l | { cat; echo "@reboot /etc/init.d/vpnserver start" ; } | crontab -
+# CRONTAB
+# sudo crontab #-l | { cat; echo "@reboot /etc/init.d/vpnserver start" ; } | crontab -
+
+if sudo crontab -l | grep -q '@reboot /etc/init.d/vpnserver start'; then
+    echo "Crontab is already updated."
+else
+    echo "Updating crontab to include vpnserver start..."  
+    sudo crontab -l | { cat; echo "@reboot /etc/init.d/vpnserver start"; } | sudo crontab -
+    echo "Crontab has been updated."
+fi
