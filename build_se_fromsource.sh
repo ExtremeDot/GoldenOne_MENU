@@ -38,7 +38,7 @@ fi
 
 if [ $vpncmd_Install_Status -eq 0 ]; then
 	apt-get update
-	apt-get upgrade
+	apt-get upgrade -y
 fi
 
 echo ""
