@@ -36,11 +36,13 @@ then
     vpncmd_Install_Status=1
 fi
 
+######
+
 if [ $vpncmd_Install_Status -eq 0 ]; then
-	apt-get update
-	apt-get upgrade -y
+	
 fi
 
+#######
 echo ""
 SERVER_IP=$(ip -4 addr | sed -ne 's|^.* inet \([^/]*\)/.* scope global.*$|\1|p' | head -1)
 if [[ -z $SERVER_IP ]]; then
