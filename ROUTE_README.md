@@ -15,13 +15,14 @@
 
 ## 🚀 نصب و اجرا
 1. فایل را دانلود یا کپی کنید و دسترسی اجرایی بدهید:
-   ```bash
+```bash
+
 mkdir -p /Golden1
 cd /Golden1
 curl -O https://raw.githubusercontent.com/ExtremeDot/golden_one/master/route_a.sh
 chmod +x /Golden1/route_a.sh
 
-   ```
+ ```
 2. اسکریپت را اجرا کنید:
    ```bash
    bash /Golden1/route_a.sh
