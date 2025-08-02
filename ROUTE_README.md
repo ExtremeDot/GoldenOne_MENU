@@ -16,11 +16,15 @@
 ## 🚀 نصب و اجرا
 1. فایل را دانلود یا کپی کنید و دسترسی اجرایی بدهید:
    ```bash
-   chmod +x route_setup.sh
+mkdir -p /Golden1
+cd /Golden1
+curl -O https://raw.githubusercontent.com/ExtremeDot/golden_one/master/route_a.sh
+chmod +x /Golden1/route_a.sh
+
    ```
 2. اسکریپت را اجرا کنید:
    ```bash
-   sudo ./route_setup.sh
+   bash /Golden1/route_a.sh
    ```
 3. هنگام اجرا:
    - اینترفیس ورودی را انتخاب کنید (پیش‌فرض از جدول مسیریابی پیش‌فرض می‌آید)
